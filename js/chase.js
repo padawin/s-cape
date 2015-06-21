@@ -8,7 +8,14 @@
 			'left': {x: -2, y: 0}
 		},
 		_worldChanged = true,
-		_levels;
+		_levels,
+		_resources = {
+			'grass': ['resources/bg-grass.png'],
+			'tree': ['resources/tree.png'],
+			'player': ['resources/player.png'],
+			'death': ['resources/death.png']
+		},
+		_nbResources = 4;
 
 	movableClass = function (x, y) {
 		this.x = x;
@@ -86,42 +93,34 @@
 	};
 
 	function _drawBackground () {
-		var img = new Image();
-
-		img.src = 'resources/bg-grass.png';
-		img.onload = function(){
-			// create pattern
-			var pattern = _ctx.createPattern(this, 'repeat'); // Create a pattern with this image, and set it to "repeat".
-			_ctx.fillStyle = pattern;
-			_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
-		}
+		var img = _resources.grass[1];
+		// create pattern
+		var pattern = _ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+		_ctx.fillStyle = pattern;
+		_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
 	}
 
-	function _draw (x, y, url) {
-		var img = new Image();
+	function _draw (x, y, resource) {
+		var img = _resources[resource][1];
+		// the animations have 4 frames
+		// the grid has cells of 48x48px
+		// there are 4 directions, so 4 rows in the sprite
+		var width = img.width <= 48 ? img.width : img.width / 4,
+			height = img.height <= 48 ? img.height : img.height / 4,
+			coordX = x + Math.ceil(48 - width) / 2,
+			coordY = y + Math.ceil(48 - height) / 2;
 
-		img.src = url;
-		img.onload = function(){
-			// the animations have 4 frames
-			// the grid has cells of 48x48px
-			// there are 4 directions, so 4 rows in the sprite
-			var width = img.width <= 48 ? img.width : img.width / 4,
-				height = img.height <= 48 ? img.height : img.height / 4,
-				coordX = x + Math.ceil(48 - width) / 2,
-				coordY = y + Math.ceil(48 - height) / 2;
-
-			_ctx.drawImage(
-				this,
-				// Start in the sprite board
-				0, 0,
-				// Dimensions in the sprite board
-				width, height,
-				// Position in the canvas
-				coordX, coordY,
-				// Dimensions in the canvas
-				width, height
-			); // context.fillRect(x, y, width, height);
-		}
+		_ctx.drawImage(
+			img,
+			// Start in the sprite board
+			0, 0,
+			// Dimensions in the sprite board
+			width, height,
+			// Position in the canvas
+			coordX, coordY,
+			// Dimensions in the canvas
+			width, height
+		); // context.fillRect(x, y, width, height);
 	}
 
 	function _createPlayer (x, y) {
@@ -144,7 +143,7 @@
 			y = _player.y;
 		}
 
-		var coords = _draw(x, y, 'resources/player.png');
+		var coords = _draw(x, y, 'player');
 	}
 
 	function _drawRock (x, y) {
@@ -152,7 +151,7 @@
 	}
 
 	function _drawTree (x, y) {
-		_draw(48 * x, 48 * y, 'resources/tree.png');
+		_draw(48 * x, 48 * y, 'tree');
 	}
 
 	function _drawHome (x, y) {
@@ -171,7 +170,7 @@
 			y = death.y;
 		}
 
-		var coords = _draw(x, y, 'resources/death.png');
+		var coords = _draw(x, y, 'death');
 	}
 
 	function _drawLevel (levelIndex) {
@@ -234,6 +233,22 @@
 					break;
 			};
 		});
+	}
+
+	function _loadResources (loadedCallback) {
+		var r, loaded = 0;
+
+		for (r in _resources) {
+			if (_resources.hasOwnProperty(r)) {
+				_resources[r].push(new Image());
+				_resources[r][1].src = _resources[r][0];
+				_resources[r][1].onload = function () {
+					if (++loaded == _nbResources) {
+						loadedCallback();
+					}
+				};
+			}
+		}
 	}
 
 	function _startMainLoop () {
@@ -309,9 +324,11 @@
 		_ctx = _canvas.getContext('2d');
 
 		_initLevel(_currentLevel);
-		_initEvents();
+		_loadResources(function () {
+			_initEvents();
 
-		_startMainLoop();
+			_startMainLoop();
+		});
 	};
 
 	/**
