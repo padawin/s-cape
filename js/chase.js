@@ -31,6 +31,7 @@
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
+		this.moveFrame = 0;
 		this.direction = direction || 'down';
 
 		this.isMoving = function () {
@@ -60,6 +61,7 @@
 			this.moving = false;
 			this.speedX = 0;
 			this.speedY = 0;
+			this.moveFrame = 0;
 		};
 
 		this.willCollide = function (direction) {
