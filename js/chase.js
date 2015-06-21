@@ -2,10 +2,10 @@
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
 		_directions = {
-			'up': {x: 0, y: -2},
-			'right': {x: 2, y: 0},
-			'down': {x: 0, y: 2},
-			'left': {x: -2, y: 0}
+			'down': {x: 0, y: 2, spriteRow: 0},
+			'left': {x: -2, y: 0, spriteRow: 1},
+			'right': {x: 2, y: 0, spriteRow: 2},
+			'up': {x: 0, y: -2, spriteRow: 3}
 		},
 		_worldChanged = true,
 		_levels,
@@ -102,7 +102,7 @@
 		_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
 	}
 
-	function _draw (x, y, resource) {
+	function _draw (x, y, resource, direction) {
 		var img = _resources[resource][1];
 		// the animations have 4 frames
 		// the grid has cells of _tileWidth * _tileHeight px
@@ -111,12 +111,13 @@
 			height = img.height <= _tileHeight ? img.height : img.height / 4,
 			// To set the sprite on the middle bottom of the tile
 			coordX = x + Math.ceil(_tileWidth - width) / 2,
-			coordY = y + Math.ceil(_tileHeight - height);
+			coordY = y + Math.ceil(_tileHeight - height),
+			spriteStartY = direction ? _directions[direction].spriteRow * _tileHeight : 0;
 
 		_ctx.drawImage(
 			img,
 			// Start in the sprite board
-			0, 0,
+			0, spriteStartY,
 			// Dimensions in the sprite board
 			width, height,
 			// Position in the canvas
@@ -146,7 +147,7 @@
 			y = _player.y;
 		}
 
-		var coords = _draw(x, y, 'player');
+		var coords = _draw(x, y, 'player', _player.direction);
 	}
 
 	function _drawRock (x, y) {
@@ -173,7 +174,7 @@
 			y = death.y;
 		}
 
-		var coords = _draw(x, y, 'death');
+		var coords = _draw(x, y, 'death', death.direction);
 	}
 
 	function _drawLevel (levelIndex) {
