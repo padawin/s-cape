@@ -333,7 +333,7 @@
 	chase.start = function (canvas) {
 		_ctx, _currentLevel = 0;
 
-		_canvas =  B.$id(canvas);
+		_canvas = B.$id(canvas);
 		_ctx = _canvas.getContext('2d');
 
 		_initLevel(_currentLevel);
