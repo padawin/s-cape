@@ -19,13 +19,13 @@
 		_tileWidth = 48,
 		_tileHeight = 48;
 
-	movableClass = function (x, y) {
+	movableClass = function (x, y, direction) {
 		this.x = x;
 		this.y = y;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
-		this.direction = 'down';
+		this.direction = direction || 'down';
 
 		this.isMoving = function () {
 			return this.moving;
@@ -86,12 +86,12 @@
 		}
 	};
 
-	playerClass = function (x, y) {
-		movableClass.call(this, x, y);
+	playerClass = function (x, y, direction) {
+		movableClass.call(this, x, y, direction);
 	};
 
-	deathClass = function (x, y) {
-		movableClass.call(this, x, y);
+	deathClass = function (x, y, direction) {
+		movableClass.call(this, x, y, direction);
 	};
 
 	function _drawBackground () {
