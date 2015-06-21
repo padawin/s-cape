@@ -110,7 +110,7 @@
 		_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
 	}
 
-	function _draw (x, y, resource, direction) {
+	function _draw (x, y, resource, direction, moveFrame) {
 		var img = _resources[resource][1];
 		// the animations have 4 frames
 		// the grid has cells of _tileWidth * _tileHeight px
@@ -120,12 +120,13 @@
 			// To set the sprite on the middle bottom of the tile
 			coordX = x + Math.ceil(_tileWidth - width) / 2,
 			coordY = y + Math.ceil(_tileHeight - height),
-			spriteStartY = direction ? _directionsSetup[direction].spriteRow * _tileHeight : 0;
+			spriteStartX = moveFrame ? parseInt(moveFrame) * width : 0,
+			spriteStartY = direction ? _directionsSetup[direction].spriteRow * height : 0;
 
 		_ctx.drawImage(
 			img,
 			// Start in the sprite board
-			0, spriteStartY,
+			spriteStartX, spriteStartY,
 			// Dimensions in the sprite board
 			width, height,
 			// Position in the canvas
@@ -157,7 +158,9 @@
 			y = _player.y;
 		}
 
-		var coords = _draw(x, y, 'player', _player.direction);
+		var coords = _draw(
+			x, y, 'player', _player.direction, _player.moveFrame
+		);
 	}
 
 	function _drawRock (x, y) {
@@ -184,7 +187,7 @@
 			y = death.y;
 		}
 
-		var coords = _draw(x, y, 'death', death.direction);
+		var coords = _draw(x, y, 'death', death.direction, death.moveFrame);
 	}
 
 	function _drawLevel (levelIndex) {
