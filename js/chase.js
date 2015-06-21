@@ -138,7 +138,9 @@
 	}
 
 	function _createDeath (x, y) {
-		_deaths.push(new deathClass(x, y));
+		_deaths.push(
+			new deathClass(x, y, _directions[parseInt(Math.random() * 100) % 4])
+		);
 	}
 
 	function _drawPlayer () {
