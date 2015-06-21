@@ -15,7 +15,9 @@
 			'player': ['resources/player.png'],
 			'death': ['resources/death.png']
 		},
-		_nbResources = 4;
+		_nbResources = 4,
+		_tileWidth = 48,
+		_tileHeight = 48;
 
 	movableClass = function (x, y) {
 		this.x = x;
@@ -56,9 +58,9 @@
 
 		this.willCollide = function (direction) {
 			if (direction == 'right'
-					&& this.x / 48 == _levels[_currentLevel].map[0].length - 1
+					&& this.x / _tileWidth == _levels[_currentLevel].map[0].length - 1
 				|| direction == 'down'
-					&& this.y /  48 == _levels[_currentLevel].map.length - 1
+					&& this.y /  _tileHeight == _levels[_currentLevel].map.length - 1
 				|| direction == 'left'
 					&& this.x == 0
 				|| direction == 'up'
@@ -68,13 +70,13 @@
 			}
 			else if (
 				direction == 'right'
-					&& _levels[_currentLevel].map[this.y / 48][this.x / 48 + 1] != ''
+					&& _levels[_currentLevel].map[this.y / _tileHeight][this.x / _tileWidth + 1] != ''
 				|| direction == 'down'
-					&& _levels[_currentLevel].map[this.y / 48 + 1][this.x / 48] != ''
+					&& _levels[_currentLevel].map[this.y / _tileHeight + 1][this.x / _tileWidth] != ''
 				|| direction == 'left'
-					&& _levels[_currentLevel].map[this.y / 48][this.x / 48 - 1] != ''
+					&& _levels[_currentLevel].map[this.y / _tileHeight][this.x / _tileWidth - 1] != ''
 				|| direction == 'up'
-					&& _levels[_currentLevel].map[this.y / 48 - 1][this.x / 48] != ''
+					&& _levels[_currentLevel].map[this.y / _tileHeight - 1][this.x / _tileWidth] != ''
 			) {
 				return true;
 			}
@@ -103,12 +105,12 @@
 	function _draw (x, y, resource) {
 		var img = _resources[resource][1];
 		// the animations have 4 frames
-		// the grid has cells of 48x48px
+		// the grid has cells of _tileWidth * _tileHeight px
 		// there are 4 directions, so 4 rows in the sprite
-		var width = img.width <= 48 ? img.width : img.width / 4,
-			height = img.height <= 48 ? img.height : img.height / 4,
-			coordX = x + Math.ceil(48 - width) / 2,
-			coordY = y + Math.ceil(48 - height) / 2;
+		var width = img.width <= _tileWidth ? img.width : img.width / 4,
+			height = img.height <= _tileHeight ? img.height : img.height / 4,
+			coordX = x + Math.ceil(_tileWidth - width) / 2,
+			coordY = y + Math.ceil(_tileHeight - height) / 2;
 
 		_ctx.drawImage(
 			img,
@@ -135,8 +137,8 @@
 		var x, y;
 		if (_player.x == null && _player.y == null) {
 			// generate coordinates
-			x = 48 * _levels[_currentLevel].player[0];
-			y = 48 * _levels[_currentLevel].player[1];
+			x = _tileWidth * _levels[_currentLevel].player[0];
+			y = _tileHeight * _levels[_currentLevel].player[1];
 		}
 		else {
 			x = _player.x;
@@ -151,7 +153,7 @@
 	}
 
 	function _drawTree (x, y) {
-		_draw(48 * x, 48 * y, 'tree');
+		_draw(_tileWidth * x, _tileHeight * y, 'tree');
 	}
 
 	function _drawHome (x, y) {
@@ -162,8 +164,8 @@
 		var x, y;
 		if (death.x == null && death.y == null) {
 			// generate coordinates
-			x = 48 * _levels[_currentLevel].deaths[index][0];
-			y = 48 * _levels[_currentLevel].deaths[index][1];
+			x = _tileWidth * _levels[_currentLevel].deaths[index][0];
+			y = _tileHeight * _levels[_currentLevel].deaths[index][1];
 		}
 		else {
 			x = death.x;
@@ -200,14 +202,14 @@
 		var d;
 
 		_createPlayer(
-			48 * _levels[levelIndex].player[0],
-			48 * _levels[levelIndex].player[1]
+			_tileWidth * _levels[levelIndex].player[0],
+			_tileHeight * _levels[levelIndex].player[1]
 		);
 
 		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
 			_createDeath(
-				48 * _levels[levelIndex].deaths[d][0],
-				48 * _levels[levelIndex].deaths[d][1]
+				_tileWidth * _levels[levelIndex].deaths[d][0],
+				_tileHeight * _levels[levelIndex].deaths[d][1]
 			);
 		}
 	}
@@ -301,8 +303,8 @@
 			_player.y += _player.speedY;
 			_worldChanged = true;
 
-			if (_player.speedX && _player.x % 48 == 0
-				|| _player.speedY && _player.y % 48 == 0
+			if (_player.speedX && _player.x % _tileWidth == 0
+				|| _player.speedY && _player.y % _tileHeight == 0
 			) {
 				_player.stopMotion();
 			}
