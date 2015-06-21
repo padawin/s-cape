@@ -237,13 +237,29 @@
 	}
 
 	function _startMainLoop () {
-		var fps = 60,
-			game;
 
-		game = setInterval(function () {
-			_updateState();
-			_updateScene();
-		}, 1000 / fps);
+		var fps = 60,
+			now,
+			then = Date.now(),
+			interval = 1000 / fps,
+			delta;
+
+		// found at http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/
+		function draw() {
+			requestAnimationFrame(draw);
+
+			now = Date.now();
+			delta = now - then;
+
+			if (delta > interval) {
+				then = now - (delta % interval);
+
+				_updateState();
+				_updateScene();
+			}
+		}
+
+		draw();
 	}
 
 	/**
