@@ -236,7 +236,14 @@
 	}
 
 	function _loadResources (loadedCallback) {
-		var r, loaded = 0;
+		var r, loaded = 0, loadingWidth = 0.70 * _canvas.width;
+
+		// rect starts from 15% from the border of the canvas
+		_ctx.rect(
+			0.15 * _canvas.width, _canvas.height / 2 - 10,
+			loadingWidth, 20
+		);
+		_ctx.stroke();
 
 		for (r in _resources) {
 			if (_resources.hasOwnProperty(r)) {
@@ -245,6 +252,12 @@
 				_resources[r][1].onload = function () {
 					if (++loaded == _nbResources) {
 						loadedCallback();
+					}
+					else {
+						_ctx.fillRect(
+							0.15 * _canvas.width, _canvas.height / 2 - 10,
+							loadingWidth * loaded / _nbResources, 20
+						);
 					}
 				};
 			}
