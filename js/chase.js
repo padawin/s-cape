@@ -1,12 +1,13 @@
 (function () {
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
-		_directions = {
-			'up': {x: 0, y: -2},
-			'right': {x: 2, y: 0},
-			'down': {x: 0, y: 2},
-			'left': {x: -2, y: 0}
+		_directionsSetup = {
+			'down': {x: 0, y: 2, spriteRow: 0},
+			'left': {x: -2, y: 0, spriteRow: 1},
+			'right': {x: 2, y: 0, spriteRow: 2},
+			'up': {x: 0, y: -2, spriteRow: 3}
 		},
+		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
 		_levels,
 		_resources = {
@@ -19,13 +20,18 @@
 		_tileWidth = 48,
 		_tileHeight = 48;
 
-	movableClass = function (x, y) {
+	_directionsSetup[_directions[0]] = {x: 0, y: 2, spriteRow: 0};
+	_directionsSetup[_directions[1]] = {x: -2, y: 0, spriteRow: 1};
+	_directionsSetup[_directions[2]] = {x: 2, y: 0, spriteRow: 2};
+	_directionsSetup[_directions[3]] = {x: 0, y: -2, spriteRow: 3};
+
+	movableClass = function (x, y, direction) {
 		this.x = x;
 		this.y = y;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
-		this.direction = 'down';
+		this.direction = direction || 'down';
 
 		this.isMoving = function () {
 			return this.moving;
@@ -36,7 +42,7 @@
 				return;
 			}
 
-			if (!_directions[direction]) {
+			if (!_directionsSetup[direction]) {
 				throw 'Unknown direction: ' + direction;
 			}
 
@@ -46,8 +52,8 @@
 
 			this.direction = direction;
 			this.moving = true;
-			this.speedX = _directions[direction].x;
-			this.speedY = _directions[direction].y;
+			this.speedX = _directionsSetup[direction].x;
+			this.speedY = _directionsSetup[direction].y;
 		};
 
 		this.stopMotion = function () {
@@ -86,12 +92,12 @@
 		}
 	};
 
-	playerClass = function (x, y) {
-		movableClass.call(this, x, y);
+	playerClass = function (x, y, direction) {
+		movableClass.call(this, x, y, direction);
 	};
 
-	deathClass = function (x, y) {
-		movableClass.call(this, x, y);
+	deathClass = function (x, y, direction) {
+		movableClass.call(this, x, y, direction);
 	};
 
 	function _drawBackground () {
@@ -102,7 +108,7 @@
 		_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
 	}
 
-	function _draw (x, y, resource) {
+	function _draw (x, y, resource, direction) {
 		var img = _resources[resource][1];
 		// the animations have 4 frames
 		// the grid has cells of _tileWidth * _tileHeight px
@@ -111,12 +117,13 @@
 			height = img.height <= _tileHeight ? img.height : img.height / 4,
 			// To set the sprite on the middle bottom of the tile
 			coordX = x + Math.ceil(_tileWidth - width) / 2,
-			coordY = y + Math.ceil(_tileHeight - height);
+			coordY = y + Math.ceil(_tileHeight - height),
+			spriteStartY = direction ? _directionsSetup[direction].spriteRow * _tileHeight : 0;
 
 		_ctx.drawImage(
 			img,
 			// Start in the sprite board
-			0, 0,
+			0, spriteStartY,
 			// Dimensions in the sprite board
 			width, height,
 			// Position in the canvas
@@ -131,7 +138,9 @@
 	}
 
 	function _createDeath (x, y) {
-		_deaths.push(new deathClass(x, y));
+		_deaths.push(
+			new deathClass(x, y, _directions[parseInt(Math.random() * 100) % 4])
+		);
 	}
 
 	function _drawPlayer () {
@@ -146,7 +155,7 @@
 			y = _player.y;
 		}
 
-		var coords = _draw(x, y, 'player');
+		var coords = _draw(x, y, 'player', _player.direction);
 	}
 
 	function _drawRock (x, y) {
@@ -173,7 +182,7 @@
 			y = death.y;
 		}
 
-		var coords = _draw(x, y, 'death');
+		var coords = _draw(x, y, 'death', death.direction);
 	}
 
 	function _drawLevel (levelIndex) {
