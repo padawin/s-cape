@@ -314,6 +314,7 @@
 			_player.x += _player.speedX;
 			_player.y += _player.speedY;
 			_worldChanged = true;
+			_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
 			if (_player.speedX && _player.x % _tileWidth == 0
 				|| _player.speedY && _player.y % _tileHeight == 0
@@ -327,6 +328,7 @@
 				_deaths[d].x += _deaths[d].speedX;
 				_deaths[d].y += _deaths[d].speedY;
 				_worldChanged = true;
+				_deaths[d].moveFrame = (_deaths[d].moveFrame + 0.25) % 4;
 			}
 		}
 	}
