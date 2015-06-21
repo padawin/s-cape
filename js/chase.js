@@ -109,8 +109,9 @@
 		// there are 4 directions, so 4 rows in the sprite
 		var width = img.width <= _tileWidth ? img.width : img.width / 4,
 			height = img.height <= _tileHeight ? img.height : img.height / 4,
+			// To set the sprite on the middle bottom of the tile
 			coordX = x + Math.ceil(_tileWidth - width) / 2,
-			coordY = y + Math.ceil(_tileHeight - height) / 2;
+			coordY = y + Math.ceil(_tileHeight - height);
 
 		_ctx.drawImage(
 			img,
