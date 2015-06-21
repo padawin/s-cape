@@ -1,12 +1,13 @@
 (function () {
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
-		_directions = {
+		_directionsSetup = {
 			'down': {x: 0, y: 2, spriteRow: 0},
 			'left': {x: -2, y: 0, spriteRow: 1},
 			'right': {x: 2, y: 0, spriteRow: 2},
 			'up': {x: 0, y: -2, spriteRow: 3}
 		},
+		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
 		_levels,
 		_resources = {
@@ -18,6 +19,11 @@
 		_nbResources = 4,
 		_tileWidth = 48,
 		_tileHeight = 48;
+
+	_directionsSetup[_directions[0]] = {x: 0, y: 2, spriteRow: 0};
+	_directionsSetup[_directions[1]] = {x: -2, y: 0, spriteRow: 1};
+	_directionsSetup[_directions[2]] = {x: 2, y: 0, spriteRow: 2};
+	_directionsSetup[_directions[3]] = {x: 0, y: -2, spriteRow: 3};
 
 	movableClass = function (x, y, direction) {
 		this.x = x;
@@ -36,7 +42,7 @@
 				return;
 			}
 
-			if (!_directions[direction]) {
+			if (!_directionsSetup[direction]) {
 				throw 'Unknown direction: ' + direction;
 			}
 
@@ -46,8 +52,8 @@
 
 			this.direction = direction;
 			this.moving = true;
-			this.speedX = _directions[direction].x;
-			this.speedY = _directions[direction].y;
+			this.speedX = _directionsSetup[direction].x;
+			this.speedY = _directionsSetup[direction].y;
 		};
 
 		this.stopMotion = function () {
@@ -112,7 +118,7 @@
 			// To set the sprite on the middle bottom of the tile
 			coordX = x + Math.ceil(_tileWidth - width) / 2,
 			coordY = y + Math.ceil(_tileHeight - height),
-			spriteStartY = direction ? _directions[direction].spriteRow * _tileHeight : 0;
+			spriteStartY = direction ? _directionsSetup[direction].spriteRow * _tileHeight : 0;
 
 		_ctx.drawImage(
 			img,
