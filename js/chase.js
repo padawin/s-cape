@@ -13,6 +13,47 @@
 		}
 	}
 
+	function _draw (x, y, url) {
+		var img = new Image();
+
+		img.src = url;
+		img.onload = function(){
+			// the animations have 4 frames
+			// the grid has cells of 48x48px
+			// there are 4 directions, so 4 rows in the sprite
+			// @TODO handle non animated images
+			_ctx.drawImage(
+				this,
+				// Start in the sprite board
+				0, 0,
+				// Dimensions in the sprite board
+				img.width / 4, img.height / 4,
+				// Position in the canvas
+				48 * x + Math.ceil(48 - img.width / 4) / 2, 48 * y + Math.ceil(48 - img.height / 4) / 2,
+				// Dimensions in the canvas
+				img.width / 4, img.height / 4
+			); // context.fillRect(x, y, width, height);
+		}
+	}
+
+	function _drawPlayer (x, y) {
+		_draw(x, y, 'resources/player.png');
+	}
+
+	function _initLevel (levelIndex) {
+		var row, col;
+
+		for (col = 0; col < chase.levels[levelIndex].length; col++) {
+			for (row = 0; row < chase.levels[levelIndex][col].length; row++) {
+				switch (chase.levels[levelIndex][col][row]) {
+					case 'P':
+						_drawPlayer(row, col);
+						break;
+				}
+			}
+		}
+	}
+
 	chase.start = function (canvas) {
 		_ctx, _currentLevel = 0;
 
@@ -20,6 +61,7 @@
 		_ctx = _canvas.getContext('2d');
 
 		_drawBackground();
+		_initLevel(_currentLevel);
 	};
 
 	/**
