@@ -1,6 +1,7 @@
 (function () {
 	var _ctx, _canvas, chase = {},
-		_player, movableClass, playerClass, _deaths = [], deathClass;
+		_player, movableClass, playerClass, _deaths = [], deathClass,
+		_worldChanged = true;
 
 	movableClass = function (x, y) {
 		this.x = x;
@@ -145,8 +146,13 @@
 	}
 
 	function _updateScene (init) {
+		if (!_worldChanged) {
+			return;
+		}
+
 		_drawBackground();
 		_drawLevel(_currentLevel, init);
+		_worldChanged = false;
 	}
 
 	chase.start = function (canvas) {
