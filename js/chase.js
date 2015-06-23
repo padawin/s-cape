@@ -1,15 +1,19 @@
 (function () {
 	var _ctx, _canvas, chase = {},
-		_player, playerClass, _deaths = [], deathClass;
+		_player, movableClass, playerClass, _deaths = [], deathClass;
 
-	playerClass = function (x, y) {
+	movableClass = function (x, y) {
 		this.x = x;
 		this.y = y;
 	};
 
+	playerClass = function (x, y) {
+		movableClass.call(this, x, y);
+		console.log(this);
+	};
+
 	deathClass = function (x, y) {
-		this.x = x;
-		this.y = y;
+		movableClass.call(this, x, y);
 	};
 
 	function _drawBackground () {
