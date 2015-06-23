@@ -56,13 +56,11 @@
 
 	function _createPlayer (x, y) {
 		_player = new playerClass(x, y);
-		_drawPlayer(x, y);
 	}
 
 	function _createDeath (x, y) {
 		var death = new deathClass(x, y);
 		_deaths.push(death);
-		_drawDeath(x, y);
 	}
 
 	function _drawPlayer (x, y) {
@@ -93,12 +91,14 @@
 				switch (chase.levels[levelIndex][col][row]) {
 					case 'P':
 						_createPlayer(row, col);
+						_drawPlayer(row, col);
 						break;
 					case 'T':
 						_drawTree(row, col);
 						break;
 					case 'D':
 						_createDeath(row, col);
+						_drawDeath(row, col);
 						break;
 				}
 			}
