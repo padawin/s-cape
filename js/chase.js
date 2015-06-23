@@ -134,12 +134,13 @@
 		var fps = 60,
 			game;
 
+		_updateScene(true);
 		game = setInterval(function () {
-			_updateScene();
+			_updateScene(false);
 		}, 1000 / fps);
 	}
 
-	function _updateScene () {
+	function _updateScene (init) {
 
 	}
 
