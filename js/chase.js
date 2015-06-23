@@ -1,26 +1,25 @@
 (function () {
-	var chase = {};
+	var _ctx, _canvas, chase = {};
 
-	function _drawBackground(canvas, ctx) {
+	function _drawBackground () {
 		var img = new Image();
 
 		img.src = 'resources/bg-grass.png';
 		img.onload = function(){
 			// create pattern
-			console.log(ctx.width, ctx.height);
-			var pattern = ctx.createPattern(this, 'repeat'); // Create a pattern with this image, and set it to "repeat".
-			ctx.fillStyle = pattern;
-			ctx.fillRect(0, 0, canvas.width, canvas.height); // context.fillRect(x, y, width, height);
+			var pattern = _ctx.createPattern(this, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+			_ctx.fillStyle = pattern;
+			_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
 		}
 	}
 
 	chase.start = function (canvas) {
-		var ctx;
+		_ctx, _currentLevel = 0;
 
-		canvas =  B.$id(canvas);
-		ctx = canvas.getContext('2d');
+		_canvas =  B.$id(canvas);
+		_ctx = _canvas.getContext('2d');
 
-		_drawBackground(canvas, ctx);
+		_drawBackground();
 	};
 
 	window.chase = chase;
