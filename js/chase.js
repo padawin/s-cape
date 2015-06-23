@@ -115,29 +115,42 @@
 		_draw(x, y, 'resources/death.png');
 	}
 
-	function _drawLevel (levelIndex, init) {
-		var row, col;
+	function _drawLevel (levelIndex) {
+		var row, col, d;
 
-		for (col = 0; col < _levels[levelIndex].length; col++) {
-			for (row = 0; row < _levels[levelIndex].length; row++) {
-				switch (_levels[levelIndex][col][row]) {
+		for (col = 0; col < _levels[levelIndex].map.length; col++) {
+			for (row = 0; row < _levels[levelIndex].map[col].length; row++) {
+				switch (_levels[levelIndex].map[col][row]) {
 					case 'P':
-						if (init) {
-							_createPlayer(row, col);
-						}
-						_drawPlayer(row, col);
 						break;
 					case 'T':
 						_drawTree(row, col);
 						break;
-					case 'D':
-						if (init) {
-							_createDeath(row, col);
-						}
-						_drawDeath(row, col);
 						break;
 				}
 			}
+		}
+
+		_drawPlayer();
+
+		for (d = 0; d < _deaths.length; d++) {
+			_drawDeath(_deaths[d], d);
+		}
+	}
+
+	function _initLevel (levelIndex) {
+		var d;
+
+		_createPlayer(
+			_levels[levelIndex].player[0],
+			_levels[levelIndex].player[1]
+		);
+
+		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
+			_createDeath(
+				_levels[levelIndex].deaths[d][0],
+				_levels[levelIndex].deaths[d][1]
+			);
 		}
 	}
 
@@ -174,19 +187,18 @@
 		var fps = 60,
 			game;
 
-		_updateScene(true);
 		game = setInterval(function () {
-			_updateScene(false);
+			_updateScene();
 		}, 1000 / fps);
 	}
 
-	function _updateScene (init) {
+	function _updateScene () {
 		if (!_worldChanged) {
 			return;
 		}
 
 		_drawBackground();
-		_drawLevel(_currentLevel, init);
+		_drawLevel(_currentLevel);
 		_worldChanged = false;
 	}
 
@@ -196,6 +208,7 @@
 		_canvas =  B.$id(canvas);
 		_ctx = _canvas.getContext('2d');
 
+		_initLevel(_currentLevel);
 		_initEvents();
 
 		_startMainLoop();
@@ -209,18 +222,22 @@
 	 * D = Death
 	 */
 	_levels = [
-		[
-			['','','','R','','P','','','',''],
-			['','','','','','','','','',''],
-			['','R','','T','','','','R','',''],
-			['','','','','','','','','',''],
-			['','D','','','','','','T','',''],
-			['','','','','','','','','D',''],
-			['','T','R','','T','','','','',''],
-			['','','','','','','','','R',''],
-			['','','','','','','T','','',''],
-			['','','','','','','','','','H']
-		]
+		{
+			'player': [5, 0],
+			'deaths': [[1, 4], [8, 5]],
+			'map': [
+				['','','','R','','','','','',''],
+				['','','','','','','','','',''],
+				['','R','','T','','','','R','',''],
+				['','','','','','','','','',''],
+				['','','','','','','','T','',''],
+				['','','','','','','','','',''],
+				['','T','R','','T','','','','',''],
+				['','','','','','','','','R',''],
+				['','','','','','','T','','',''],
+				['','','','','','','','','','H']
+			]
+		}
 	];
 
 	window.chase = chase;
