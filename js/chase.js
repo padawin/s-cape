@@ -117,7 +117,7 @@
 					e.preventDefault();
 					break;
 			};
-		}.bind(this));
+		});
 	}
 
 	function _startMainLoop () {
