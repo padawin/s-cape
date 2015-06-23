@@ -120,6 +120,19 @@
 		}.bind(this));
 	}
 
+	function _startMainLoop () {
+		var fps = 60,
+			game;
+
+		game = setInterval(function () {
+			_updateScene();
+		}, 1000 / fps);
+	}
+
+	function _updateScene () {
+
+	}
+
 	chase.start = function (canvas) {
 		_ctx, _currentLevel = 0;
 
@@ -130,6 +143,8 @@
 		_initLevel(_currentLevel);
 
 		_initEvents();
+
+		_startMainLoop();
 	};
 
 	/**
