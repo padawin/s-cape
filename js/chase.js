@@ -197,12 +197,6 @@
 					break;
 			};
 		});
-
-		B.addEvent(document, 'keyup', function (e) {
-			if (_player.isMoving()) {
-				_player.stopMotion();
-			}
-		});
 	}
 
 	function _startMainLoop () {
@@ -210,10 +204,41 @@
 			game;
 
 		game = setInterval(function () {
+			_updateState();
 			_updateScene();
 		}, 1000 / fps);
 	}
 
+	/**
+	 * Update the position of the movable entities
+	 */
+	function _updateState () {
+		var d;
+
+		if (_player.isMoving()) {
+			_player.x += _player.speedX;
+			_player.y += _player.speedY;
+			_worldChanged = true;
+
+			if (_player.speedX && _player.x % 48 == 0
+				|| _player.speedY && _player.y % 48 == 0
+			) {
+				_player.stopMotion();
+			}
+		}
+
+		for (d = 0; d < _deaths.length; d++) {
+			if (_deaths[d].isMoving()) {
+				_deaths[d].x += _deaths[d].speedX;
+				_deaths[d].y += _deaths[d].speedY;
+				_worldChanged = true;
+			}
+		}
+	}
+
+	/**
+	 * Redraw the scene if any entity moved
+	 */
 	function _updateScene () {
 		if (!_worldChanged) {
 			return;
