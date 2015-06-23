@@ -43,6 +43,10 @@
 		_draw(x, y, 'resources/player.png');
 	}
 
+	function _drawTree (x, y) {
+		_draw(x, y, 'resources/tree.png');
+	}
+
 	function _drawDeath (x, y) {
 		_draw(x, y, 'resources/death.png');
 	}
@@ -55,6 +59,9 @@
 				switch (chase.levels[levelIndex][col][row]) {
 					case 'P':
 						_drawPlayer(row, col);
+						break;
+					case 'T':
+						_drawTree(row, col);
 						break;
 					case 'D':
 						_drawDeath(row, col);
