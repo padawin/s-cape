@@ -59,6 +59,18 @@
 			) {
 				return true;
 			}
+			else if (
+				direction == 'right'
+					&& _levels[_currentLevel].map[this.y / 48][this.x / 48 + 1] != ''
+				|| direction == 'down'
+					&& _levels[_currentLevel].map[this.y / 48 + 1][this.x / 48] != ''
+				|| direction == 'left'
+					&& _levels[_currentLevel].map[this.y / 48][this.x / 48 - 1] != ''
+				|| direction == 'up'
+					&& _levels[_currentLevel].map[this.y / 48 - 1][this.x / 48] != ''
+			) {
+				return true;
+			}
 			else {
 				return false;
 			}
