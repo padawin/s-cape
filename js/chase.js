@@ -60,7 +60,7 @@
 	}
 
 	function _createDeath (x, y) {
-		var death = new playerClass(x, y);
+		var death = new deathClass(x, y);
 		_deaths.push(death);
 		_drawDeath(x, y);
 	}
