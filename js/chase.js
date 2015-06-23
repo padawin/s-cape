@@ -23,6 +23,10 @@
 		};
 
 		this.startMotion = function (direction) {
+			if (this.isMoving()) {
+				return;
+			}
+
 			if (!_directions[direction]) {
 				throw 'Unknown direction: ' + direction;
 			}
