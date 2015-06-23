@@ -83,21 +83,25 @@
 		_draw(x, y, 'resources/death.png');
 	}
 
-	function _initLevel (levelIndex) {
+	function _drawLevel (levelIndex, init) {
 		var row, col;
 
 		for (col = 0; col < chase.levels[levelIndex].length; col++) {
 			for (row = 0; row < chase.levels[levelIndex][col].length; row++) {
 				switch (chase.levels[levelIndex][col][row]) {
 					case 'P':
-						_createPlayer(row, col);
+						if (init) {
+							_createPlayer(row, col);
+						}
 						_drawPlayer(row, col);
 						break;
 					case 'T':
 						_drawTree(row, col);
 						break;
 					case 'D':
-						_createDeath(row, col);
+						if (init) {
+							_createDeath(row, col);
+						}
 						_drawDeath(row, col);
 						break;
 				}
@@ -141,7 +145,8 @@
 	}
 
 	function _updateScene (init) {
-
+		_drawBackground();
+		_drawLevel(_currentLevel, init);
 	}
 
 	chase.start = function (canvas) {
@@ -149,9 +154,6 @@
 
 		_canvas =  B.$id(canvas);
 		_ctx = _canvas.getContext('2d');
-
-		_drawBackground();
-		_initLevel(_currentLevel);
 
 		_initEvents();
 
