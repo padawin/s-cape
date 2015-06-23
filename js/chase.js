@@ -7,7 +7,8 @@
 			'down': {x: 0, y: 2},
 			'left': {x: -2, y: 0}
 		},
-		_worldChanged = true;
+		_worldChanged = true,
+		_levels;
 
 	movableClass = function (x, y) {
 		this.x = x;
@@ -118,9 +119,9 @@
 	function _drawLevel (levelIndex, init) {
 		var row, col;
 
-		for (col = 0; col < chase.levels[levelIndex].length; col++) {
-			for (row = 0; row < chase.levels[levelIndex][col].length; row++) {
-				switch (chase.levels[levelIndex][col][row]) {
+		for (col = 0; col < _levels[levelIndex].length; col++) {
+			for (row = 0; row < _levels[levelIndex].length; row++) {
+				switch (_levels[levelIndex][col][row]) {
 					case 'P':
 						if (init) {
 							_createPlayer(row, col);
@@ -208,7 +209,7 @@
 	 * H = Home
 	 * D = Death
 	 */
-	chase.levels = [
+	_levels = [
 		[
 			['','','','R','','P','','','',''],
 			['','','','','','','','','',''],
@@ -221,7 +222,6 @@
 			['','','','','','','T','','',''],
 			['','','','','','','','','','H']
 		]
-
 	];
 
 	window.chase = chase;
