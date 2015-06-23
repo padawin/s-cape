@@ -70,8 +70,8 @@
 			// there are 4 directions, so 4 rows in the sprite
 			var width = img.width <= 48 ? img.width : img.width / 4,
 				height = img.height <= 48 ? img.height : img.height / 4,
-				coordX = 48 * x + Math.ceil(48 - width) / 2,
-				coordY = 48 * y + Math.ceil(48 - height) / 2;
+				coordX = x + Math.ceil(48 - width) / 2,
+				coordY = y + Math.ceil(48 - height) / 2;
 
 			_ctx.drawImage(
 				this,
@@ -95,8 +95,19 @@
 		_deaths.push(new deathClass(x, y));
 	}
 
-	function _drawPlayer (x, y) {
-		_draw(x, y, 'resources/player.png');
+	function _drawPlayer () {
+		var x, y;
+		if (_player.x == null && _player.y == null) {
+			// generate coordinates
+			x = 48 * _levels[_currentLevel].player[0];
+			y = 48 * _levels[_currentLevel].player[1];
+		}
+		else {
+			x = _player.x;
+			y = _player.y;
+		}
+
+		var coords = _draw(x, y, 'resources/player.png');
 	}
 
 	function _drawRock (x, y) {
@@ -104,15 +115,26 @@
 	}
 
 	function _drawTree (x, y) {
-		_draw(x, y, 'resources/tree.png');
+		_draw(48 * x, 48 * y, 'resources/tree.png');
 	}
 
 	function _drawHome (x, y) {
 
 	}
 
-	function _drawDeath (x, y) {
-		_draw(x, y, 'resources/death.png');
+	function _drawDeath (death, index) {
+		var x, y;
+		if (death.x == null && death.y == null) {
+			// generate coordinates
+			x = 48 * _levels[_currentLevel].deaths[index][0];
+			y = 48 * _levels[_currentLevel].deaths[index][1];
+		}
+		else {
+			x = death.x;
+			y = death.y;
+		}
+
+		var coords = _draw(x, y, 'resources/death.png');
 	}
 
 	function _drawLevel (levelIndex) {
@@ -142,14 +164,14 @@
 		var d;
 
 		_createPlayer(
-			_levels[levelIndex].player[0],
-			_levels[levelIndex].player[1]
+			48 * _levels[levelIndex].player[0],
+			48 * _levels[levelIndex].player[1]
 		);
 
 		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
 			_createDeath(
-				_levels[levelIndex].deaths[d][0],
-				_levels[levelIndex].deaths[d][1]
+				48 * _levels[levelIndex].deaths[d][0],
+				48 * _levels[levelIndex].deaths[d][1]
 			);
 		}
 	}
