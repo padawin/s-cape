@@ -68,7 +68,6 @@
 			// the animations have 4 frames
 			// the grid has cells of 48x48px
 			// there are 4 directions, so 4 rows in the sprite
-			// @TODO handle non animated images
 			var width = img.width <= 48 ? img.width : img.width / 4,
 				height = img.height <= 48 ? img.height : img.height / 4;
 
