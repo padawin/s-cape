@@ -1,5 +1,16 @@
 (function () {
-	var _ctx, _canvas, chase = {};
+	var _ctx, _canvas, chase = {},
+		_player, playerClass, _deaths = [], deathClass;
+		
+	playerClass = function (x, y) {
+		this.x = x;
+		this.y = y;
+	};
+		
+	deathClass = function (x, y) {
+		this.x = x;
+		this.y = y;
+	};
 
 	function _drawBackground () {
 		var img = new Image();
@@ -39,12 +50,31 @@
 		}
 	}
 
+	function _createPlayer (x, y) {
+		_player = new playerClass(x, y);
+		_drawPlayer(x, y);
+	}
+
+	function _createDeath (x, y) {
+		var death = new playerClass(x, y);
+		_deaths.push(death);
+		_drawDeath(x, y);
+	}
+
 	function _drawPlayer (x, y) {
 		_draw(x, y, 'resources/player.png');
 	}
 
+	function _drawRock (x, y) {
+
+	}
+
 	function _drawTree (x, y) {
 		_draw(x, y, 'resources/tree.png');
+	}
+
+	function _drawHome (x, y) {
+
 	}
 
 	function _drawDeath (x, y) {
@@ -58,13 +88,13 @@
 			for (row = 0; row < chase.levels[levelIndex][col].length; row++) {
 				switch (chase.levels[levelIndex][col][row]) {
 					case 'P':
-						_drawPlayer(row, col);
+						_createPlayer(row, col);
 						break;
 					case 'T':
 						_drawTree(row, col);
 						break;
 					case 'D':
-						_drawDeath(row, col);
+						_createDeath(row, col);
 						break;
 				}
 			}
