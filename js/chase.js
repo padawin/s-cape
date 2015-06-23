@@ -31,15 +31,7 @@
 				throw 'Unknown direction: ' + direction;
 			}
 
-			if (direction == 'right'
-					&& this.x / 48 == _levels[_currentLevel].map[0].length - 1
-				|| direction == 'down'
-					&& this.y /  48 == _levels[_currentLevel].map.length - 1
-				|| direction == 'left'
-					&& this.x == 0
-				|| direction == 'up'
-					&& this.y == 0
-			) {
+			if (this.willCollide(direction)) {
 				return;
 			}
 
@@ -54,6 +46,23 @@
 			this.speedX = 0;
 			this.speedY = 0;
 		};
+
+		this.willCollide = function (direction) {
+			if (direction == 'right'
+					&& this.x / 48 == _levels[_currentLevel].map[0].length - 1
+				|| direction == 'down'
+					&& this.y /  48 == _levels[_currentLevel].map.length - 1
+				|| direction == 'left'
+					&& this.x == 0
+				|| direction == 'up'
+					&& this.y == 0
+			) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	};
 
 	playerClass = function (x, y) {
