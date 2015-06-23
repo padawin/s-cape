@@ -29,8 +29,8 @@
 
 			this.direction = direction;
 			this.moving = true;
-			this.speedX = 1;
-			this.speedY = 1;
+			this.speedX = _directions[direction].x;
+			this.speedY = _directions[direction].y;
 		};
 
 		this.stopMotion = function () {
