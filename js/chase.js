@@ -69,7 +69,9 @@
 			// the grid has cells of 48x48px
 			// there are 4 directions, so 4 rows in the sprite
 			var width = img.width <= 48 ? img.width : img.width / 4,
-				height = img.height <= 48 ? img.height : img.height / 4;
+				height = img.height <= 48 ? img.height : img.height / 4,
+				coordX = 48 * x + Math.ceil(48 - width) / 2,
+				coordY = 48 * y + Math.ceil(48 - height) / 2;
 
 			_ctx.drawImage(
 				this,
@@ -78,7 +80,7 @@
 				// Dimensions in the sprite board
 				width, height,
 				// Position in the canvas
-				48 * x + Math.ceil(48 - width) / 2, 48 * y + Math.ceil(48 - height) / 2,
+				coordX, coordY,
 				// Dimensions in the canvas
 				width, height
 			); // context.fillRect(x, y, width, height);
