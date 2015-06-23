@@ -2,12 +2,13 @@
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
 		_directions = {
-			'up': {},
-			'right': {},
-			'down': {},
-			'left': {}
+			'up': {x: 0, y: -2},
+			'right': {x: 2, y: 0},
+			'down': {x: 0, y: 2},
+			'left': {x: -2, y: 0}
 		},
-		_worldChanged = true;
+		_worldChanged = true,
+		_levels;
 
 	movableClass = function (x, y) {
 		this.x = x;
@@ -22,14 +23,22 @@
 		};
 
 		this.startMotion = function (direction) {
+			if (this.isMoving()) {
+				return;
+			}
+
 			if (!_directions[direction]) {
 				throw 'Unknown direction: ' + direction;
 			}
 
+			if (this.willCollide(direction)) {
+				return;
+			}
+
 			this.direction = direction;
 			this.moving = true;
-			this.speedX = 1;
-			this.speedY = 1;
+			this.speedX = _directions[direction].x;
+			this.speedY = _directions[direction].y;
 		};
 
 		this.stopMotion = function () {
@@ -37,11 +46,39 @@
 			this.speedX = 0;
 			this.speedY = 0;
 		};
+
+		this.willCollide = function (direction) {
+			if (direction == 'right'
+					&& this.x / 48 == _levels[_currentLevel].map[0].length - 1
+				|| direction == 'down'
+					&& this.y /  48 == _levels[_currentLevel].map.length - 1
+				|| direction == 'left'
+					&& this.x == 0
+				|| direction == 'up'
+					&& this.y == 0
+			) {
+				return true;
+			}
+			else if (
+				direction == 'right'
+					&& _levels[_currentLevel].map[this.y / 48][this.x / 48 + 1] != ''
+				|| direction == 'down'
+					&& _levels[_currentLevel].map[this.y / 48 + 1][this.x / 48] != ''
+				|| direction == 'left'
+					&& _levels[_currentLevel].map[this.y / 48][this.x / 48 - 1] != ''
+				|| direction == 'up'
+					&& _levels[_currentLevel].map[this.y / 48 - 1][this.x / 48] != ''
+			) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	};
 
 	playerClass = function (x, y) {
 		movableClass.call(this, x, y);
-		console.log(this);
 	};
 
 	deathClass = function (x, y) {
@@ -68,9 +105,10 @@
 			// the animations have 4 frames
 			// the grid has cells of 48x48px
 			// there are 4 directions, so 4 rows in the sprite
-			// @TODO handle non animated images
 			var width = img.width <= 48 ? img.width : img.width / 4,
-				height = img.height <= 48 ? img.height : img.height / 4;
+				height = img.height <= 48 ? img.height : img.height / 4,
+				coordX = x + Math.ceil(48 - width) / 2,
+				coordY = y + Math.ceil(48 - height) / 2;
 
 			_ctx.drawImage(
 				this,
@@ -79,7 +117,7 @@
 				// Dimensions in the sprite board
 				width, height,
 				// Position in the canvas
-				48 * x + Math.ceil(48 - width) / 2, 48 * y + Math.ceil(48 - height) / 2,
+				coordX, coordY,
 				// Dimensions in the canvas
 				width, height
 			); // context.fillRect(x, y, width, height);
@@ -91,12 +129,22 @@
 	}
 
 	function _createDeath (x, y) {
-		var death = new deathClass(x, y);
-		_deaths.push(death);
+		_deaths.push(new deathClass(x, y));
 	}
 
-	function _drawPlayer (x, y) {
-		_draw(x, y, 'resources/player.png');
+	function _drawPlayer () {
+		var x, y;
+		if (_player.x == null && _player.y == null) {
+			// generate coordinates
+			x = 48 * _levels[_currentLevel].player[0];
+			y = 48 * _levels[_currentLevel].player[1];
+		}
+		else {
+			x = _player.x;
+			y = _player.y;
+		}
+
+		var coords = _draw(x, y, 'resources/player.png');
 	}
 
 	function _drawRock (x, y) {
@@ -104,40 +152,64 @@
 	}
 
 	function _drawTree (x, y) {
-		_draw(x, y, 'resources/tree.png');
+		_draw(48 * x, 48 * y, 'resources/tree.png');
 	}
 
 	function _drawHome (x, y) {
 
 	}
 
-	function _drawDeath (x, y) {
-		_draw(x, y, 'resources/death.png');
+	function _drawDeath (death, index) {
+		var x, y;
+		if (death.x == null && death.y == null) {
+			// generate coordinates
+			x = 48 * _levels[_currentLevel].deaths[index][0];
+			y = 48 * _levels[_currentLevel].deaths[index][1];
+		}
+		else {
+			x = death.x;
+			y = death.y;
+		}
+
+		var coords = _draw(x, y, 'resources/death.png');
 	}
 
-	function _drawLevel (levelIndex, init) {
-		var row, col;
+	function _drawLevel (levelIndex) {
+		var row, col, d;
 
-		for (col = 0; col < chase.levels[levelIndex].length; col++) {
-			for (row = 0; row < chase.levels[levelIndex][col].length; row++) {
-				switch (chase.levels[levelIndex][col][row]) {
+		for (col = 0; col < _levels[levelIndex].map.length; col++) {
+			for (row = 0; row < _levels[levelIndex].map[col].length; row++) {
+				switch (_levels[levelIndex].map[col][row]) {
 					case 'P':
-						if (init) {
-							_createPlayer(row, col);
-						}
-						_drawPlayer(row, col);
 						break;
 					case 'T':
 						_drawTree(row, col);
 						break;
-					case 'D':
-						if (init) {
-							_createDeath(row, col);
-						}
-						_drawDeath(row, col);
 						break;
 				}
 			}
+		}
+
+		_drawPlayer();
+
+		for (d = 0; d < _deaths.length; d++) {
+			_drawDeath(_deaths[d], d);
+		}
+	}
+
+	function _initLevel (levelIndex) {
+		var d;
+
+		_createPlayer(
+			48 * _levels[levelIndex].player[0],
+			48 * _levels[levelIndex].player[1]
+		);
+
+		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
+			_createDeath(
+				48 * _levels[levelIndex].deaths[d][0],
+				48 * _levels[levelIndex].deaths[d][1]
+			);
 		}
 	}
 
@@ -162,31 +234,55 @@
 					break;
 			};
 		});
-
-		B.addEvent(document, 'keyup', function (e) {
-			if (_player.isMoving()) {
-				_player.stopMotion();
-			}
-		});
 	}
 
 	function _startMainLoop () {
 		var fps = 60,
 			game;
 
-		_updateScene(true);
 		game = setInterval(function () {
-			_updateScene(false);
+			_updateState();
+			_updateScene();
 		}, 1000 / fps);
 	}
 
-	function _updateScene (init) {
+	/**
+	 * Update the position of the movable entities
+	 */
+	function _updateState () {
+		var d;
+
+		if (_player.isMoving()) {
+			_player.x += _player.speedX;
+			_player.y += _player.speedY;
+			_worldChanged = true;
+
+			if (_player.speedX && _player.x % 48 == 0
+				|| _player.speedY && _player.y % 48 == 0
+			) {
+				_player.stopMotion();
+			}
+		}
+
+		for (d = 0; d < _deaths.length; d++) {
+			if (_deaths[d].isMoving()) {
+				_deaths[d].x += _deaths[d].speedX;
+				_deaths[d].y += _deaths[d].speedY;
+				_worldChanged = true;
+			}
+		}
+	}
+
+	/**
+	 * Redraw the scene if any entity moved
+	 */
+	function _updateScene () {
 		if (!_worldChanged) {
 			return;
 		}
 
 		_drawBackground();
-		_drawLevel(_currentLevel, init);
+		_drawLevel(_currentLevel);
 		_worldChanged = false;
 	}
 
@@ -196,6 +292,7 @@
 		_canvas =  B.$id(canvas);
 		_ctx = _canvas.getContext('2d');
 
+		_initLevel(_currentLevel);
 		_initEvents();
 
 		_startMainLoop();
@@ -208,20 +305,23 @@
 	 * H = Home
 	 * D = Death
 	 */
-	chase.levels = [
-		[
-			['','','','R','','P','','','',''],
-			['','','','','','','','','',''],
-			['','R','','T','','','','R','',''],
-			['','','','','','','','','',''],
-			['','D','','','','','','T','',''],
-			['','','','','','','','','D',''],
-			['','T','R','','T','','','','',''],
-			['','','','','','','','','R',''],
-			['','','','','','','T','','',''],
-			['','','','','','','','','','H']
-		]
-
+	_levels = [
+		{
+			'player': [5, 0],
+			'deaths': [[1, 4], [8, 5]],
+			'map': [
+				['','','','R','','','','','',''],
+				['','','','','','','','','',''],
+				['','R','','T','','','','R','',''],
+				['','','','','','','','','',''],
+				['','','','','','','','T','',''],
+				['','','','','','','','','',''],
+				['','T','R','','T','','','','',''],
+				['','','','','','','','','R',''],
+				['','','','','','','T','','',''],
+				['','','','','','','','','','H']
+			]
+		}
 	];
 
 	window.chase = chase;
