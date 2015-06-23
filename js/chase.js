@@ -101,6 +101,25 @@
 		}
 	}
 
+	function _initEvents () {
+		B.addEvent(document, 'keydown', function (e) {
+			switch (e.which) {
+				case 37: // left
+					e.preventDefault();
+					break;
+				case 38: // up
+					e.preventDefault();
+					break;
+				case 39: // right
+					e.preventDefault();
+					break;
+				case 40: // down
+					e.preventDefault();
+					break;
+			};
+		}.bind(this));
+	}
+
 	chase.start = function (canvas) {
 		_ctx, _currentLevel = 0;
 
@@ -109,6 +128,8 @@
 
 		_drawBackground();
 		_initLevel(_currentLevel);
+
+		_initEvents();
 	};
 
 	/**
