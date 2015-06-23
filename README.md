@@ -9,6 +9,7 @@ Move player and enemy cell by cell or animated between cells?
 
 Dark/cave with limited visibility?
 
+
 ## Copyrights
 
 Sprites found on the following websites:
