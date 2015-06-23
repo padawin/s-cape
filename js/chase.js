@@ -42,7 +42,6 @@
 
 	playerClass = function (x, y) {
 		movableClass.call(this, x, y);
-		console.log(this);
 	};
 
 	deathClass = function (x, y) {
