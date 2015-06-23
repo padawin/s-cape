@@ -2,10 +2,10 @@
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
 		_directions = {
-			'up': {},
-			'right': {},
-			'down': {},
-			'left': {}
+			'up': {x: 0, y: -2},
+			'right': {x: 2, y: 0},
+			'down': {x: 0, y: 2},
+			'left': {x: -2, y: 0}
 		},
 		_worldChanged = true;
 
