@@ -1,12 +1,12 @@
 (function () {
 	var _ctx, _canvas, chase = {},
 		_player, playerClass, _deaths = [], deathClass;
-		
+
 	playerClass = function (x, y) {
 		this.x = x;
 		this.y = y;
 	};
-		
+
 	deathClass = function (x, y) {
 		this.x = x;
 		this.y = y;
@@ -35,7 +35,7 @@
 			// @TODO handle non animated images
 			var width = img.width <= 48 && img.width || img.width / 4,
 				height = img.height <= 48 && img.height || img.height / 4;
-				
+
 			_ctx.drawImage(
 				this,
 				// Start in the sprite board
