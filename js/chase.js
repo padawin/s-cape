@@ -1,11 +1,42 @@
 (function () {
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
+		_directions = {
+			'up': {},
+			'right': {},
+			'down': {},
+			'left': {}
+		},
 		_worldChanged = true;
 
 	movableClass = function (x, y) {
 		this.x = x;
 		this.y = y;
+		this.speedX = 0;
+		this.speedY = 0;
+		this.moving = false;
+		this.direction = 'down';
+
+		this.isMoving = function () {
+			return this.moving;
+		};
+
+		this.startMotion = function (direction) {
+			if (!_directions[direction]) {
+				throw 'Unknown direction: ' + direction;
+			}
+
+			this.direction = direction;
+			this.moving = true;
+			this.speedX = 1;
+			this.speedY = 1;
+		};
+
+		this.stopMotion = function () {
+			this.moving = false;
+			this.speedX = 0;
+			this.speedY = 0;
+		};
 	};
 
 	playerClass = function (x, y) {
@@ -114,15 +145,19 @@
 		B.addEvent(document, 'keydown', function (e) {
 			switch (e.which) {
 				case 37: // left
+					_player.startMotion('left');
 					e.preventDefault();
 					break;
 				case 38: // up
+					_player.startMotion('up');
 					e.preventDefault();
 					break;
 				case 39: // right
+					_player.startMotion('right');
 					e.preventDefault();
 					break;
 				case 40: // down
+					_player.startMotion('down');
 					e.preventDefault();
 					break;
 			};
@@ -130,7 +165,7 @@
 		
 		B.addEvent(document, 'keyup', function (e) {
 			if (_player.isMoving()) {
-				_player.setMoving(false);
+				_player.stopMotion();
 			}
 		});
 	}
