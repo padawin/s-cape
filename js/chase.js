@@ -118,6 +118,12 @@
 					break;
 			};
 		});
+		
+		B.addEvent(document, 'keyup', function (e) {
+			if (_player.isMoving()) {
+				_player.setMoving(false);
+			}
+		});
 	}
 
 	function _startMainLoop () {
