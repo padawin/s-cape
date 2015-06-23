@@ -22,16 +22,19 @@
 			// the grid has cells of 48x48px
 			// there are 4 directions, so 4 rows in the sprite
 			// @TODO handle non animated images
+			var width = img.width <= 48 && img.width || img.width / 4,
+				height = img.height <= 48 && img.height || img.height / 4;
+				
 			_ctx.drawImage(
 				this,
 				// Start in the sprite board
 				0, 0,
 				// Dimensions in the sprite board
-				img.width / 4, img.height / 4,
+				width, height,
 				// Position in the canvas
-				48 * x + Math.ceil(48 - img.width / 4) / 2, 48 * y + Math.ceil(48 - img.height / 4) / 2,
+				48 * x + Math.ceil(48 - width) / 2, 48 * y + Math.ceil(48 - height) / 2,
 				// Dimensions in the canvas
-				img.width / 4, img.height / 4
+				width, height
 			); // context.fillRect(x, y, width, height);
 		}
 	}
