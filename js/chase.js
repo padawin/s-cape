@@ -148,19 +148,9 @@
 	}
 
 	function _drawPlayer () {
-		var x, y;
-		if (_player.x == null && _player.y == null) {
-			// generate coordinates
-			x = _tileWidth * _levels[_currentLevel].player[0];
-			y = _tileHeight * _levels[_currentLevel].player[1];
-		}
-		else {
-			x = _player.x;
-			y = _player.y;
-		}
-
-		var coords = _draw(
-			x, y, 'player', _player.direction, _player.moveFrame
+		_draw(
+			_player.x, _player.y,
+			'player', _player.direction, _player.moveFrame
 		);
 	}
 
@@ -177,18 +167,10 @@
 	}
 
 	function _drawDeath (death, index) {
-		var x, y;
-		if (death.x == null && death.y == null) {
-			// generate coordinates
-			x = _tileWidth * _levels[_currentLevel].deaths[index][0];
-			y = _tileHeight * _levels[_currentLevel].deaths[index][1];
-		}
-		else {
-			x = death.x;
-			y = death.y;
-		}
-
-		var coords = _draw(x, y, 'death', death.direction, death.moveFrame);
+		_draw(
+			death.x, death.y, 'death',
+			death.direction, death.moveFrame
+		);
 	}
 
 	function _drawLevel (levelIndex) {
