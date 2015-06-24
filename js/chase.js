@@ -11,10 +11,12 @@
 		_worldChanged = true,
 		_levels,
 		_resources = {
-			'grass': ['resources/bg-grass.png'],
-			'tree': ['resources/tree.png'],
-			'player': ['resources/player.png'],
-			'death': ['resources/death.png']
+			// url, tile dimensions, top left position in grid's cell to be
+			// middle bottom aligned
+			'grass': {'url': 'resources/bg-grass.png', 'w': 40, 'h': 40},
+			'tree': {'url': 'resources/tree.png', 'w': 48, 'h': 48, 'x': 0, 'y': 0},
+			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'x': 8, 'y': 0},
+			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'x': -1, 'y': 0}
 		},
 		_nbResources = 4,
 		_tileWidth = 48,
@@ -103,7 +105,7 @@
 	};
 
 	function _drawBackground () {
-		var img = _resources.grass[1];
+		var img = _resources.grass.resource;
 		// create pattern
 		var pattern = _ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
 		_ctx.fillStyle = pattern;
@@ -111,28 +113,25 @@
 	}
 
 	function _draw (x, y, resource, direction, moveFrame) {
-		var img = _resources[resource][1];
+		var resource = _resources[resource];
 		// the animations have 4 frames
 		// the grid has cells of _tileWidth * _tileHeight px
 		// there are 4 directions, so 4 rows in the sprite
-		var width = img.width <= _tileWidth ? img.width : img.width / 4,
-			height = img.height <= _tileHeight ? img.height : img.height / 4,
-			// To set the sprite on the middle bottom of the tile
-			coordX = x + Math.ceil(_tileWidth - width) / 2,
-			coordY = y + Math.ceil(_tileHeight - height),
-			spriteStartX = moveFrame ? parseInt(moveFrame) * width : 0,
-			spriteStartY = direction ? _directionsSetup[direction].spriteRow * height : 0;
-
+		// To set the sprite on the middle bottom of the tile
+		var coordX = x + resource.x,
+			coordY = y + resource.y,
+			spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
+			spriteStartY = direction ? _directionsSetup[direction].spriteRow * resource.h : 0;
 		_ctx.drawImage(
-			img,
+			resource.resource,
 			// Start in the sprite board
 			spriteStartX, spriteStartY,
 			// Dimensions in the sprite board
-			width, height,
+			resource.w, resource.h,
 			// Position in the canvas
 			coordX, coordY,
 			// Dimensions in the canvas
-			width, height
+			resource.w, resource.h
 		); // context.fillRect(x, y, width, height);
 	}
 
@@ -264,9 +263,9 @@
 
 		for (r in _resources) {
 			if (_resources.hasOwnProperty(r)) {
-				_resources[r].push(new Image());
-				_resources[r][1].src = _resources[r][0];
-				_resources[r][1].onload = function () {
+				_resources[r].resource = new Image();
+				_resources[r].resource.src = _resources[r].url;
+				_resources[r].resource.onload = function () {
 					if (++loaded == _nbResources) {
 						loadedCallback();
 					}
