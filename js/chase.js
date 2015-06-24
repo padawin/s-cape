@@ -14,9 +14,9 @@
 			// url, tile dimensions, top left position in grid's cell to be
 			// middle bottom aligned
 			'grass': {'url': 'resources/bg-grass.png', 'w': 40, 'h': 40},
-			'tree': {'url': 'resources/tree.png', 'w': 48, 'h': 48, 'x': 0, 'y': 0},
-			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'x': 8, 'y': 0},
-			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'x': -1, 'y': 0}
+			'tree': {'url': 'resources/tree.png', 'w': 48, 'h': 48, 'x': 0, 'y': -24},
+			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'x': 8, 'y': -24},
+			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'x': -1, 'y': -24}
 		},
 		_nbResources = 4,
 		_tileWidth = 48,
