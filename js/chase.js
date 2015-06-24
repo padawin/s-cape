@@ -195,18 +195,18 @@
 		}
 	}
 
-	function _initLevel (levelIndex) {
+	function _initLevel () {
 		var d, movableX, movableY;
 
-		movableX = _levels[levelIndex].player[0];
-		movableY = _levels[levelIndex].player[1];
+		movableX = _levels[_currentLevel].player[0];
+		movableY = _levels[_currentLevel].player[1];
 		_createPlayer(movableX, movableY, _tileWidth, _tileHeight);
-		_levels[levelIndex].map[movableY][movableX] = 'P';
+		_levels[_currentLevel].map[movableY][movableX] = 'P';
 
-		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
-			movableX = _levels[levelIndex].deaths[d][0];
-			movableY = _levels[levelIndex].deaths[d][1];
-			_levels[levelIndex].map[movableY][movableX] = 'D';
+		for (d = 0; d < _levels[_currentLevel].deaths.length; d++) {
+			movableX = _levels[_currentLevel].deaths[d][0];
+			movableY = _levels[_currentLevel].deaths[d][1];
+			_levels[_currentLevel].map[movableY][movableX] = 'D';
 			_createDeath(movableX, movableY, _tileWidth, _tileHeight);
 		}
 	}
@@ -341,7 +341,7 @@
 		_canvas = B.$id(canvas);
 		_ctx = _canvas.getContext('2d');
 
-		_initLevel(_currentLevel);
+		_initLevel();
 		_loadResources(function () {
 			_initEvents();
 
