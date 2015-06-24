@@ -11,10 +11,10 @@
 		_worldChanged = true,
 		_levels,
 		_resources = {
-			'grass': ['resources/bg-grass.png'],
-			'tree': ['resources/tree.png'],
-			'player': ['resources/player.png'],
-			'death': ['resources/death.png']
+			'grass': {'url': 'resources/bg-grass.png'},
+			'tree': {'url': 'resources/tree.png'},
+			'player': {'url': 'resources/player.png'},
+			'death': {'url': 'resources/death.png'}
 		},
 		_nbResources = 4,
 		_tileWidth = 48,
@@ -103,7 +103,7 @@
 	};
 
 	function _drawBackground () {
-		var img = _resources.grass[1];
+		var img = _resources.grass.resource;
 		// create pattern
 		var pattern = _ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
 		_ctx.fillStyle = pattern;
@@ -111,7 +111,7 @@
 	}
 
 	function _draw (x, y, resource, direction, moveFrame) {
-		var img = _resources[resource][1];
+		var img = _resources[resource].resource;
 		// the animations have 4 frames
 		// the grid has cells of _tileWidth * _tileHeight px
 		// there are 4 directions, so 4 rows in the sprite
@@ -264,9 +264,9 @@
 
 		for (r in _resources) {
 			if (_resources.hasOwnProperty(r)) {
-				_resources[r].push(new Image());
-				_resources[r][1].src = _resources[r][0];
-				_resources[r][1].onload = function () {
+				_resources[r].resource = new Image();
+				_resources[r].resource.src = _resources[r].url;
+				_resources[r].resource.onload = function () {
 					if (++loaded == _nbResources) {
 						loadedCallback();
 					}
