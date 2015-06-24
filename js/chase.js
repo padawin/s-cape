@@ -192,25 +192,24 @@
 	}
 
 	function _drawLevel (levelIndex) {
-		var row, col, d;
+		var row, col, d = 0;
 
 		for (col = 0; col < _levels[levelIndex].map.length; col++) {
 			for (row = 0; row < _levels[levelIndex].map[col].length; row++) {
 				switch (_levels[levelIndex].map[col][row]) {
 					case 'P':
+						_drawPlayer();
+						break;
 						break;
 					case 'T':
 						_drawTree(row, col);
 						break;
+					case 'D':
+						_drawDeath(_deaths[d], d);
+						++d;
 						break;
 				}
 			}
-		}
-
-		_drawPlayer();
-
-		for (d = 0; d < _deaths.length; d++) {
-			_drawDeath(_deaths[d], d);
 		}
 	}
 
@@ -220,10 +219,12 @@
 		movableX = _levels[levelIndex].player[0];
 		movableY = _levels[levelIndex].player[1];
 		_createPlayer(movableX, movableY, _tileWidth, _tileHeight);
+		_levels[levelIndex].map[movableY][movableX] = 'P';
 
 		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
 			movableX = _levels[levelIndex].deaths[d][0];
 			movableY = _levels[levelIndex].deaths[d][1];
+			_levels[levelIndex].map[movableY][movableX] = 'D';
 			_createDeath(movableX, movableY, _tileWidth, _tileHeight);
 		}
 	}
@@ -321,8 +322,10 @@
 			if (_player.speedX && _player.x % _tileWidth == 0
 				|| _player.speedY && _player.y % _tileHeight == 0
 			) {
+				_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
 				_player.cellX = _player.x / _tileWidth;
 				_player.cellY = _player.y / _tileHeight;
+				_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
 				_player.stopMotion();
 			}
 		}
