@@ -28,8 +28,10 @@
 	_directionsSetup[_directions[3]] = {x: 0, y: -2, spriteRow: 3};
 
 	movableClass = function (x, y, direction) {
-		this.x = x;
-		this.y = y;
+		this.cellX = x;
+		this.cellY = y;
+		this.x = x * _tileWidth;
+		this.y = y * _tileHeight;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
@@ -213,18 +215,16 @@
 	}
 
 	function _initLevel (levelIndex) {
-		var d;
+		var d, movableX, movableY;
 
-		_createPlayer(
-			_tileWidth * _levels[levelIndex].player[0],
-			_tileHeight * _levels[levelIndex].player[1]
-		);
+		movableX = _levels[levelIndex].player[0];
+		movableY = _levels[levelIndex].player[1];
+		_createPlayer(movableX, movableY, _tileWidth, _tileHeight);
 
 		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
-			_createDeath(
-				_tileWidth * _levels[levelIndex].deaths[d][0],
-				_tileHeight * _levels[levelIndex].deaths[d][1]
-			);
+			movableX = _levels[levelIndex].deaths[d][0];
+			movableY = _levels[levelIndex].deaths[d][1];
+			_createDeath(movableX, movableY, _tileWidth, _tileHeight);
 		}
 	}
 
@@ -321,6 +321,8 @@
 			if (_player.speedX && _player.x % _tileWidth == 0
 				|| _player.speedY && _player.y % _tileHeight == 0
 			) {
+				_player.cellX = _player.x / _tileWidth;
+				_player.cellY = _player.y / _tileHeight;
 				_player.stopMotion();
 			}
 		}
