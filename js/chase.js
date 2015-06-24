@@ -209,6 +209,9 @@
 			_levels[_currentLevel].map[movableY][movableX] = 'D';
 			_createDeath(movableX, movableY, _tileWidth, _tileHeight);
 		}
+
+		_canvas.width = _levels[_currentLevel].map[0].length * _tileWidth;
+		_canvas.height = _levels[_currentLevel].map.length * _tileHeight;
 	}
 
 	function _initEvents () {
