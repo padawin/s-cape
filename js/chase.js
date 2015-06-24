@@ -20,7 +20,7 @@
 		},
 		_nbResources = 4,
 		_tileWidth = 48,
-		_tileHeight = 48;
+		_tileHeight = 24;
 
 	_directionsSetup[_directions[0]] = {x: 0, y: 2, spriteRow: 0};
 	_directionsSetup[_directions[1]] = {x: -2, y: 0, spriteRow: 1};
@@ -28,8 +28,10 @@
 	_directionsSetup[_directions[3]] = {x: 0, y: -2, spriteRow: 3};
 
 	movableClass = function (x, y, direction) {
-		this.x = x;
-		this.y = y;
+		this.cellX = x;
+		this.cellY = y;
+		this.x = x * _tileWidth;
+		this.y = y * _tileHeight;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
@@ -190,41 +192,40 @@
 	}
 
 	function _drawLevel (levelIndex) {
-		var row, col, d;
+		var row, col, d = 0;
 
 		for (col = 0; col < _levels[levelIndex].map.length; col++) {
 			for (row = 0; row < _levels[levelIndex].map[col].length; row++) {
 				switch (_levels[levelIndex].map[col][row]) {
 					case 'P':
+						_drawPlayer();
+						break;
 						break;
 					case 'T':
 						_drawTree(row, col);
 						break;
+					case 'D':
+						_drawDeath(_deaths[d], d);
+						++d;
 						break;
 				}
 			}
 		}
-
-		_drawPlayer();
-
-		for (d = 0; d < _deaths.length; d++) {
-			_drawDeath(_deaths[d], d);
-		}
 	}
 
 	function _initLevel (levelIndex) {
-		var d;
+		var d, movableX, movableY;
 
-		_createPlayer(
-			_tileWidth * _levels[levelIndex].player[0],
-			_tileHeight * _levels[levelIndex].player[1]
-		);
+		movableX = _levels[levelIndex].player[0];
+		movableY = _levels[levelIndex].player[1];
+		_createPlayer(movableX, movableY, _tileWidth, _tileHeight);
+		_levels[levelIndex].map[movableY][movableX] = 'P';
 
 		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
-			_createDeath(
-				_tileWidth * _levels[levelIndex].deaths[d][0],
-				_tileHeight * _levels[levelIndex].deaths[d][1]
-			);
+			movableX = _levels[levelIndex].deaths[d][0];
+			movableY = _levels[levelIndex].deaths[d][1];
+			_levels[levelIndex].map[movableY][movableX] = 'D';
+			_createDeath(movableX, movableY, _tileWidth, _tileHeight);
 		}
 	}
 
@@ -321,6 +322,10 @@
 			if (_player.speedX && _player.x % _tileWidth == 0
 				|| _player.speedY && _player.y % _tileHeight == 0
 			) {
+				_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
+				_player.cellX = _player.x / _tileWidth;
+				_player.cellY = _player.y / _tileHeight;
+				_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
 				_player.stopMotion();
 			}
 		}
@@ -372,8 +377,18 @@
 	_levels = [
 		{
 			'player': [5, 0],
-			'deaths': [[1, 4], [8, 5]],
+			'deaths': [[1, 4], [8, 5], [2, 9], [8, 13]],
 			'map': [
+				['','','','','','','','','',''],
+				['','','','','','','','','',''],
+				['','','','T','','','','','',''],
+				['','','','','','','','','',''],
+				['','','','','','','','T','',''],
+				['','','','','','','','','',''],
+				['','T','','','T','','','','',''],
+				['','','','','','','','','',''],
+				['','','','','','','T','','',''],
+				['','','','','','','','','',''],
 				['','','','','','','','','',''],
 				['','','','','','','','','',''],
 				['','','','T','','','','','',''],
