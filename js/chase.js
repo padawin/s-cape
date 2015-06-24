@@ -70,9 +70,9 @@
 
 		this.willCollide = function (direction) {
 			if (direction == 'right'
-					&& this.x / _tileWidth == _levels[_currentLevel].map[0].length - 1
+					&& this.cellX == _levels[_currentLevel].map[0].length - 1
 				|| direction == 'down'
-					&& this.y /  _tileHeight == _levels[_currentLevel].map.length - 1
+					&& this.cellY == _levels[_currentLevel].map.length - 1
 				|| direction == 'left'
 					&& this.x == 0
 				|| direction == 'up'
