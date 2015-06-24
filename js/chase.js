@@ -14,9 +14,9 @@
 			// url, tile dimensions, top left position in grid's cell to be
 			// middle bottom aligned
 			'grass': {'url': 'resources/bg-grass.png', 'w': 40, 'h': 40},
-			'tree': {'url': 'resources/tree.png', 'w': 48, 'h': 48, 'x': 0, 'y': 0},
-			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'x': 8, 'y': 0},
-			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'x': -1, 'y': 0}
+			'tree': {'url': 'resources/tree.png', 'w': 48, 'h': 48, 'x': 0, 'y': -24},
+			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'x': 8, 'y': -24},
+			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'x': -1, 'y': -24}
 		},
 		_nbResources = 4,
 		_tileWidth = 48,
@@ -148,19 +148,9 @@
 	}
 
 	function _drawPlayer () {
-		var x, y;
-		if (_player.x == null && _player.y == null) {
-			// generate coordinates
-			x = _tileWidth * _levels[_currentLevel].player[0];
-			y = _tileHeight * _levels[_currentLevel].player[1];
-		}
-		else {
-			x = _player.x;
-			y = _player.y;
-		}
-
-		var coords = _draw(
-			x, y, 'player', _player.direction, _player.moveFrame
+		_draw(
+			_player.x, _player.y,
+			'player', _player.direction, _player.moveFrame
 		);
 	}
 
@@ -177,18 +167,10 @@
 	}
 
 	function _drawDeath (death, index) {
-		var x, y;
-		if (death.x == null && death.y == null) {
-			// generate coordinates
-			x = _tileWidth * _levels[_currentLevel].deaths[index][0];
-			y = _tileHeight * _levels[_currentLevel].deaths[index][1];
-		}
-		else {
-			x = death.x;
-			y = death.y;
-		}
-
-		var coords = _draw(x, y, 'death', death.direction, death.moveFrame);
+		_draw(
+			death.x, death.y, 'death',
+			death.direction, death.moveFrame
+		);
 	}
 
 	function _drawLevel (levelIndex) {
@@ -213,20 +195,23 @@
 		}
 	}
 
-	function _initLevel (levelIndex) {
+	function _initLevel () {
 		var d, movableX, movableY;
 
-		movableX = _levels[levelIndex].player[0];
-		movableY = _levels[levelIndex].player[1];
+		movableX = _levels[_currentLevel].player[0];
+		movableY = _levels[_currentLevel].player[1];
 		_createPlayer(movableX, movableY, _tileWidth, _tileHeight);
-		_levels[levelIndex].map[movableY][movableX] = 'P';
+		_levels[_currentLevel].map[movableY][movableX] = 'P';
 
-		for (d = 0; d < _levels[levelIndex].deaths.length; d++) {
-			movableX = _levels[levelIndex].deaths[d][0];
-			movableY = _levels[levelIndex].deaths[d][1];
-			_levels[levelIndex].map[movableY][movableX] = 'D';
+		for (d = 0; d < _levels[_currentLevel].deaths.length; d++) {
+			movableX = _levels[_currentLevel].deaths[d][0];
+			movableY = _levels[_currentLevel].deaths[d][1];
+			_levels[_currentLevel].map[movableY][movableX] = 'D';
 			_createDeath(movableX, movableY, _tileWidth, _tileHeight);
 		}
+
+		_canvas.width = _levels[_currentLevel].map[0].length * _tileWidth;
+		_canvas.height = _levels[_currentLevel].map.length * _tileHeight;
 	}
 
 	function _initEvents () {
@@ -359,7 +344,7 @@
 		_canvas = B.$id(canvas);
 		_ctx = _canvas.getContext('2d');
 
-		_initLevel(_currentLevel);
+		_initLevel();
 		_loadResources(function () {
 			_initEvents();
 
