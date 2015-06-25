@@ -30,8 +30,8 @@
 	movableClass = function (cellX, cellY, resource, direction) {
 		this.cellX = cellX;
 		this.cellY = cellY;
-		this.x = cellX * _tileWidth;
-		this.y = cellY * _tileHeight;
+		this.x = cellX * _tileWidth + (_tileWidth - resource.w) / 2;
+		this.y = cellY * _tileHeight + _tileHeight - resource.h;
 		this.w = resource.w;
 		this.h = resource.h;
 		this.speedX = 0;
@@ -123,8 +123,8 @@
 		// the grid has cells of _tileWidth * _tileHeight px
 		// there are 4 directions, so 4 rows in the sprite
 		// To set the sprite on the middle bottom of the tile
-		var coordX = x + resource.x,
-			coordY = y + resource.y,
+		var coordX = x,
+			coordY = y,
 			spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
 			spriteStartY = direction ? _directionsSetup[direction].spriteRow * resource.h : 0;
 		_ctx.drawImage(
@@ -162,7 +162,11 @@
 	}
 
 	function _drawTree (cellX, cellY) {
-		_draw(_tileWidth * cellX, _tileHeight * cellY, 'tree');
+		_draw(
+			cellX * _tileWidth + (_tileWidth - _resources['tree'].w) / 2,
+			cellY * _tileHeight + (_tileHeight - _resources['tree'].h),
+			'tree'
+		);
 	}
 
 	function _drawHome (x, y) {
@@ -311,8 +315,8 @@
 				|| _player.speedY && _player.y % _tileHeight == 0
 			) {
 				_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
-				_player.cellX = _player.x / _tileWidth;
-				_player.cellY = _player.y / _tileHeight;
+				_player.cellX = parseInt((_player.x + _player.w) / _tileWidth);
+				_player.cellY = parseInt((_player.y + _player.h) / _tileHeight);
 				_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
 				_player.stopMotion();
 			}
