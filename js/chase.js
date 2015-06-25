@@ -95,18 +95,6 @@
 			) {
 				return true;
 			}
-			else if (
-				direction == 'right'
-					&& _levels[_currentLevel].map[this.y / _tileHeight][this.x / _tileWidth + 1] != ''
-				|| direction == 'down'
-					&& _levels[_currentLevel].map[this.y / _tileHeight + 1][this.x / _tileWidth] != ''
-				|| direction == 'left'
-					&& _levels[_currentLevel].map[this.y / _tileHeight][this.x / _tileWidth - 1] != ''
-				|| direction == 'up'
-					&& _levels[_currentLevel].map[this.y / _tileHeight - 1][this.x / _tileWidth] != ''
-			) {
-				return true;
-			}
 			else {
 				return false;
 			}
