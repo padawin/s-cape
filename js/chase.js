@@ -15,7 +15,7 @@
 			// middle bottom aligned
 			'grass': {'url': 'resources/bg-grass.png', 'w': 40, 'h': 40},
 			'tree': {'url': 'resources/tree.png', 'w': 48, 'h': 48, 'hitbox': [12, 24, 36, 48]},
-			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'hitbox': [12, 24, 36, 48]},
+			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'hitbox': [8, 24, 24, 48]},
 			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'hitbox': [12, 24, 36, 48]}
 		},
 		_nbResources = 4,
