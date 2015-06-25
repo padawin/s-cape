@@ -173,8 +173,8 @@
 
 	}
 
-	function _drawTree (x, y) {
-		_draw(_tileWidth * x, _tileHeight * y, 'tree');
+	function _drawTree (cellX, cellY) {
+		_draw(_tileWidth * cellX, _tileHeight * cellY, 'tree');
 	}
 
 	function _drawHome (x, y) {
