@@ -53,10 +53,6 @@
 				throw 'Unknown direction: ' + direction;
 			}
 
-			if (this.willCollide(direction)) {
-				return;
-			}
-
 			this.direction = direction;
 			this.moving = true;
 			this.speedX = _directionsSetup[direction].x;
@@ -82,23 +78,6 @@
 
 			return false;
 		};
-
-		this.willCollide = function (direction) {
-			if (direction == 'right'
-					&& this.cellX == _levels[_currentLevel].map[0].length - 1
-				|| direction == 'down'
-					&& this.cellY == _levels[_currentLevel].map.length - 1
-				|| direction == 'left'
-					&& this.x == 0
-				|| direction == 'up'
-					&& this.y == 0
-			) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
 	};
 
 	playerClass = function (x, y, direction) {
@@ -222,6 +201,13 @@
 	}
 
 	function _initEvents () {
+		B.addEvent(document, 'keyup', function (e) {
+			if (_player.isMoving()) {
+				_worldChanged = true;
+				_player.stopMotion();
+			}
+		});
+
 		B.addEvent(document, 'keydown', function (e) {
 			switch (e.which) {
 				case 37: // left
@@ -303,22 +289,25 @@
 	 * Update the position of the movable entities
 	 */
 	function _updateState () {
-		var d;
+		var d, oldX = _player.x, oldY = _player.y;
 
 		if (_player.isMoving()) {
 			_player.x += _player.speedX;
 			_player.y += _player.speedY;
-			_worldChanged = true;
-			_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
-			if (_player.speedX && _player.x % _tileWidth == 0
-				|| _player.speedY && _player.y % _tileHeight == 0
-			) {
+			if (_player.isColliding()) {
+				_player.x = oldX;
+				_player.y = oldY;
+				_player.stopMotion();
+			}
+			else {
+				_worldChanged = true;
+				_player.moveFrame = (_player.moveFrame + 0.25) % 4;
+
 				_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
 				_player.cellX = parseInt((_player.x + _player.w) / _tileWidth);
 				_player.cellY = parseInt((_player.y + _player.h) / _tileHeight);
 				_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
-				_player.stopMotion();
 			}
 		}
 
@@ -368,7 +357,7 @@
 	 */
 	_levels = [
 		{
-			'player': [5, 0],
+			'player': [5, 2],
 			'deaths': [[1, 4], [8, 5], [2, 9], [8, 13]],
 			'map': [
 				['','','','','','','','','',''],
