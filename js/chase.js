@@ -36,6 +36,7 @@
 		this.w = resource.w;
 		this.h = resource.h;
 		this.cellChange = resource.cellChange;
+		this.hitbox = resource.hitbox;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
