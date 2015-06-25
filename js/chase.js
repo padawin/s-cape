@@ -15,8 +15,8 @@
 			// middle bottom aligned
 			'grass': {'url': 'resources/bg-grass.png', 'w': 40, 'h': 40},
 			'tree': {'url': 'resources/tree.png', 'w': 48, 'h': 48, 'hitbox': [12, 24, 36, 48]},
-			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'hitbox': [8, 24, 24, 48]},
-			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'hitbox': [12, 24, 36, 48]}
+			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'cellChange': [16, 36], 'hitbox': [8, 24, 24, 48]},
+			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'cellChange': [25, 36], 'hitbox': [12, 24, 36, 48]}
 		},
 		_nbResources = 4,
 		_tileWidth = 48,
@@ -34,6 +34,7 @@
 		this.y = cellY * _tileHeight + _tileHeight - resource.h;
 		this.w = resource.w;
 		this.h = resource.h;
+		this.cellChange = resource.cellChange;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
@@ -305,8 +306,8 @@
 				_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
 				_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
-				_player.cellX = parseInt((_player.x + _player.w) / _tileWidth);
-				_player.cellY = parseInt((_player.y + _player.h) / _tileHeight);
+				_player.cellX = parseInt((_player.x + _player.cellChange[0]) / _tileWidth);
+				_player.cellY = parseInt((_player.y + _player.cellChange[1]) / _tileHeight);
 				_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
 			}
 		}
