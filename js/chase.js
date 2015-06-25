@@ -27,11 +27,11 @@
 	_directionsSetup[_directions[2]] = {x: 2, y: 0, spriteRow: 2};
 	_directionsSetup[_directions[3]] = {x: 0, y: -2, spriteRow: 3};
 
-	movableClass = function (x, y, direction) {
-		this.cellX = x;
-		this.cellY = y;
-		this.x = x * _tileWidth;
-		this.y = y * _tileHeight;
+	movableClass = function (cellX, cellY, direction) {
+		this.cellX = cellX;
+		this.cellY = cellY;
+		this.x = cellX * _tileWidth;
+		this.y = cellY * _tileHeight;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
