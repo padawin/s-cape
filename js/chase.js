@@ -70,6 +70,19 @@
 			this.moveFrame = 0;
 		};
 
+		this.isColliding = function () {
+			// Map borders
+			if (this.x < 0
+				|| this.y < 0
+				|| this.x + this.w == _levels[_currentLevel].map[0].length * _tileWidth
+				|| this.y + this.h == _levels[_currentLevel].map.length * _tileHeight
+			) {
+				return true;
+			}
+
+			return false;
+		};
+
 		this.willCollide = function (direction) {
 			if (direction == 'right'
 					&& this.cellX == _levels[_currentLevel].map[0].length - 1
