@@ -173,12 +173,12 @@
 		);
 	}
 
-	function _drawLevel (levelIndex) {
+	function _drawLevel () {
 		var row, col, d = 0;
 
-		for (col = 0; col < _levels[levelIndex].map.length; col++) {
-			for (row = 0; row < _levels[levelIndex].map[col].length; row++) {
-				switch (_levels[levelIndex].map[col][row]) {
+		for (col = 0; col < _levels[_currentLevel].map.length; col++) {
+			for (row = 0; row < _levels[_currentLevel].map[col].length; row++) {
+				switch (_levels[_currentLevel].map[col][row]) {
 					case 'P':
 						_drawPlayer();
 						break;
@@ -334,7 +334,7 @@
 		}
 
 		_drawBackground();
-		_drawLevel(_currentLevel);
+		_drawLevel();
 		_worldChanged = false;
 	}
 
