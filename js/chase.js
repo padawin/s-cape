@@ -202,14 +202,14 @@
 
 		movableX = _levels[_currentLevel].player[0];
 		movableY = _levels[_currentLevel].player[1];
-		_createPlayer(movableX, movableY, _tileWidth, _tileHeight);
 		_levels[_currentLevel].map[movableY][movableX] = 'P';
+		_createPlayer(movableX, movableY);
 
 		for (d = 0; d < _levels[_currentLevel].deaths.length; d++) {
 			movableX = _levels[_currentLevel].deaths[d][0];
 			movableY = _levels[_currentLevel].deaths[d][1];
 			_levels[_currentLevel].map[movableY][movableX] = 'D';
-			_createDeath(movableX, movableY, _tileWidth, _tileHeight);
+			_createDeath(movableX, movableY);
 		}
 
 		_canvas.width = _levels[_currentLevel].map[0].length * _tileWidth;
