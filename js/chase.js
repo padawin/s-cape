@@ -205,6 +205,7 @@
 	function _initEvents () {
 		B.addEvent(document, 'keyup', function (e) {
 			if (_player.isMoving()) {
+				_worldChanged = true;
 				_player.stopMotion();
 			}
 		});
