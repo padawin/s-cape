@@ -106,6 +106,7 @@
 			coordY = y,
 			spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
 			spriteStartY = direction ? _directionsSetup[direction].spriteRow * resource.h : 0;
+
 		_ctx.drawImage(
 			resource.resource,
 			// Start in the sprite board
