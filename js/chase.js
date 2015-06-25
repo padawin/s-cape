@@ -134,7 +134,7 @@
 			coordX, coordY,
 			// Dimensions in the canvas
 			resource.w, resource.h
-		); // context.fillRect(x, y, width, height);
+		);
 	}
 
 	function _createPlayer (x, y) {
