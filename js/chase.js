@@ -184,22 +184,23 @@
 	}
 
 	function _initLevel () {
-		var d, movableX, movableY;
-
-		movableX = _levels[_currentLevel].player[0];
-		movableY = _levels[_currentLevel].player[1];
-		_levels[_currentLevel].map[movableY][movableX] = 'P';
-		_createPlayer(movableX, movableY);
-
-		for (d = 0; d < _levels[_currentLevel].deaths.length; d++) {
-			movableX = _levels[_currentLevel].deaths[d][0];
-			movableY = _levels[_currentLevel].deaths[d][1];
-			_levels[_currentLevel].map[movableY][movableX] = 'D';
-			_createDeath(movableX, movableY);
-		}
+		var row, col;
 
 		_canvas.width = _levels[_currentLevel].map[0].length * _tileWidth;
 		_canvas.height = _levels[_currentLevel].map.length * _tileHeight;
+
+		for (col = 0; col < _levels[_currentLevel].map.length; col++) {
+			for (row = 0; row < _levels[_currentLevel].map[col].length; row++) {
+				switch (_levels[_currentLevel].map[col][row]) {
+					case 'P':
+						_createPlayer(row, col);
+						break;
+					case 'D':
+						_createDeath(row, col);
+						break;
+				}
+			}
+		}
 	}
 
 	function _initEvents () {
@@ -363,26 +364,24 @@
 	 */
 	_levels = [
 		{
-			'player': [5, 2],
-			'deaths': [[1, 4], [8, 5], [2, 9], [8, 13]],
 			'map': [
 				['','','','','','','','','',''],
+				['','','','','','P','','','',''],
+				['','','','T','','','','','',''],
+				['','','','','','','','','',''],
+				['','D','','','','','','T','',''],
+				['','','','','','','','','',''],
+				['','T','','D','T','','','','',''],
+				['','','','','','','','','',''],
+				['','','','','','','T','D','',''],
+				['','','','','','','','','',''],
 				['','','','','','','','','',''],
 				['','','','T','','','','','',''],
 				['','','','','','','','','',''],
-				['','','','','','','','T','',''],
+				['','','D','','','','','T','',''],
 				['','','','','','','','','',''],
 				['','T','','','T','','','','',''],
-				['','','','','','','','','',''],
-				['','','','','','','T','','',''],
-				['','','','','','','','','',''],
-				['','','','','','','','','',''],
-				['','','','T','','','','','',''],
-				['','','','','','','','','',''],
-				['','','','','','','','T','',''],
-				['','','','','','','','','',''],
-				['','T','','','T','','','','',''],
-				['','','','','','','','','',''],
+				['','','','','','','','D','',''],
 				['','','','','','','T','','',''],
 				['','','','','','','','','','H']
 			]
