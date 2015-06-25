@@ -27,11 +27,13 @@
 	_directionsSetup[_directions[2]] = {x: 2, y: 0, spriteRow: 2};
 	_directionsSetup[_directions[3]] = {x: 0, y: -2, spriteRow: 3};
 
-	movableClass = function (cellX, cellY, direction) {
+	movableClass = function (cellX, cellY, resource, direction) {
 		this.cellX = cellX;
 		this.cellY = cellY;
 		this.x = cellX * _tileWidth;
 		this.y = cellY * _tileHeight;
+		this.w = resource.w;
+		this.h = resource.h;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
@@ -99,11 +101,11 @@
 	};
 
 	playerClass = function (x, y, direction) {
-		movableClass.call(this, x, y, direction);
+		movableClass.call(this, x, y, _resources['player'], direction);
 	};
 
 	deathClass = function (x, y, direction) {
-		movableClass.call(this, x, y, direction);
+		movableClass.call(this, x, y, _resources['death'], direction);
 	};
 
 	function _drawBackground () {
