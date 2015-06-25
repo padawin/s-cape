@@ -204,7 +204,6 @@
 	function _initEvents () {
 		B.addEvent(document, 'keyup', function (e) {
 			if (_player.isMoving()) {
-				_worldChanged = true;
 				_player.stopMotion();
 			}
 		});
@@ -295,6 +294,7 @@
 		if (_player.isMoving()) {
 			_player.x += _player.speedX;
 			_player.y += _player.speedY;
+			_worldChanged = true;
 
 			if (_player.isColliding()) {
 				_player.x = oldX;
@@ -302,7 +302,6 @@
 				_player.stopMotion();
 			}
 			else {
-				_worldChanged = true;
 				_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
 				_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
