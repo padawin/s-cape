@@ -291,7 +291,7 @@
 	 * Update the position of the movable entities
 	 */
 	function _updateState () {
-		var d, oldX = _player.x, oldY = _player.y;
+		var d, oldX = _player.x, oldY = _player.y, newPX, newPY;
 
 		if (_player.isMoving()) {
 			_player.x += _player.speedX;
@@ -306,10 +306,14 @@
 			else {
 				_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
-				_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
-				_player.cellX = parseInt((_player.x + _player.cellChange[0]) / _tileWidth);
-				_player.cellY = parseInt((_player.y + _player.cellChange[1]) / _tileHeight);
-				_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
+				newPX = parseInt((_player.x + _player.cellChange[0]) / _tileWidth);
+				newPY = parseInt((_player.y + _player.cellChange[1]) / _tileHeight);
+				if (_levels[_currentLevel].map[newPY][newPX] == '') {
+					_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
+					_player.cellX = newPX;
+					_player.cellY = newPY;
+					_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
+				}
 			}
 		}
 
