@@ -20,7 +20,8 @@
 		},
 		_nbResources = 4,
 		_tileWidth = 48,
-		_tileHeight = 24;
+		_tileHeight = 24,
+		_obstacles = [];
 
 	_directionsSetup[_directions[0]] = {x: 0, y: 2, spriteRow: 0};
 	_directionsSetup[_directions[1]] = {x: -2, y: 0, spriteRow: 1};
@@ -131,6 +132,14 @@
 		);
 	}
 
+	function _createObstacle (type, cellX, cellY) {
+		_obstacles.push({
+			'x': _tileWidth * cellX,
+			'y': _tileHeight * cellY,
+			'hitbox': _resources[type].hitbox
+		});
+	}
+
 	function _drawPlayer () {
 		_draw(
 			_player.x, _player.y,
@@ -195,7 +204,11 @@
 					case 'P':
 						_createPlayer(row, col);
 						break;
+					case 'T':
+						_createObstacle('tree', row, col);
+						break;
 					case 'D':
+						_createObstacle('death', row, col);
 						_createDeath(row, col);
 						break;
 				}
