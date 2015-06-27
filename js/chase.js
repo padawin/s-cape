@@ -32,8 +32,8 @@
 	movableClass = function (cellX, cellY, resource, direction) {
 		this.cellX = cellX;
 		this.cellY = cellY;
-		this.x = cellX * _tileWidth + (_tileWidth - resource.w) / 2;
-		this.y = cellY * _tileHeight + _tileHeight - resource.h;
+		this.x = _getObjectDisplayXFromCell(cellX, resource.w);
+		this.y = _getObjectDisplayYFromCell(cellY, resource.h);
 		this.w = resource.w;
 		this.h = resource.h;
 		this.cellChange = resource.cellChange;
@@ -104,6 +104,14 @@
 		movableClass.call(this, x, y, _resources['death'], direction);
 	};
 
+	function _getObjectDisplayXFromCell (cellX, resourceWidth) {
+		return cellX * _tileWidth + (_tileWidth - resourceWidth) / 2;
+	}
+
+	function _getObjectDisplayYFromCell (cellY, resourceHeight) {
+		return cellY * _tileHeight + _tileHeight - resourceHeight;
+	}
+
 	function _drawBackground () {
 		var img = _resources.grass.resource;
 		// create pattern
@@ -148,8 +156,8 @@
 
 	function _createObstacle (type, cellX, cellY) {
 		_obstacles.push({
-			'x': _tileWidth * cellX + (_tileWidth - _resources[type].w) / 2,
-			'y': _tileHeight * cellY + (_tileHeight - _resources[type].h),
+			'x': _getObjectDisplayXFromCell(cellX, _resources[type].w),
+			'y': _getObjectDisplayYFromCell(cellY, _resources[type].h),
 			'hitbox': _resources[type].hitbox
 		});
 	}
@@ -167,8 +175,8 @@
 
 	function _drawTree (cellX, cellY) {
 		_draw(
-			cellX * _tileWidth + (_tileWidth - _resources['tree'].w) / 2,
-			cellY * _tileHeight + (_tileHeight - _resources['tree'].h),
+			_getObjectDisplayXFromCell(cellX, _resources['tree'].w),
+			_getObjectDisplayYFromCell(cellY, _resources['tree'].h),
 			'tree'
 		);
 	}
