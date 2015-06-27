@@ -10,6 +10,7 @@
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
 		_levels,
+		_currentLevel,
 		_resources = {
 			// url, tile dimensions, top left position in grid's cell to be
 			// middle bottom aligned
