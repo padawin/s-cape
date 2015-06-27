@@ -21,7 +21,8 @@
 		_nbResources = 4,
 		_tileWidth = 48,
 		_tileHeight = 24,
-		_obstacles = [];
+		_obstacles = [],
+		_isMobile;
 
 	_directionsSetup[_directions[0]] = {x: 0, y: 2, spriteRow: 0};
 	_directionsSetup[_directions[1]] = {x: -2, y: 0, spriteRow: 1};
@@ -230,33 +231,65 @@
 	}
 
 	function _initEvents () {
-		B.addEvent(document, 'keyup', function (e) {
-			if (_player.isMoving()) {
-				_worldChanged = true;
-				_player.stopMotion();
-			}
-		});
-
-		B.addEvent(document, 'keydown', function (e) {
-			switch (e.which) {
-				case 37: // left
-					_player.startMotion('left');
-					e.preventDefault();
-					break;
-				case 38: // up
+		if (_isMobile) {
+			function _touchEvent (e) {
+				var trigoX, trigoY, touchRatio, canvasRatio;
+				trigoX = e.touches[0].clientX - _canvas.width / 2;
+				trigoY = -1 * e.touches[0].clientY + _canvas.height / 2;
+				touchRatio = Math.abs(trigoY / trigoX);
+				canvasRatio = _canvas.height / _canvas.width;
+				// @TODO Store canvas ratio because never changes (except in case of window resize
+				if (trigoY > 0 && touchRatio > canvasRatio) {
 					_player.startMotion('up');
-					e.preventDefault();
-					break;
-				case 39: // right
-					_player.startMotion('right');
-					e.preventDefault();
-					break;
-				case 40: // down
+				}
+				else if (trigoY < 0 && touchRatio > canvasRatio) {
 					_player.startMotion('down');
-					e.preventDefault();
-					break;
-			};
-		});
+				}
+				else if (trigoX > 0) {
+					_player.startMotion('right');
+				}
+				else {
+					_player.startMotion('left');
+				}
+			}
+
+			B.addEvent(_canvas, 'touchstart', _touchEvent);
+
+			B.addEvent(_canvas, 'touchmove', _touchEvent);
+
+			B.addEvent(_canvas, 'touchend', function (e) {
+				_player.stopMotion();
+			});
+		}
+		else {
+			B.addEvent(document, 'keyup', function (e) {
+				if (_player.isMoving()) {
+					_worldChanged = true;
+					_player.stopMotion();
+				}
+			});
+
+			B.addEvent(document, 'keydown', function (e) {
+				switch (e.which) {
+					case 37: // left
+						_player.startMotion('left');
+						e.preventDefault();
+						break;
+					case 38: // up
+						_player.startMotion('up');
+						e.preventDefault();
+						break;
+					case 39: // right
+						_player.startMotion('right');
+						e.preventDefault();
+						break;
+					case 40: // down
+						_player.startMotion('down');
+						e.preventDefault();
+						break;
+				};
+			});
+		}
 	}
 
 	function _loadResources (loadedCallback) {
@@ -367,7 +400,8 @@
 		_worldChanged = false;
 	}
 
-	chase.start = function (canvas) {
+	chase.start = function (canvas, isMobile) {
+		_isMobile = isMobile;
 		_ctx, _currentLevel = 0;
 
 		_canvas = B.$id(canvas);
