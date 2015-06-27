@@ -80,6 +80,7 @@
 			) {
 				return true;
 			}
+			// Object in map
 			else {
 				var o, nbObstacles = _obstacles.length;
 				for (o = 0; o < nbObstacles; ++o) {
