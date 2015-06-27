@@ -10,7 +10,7 @@
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
 		_levels,
-		_currentLevel,
+		_currentLevelIndex,
 		_resources = {
 			// url, tile dimensions, top left position in grid's cell to be
 			// middle bottom aligned
@@ -75,8 +75,8 @@
 			// Map borders
 			if (this.x < 0
 				|| this.y < 0
-				|| this.x + this.w == _levels[_currentLevel].map[0].length * _tileWidth
-				|| this.y + this.h == _levels[_currentLevel].map.length * _tileHeight
+				|| this.x + this.w == _levels[_currentLevelIndex].map[0].length * _tileWidth
+				|| this.y + this.h == _levels[_currentLevelIndex].map.length * _tileHeight
 			) {
 				return true;
 			}
@@ -196,9 +196,9 @@
 	function _drawLevel () {
 		var row, col, d = 0;
 
-		for (col = 0; col < _levels[_currentLevel].map.length; col++) {
-			for (row = 0; row < _levels[_currentLevel].map[col].length; row++) {
-				switch (_levels[_currentLevel].map[col][row]) {
+		for (col = 0; col < _levels[_currentLevelIndex].map.length; col++) {
+			for (row = 0; row < _levels[_currentLevelIndex].map[col].length; row++) {
+				switch (_levels[_currentLevelIndex].map[col][row]) {
 					case 'P':
 						_drawPlayer();
 						break;
@@ -218,12 +218,12 @@
 	function _initLevel () {
 		var row, col;
 
-		_canvas.width = _levels[_currentLevel].map[0].length * _tileWidth;
-		_canvas.height = _levels[_currentLevel].map.length * _tileHeight;
+		_canvas.width = _levels[_currentLevelIndex].map[0].length * _tileWidth;
+		_canvas.height = _levels[_currentLevelIndex].map.length * _tileHeight;
 
-		for (col = 0; col < _levels[_currentLevel].map.length; col++) {
-			for (row = 0; row < _levels[_currentLevel].map[col].length; row++) {
-				switch (_levels[_currentLevel].map[col][row]) {
+		for (col = 0; col < _levels[_currentLevelIndex].map.length; col++) {
+			for (row = 0; row < _levels[_currentLevelIndex].map[col].length; row++) {
+				switch (_levels[_currentLevelIndex].map[col][row]) {
 					case 'P':
 						_createPlayer(row, col);
 						break;
@@ -377,11 +377,11 @@
 
 				newPX = parseInt((_player.x + _player.cellChange[0]) / _tileWidth);
 				newPY = parseInt((_player.y + _player.cellChange[1]) / _tileHeight);
-				if (_levels[_currentLevel].map[newPY][newPX] == '') {
-					_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
+				if (_levels[_currentLevelIndex].map[newPY][newPX] == '') {
+					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = '';
 					_player.cellX = newPX;
 					_player.cellY = newPY;
-					_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
+					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = 'P';
 				}
 			}
 		}
@@ -411,7 +411,7 @@
 
 	chase.start = function (canvas, isMobile) {
 		_isMobile = isMobile;
-		_ctx, _currentLevel = 0;
+		_ctx, _currentLevelIndex = 0;
 
 		_canvas = B.$id(canvas);
 		_ctx = _canvas.getContext('2d');
