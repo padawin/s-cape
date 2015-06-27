@@ -233,15 +233,16 @@
 	function _initEvents () {
 		if (_isMobile) {
 			function _touchEvent (e) {
-				var trigoX, trigoY;
+				var trigoX, trigoY, touchRatio, canvasRatio;
 				trigoX = e.touches[0].clientX - _canvas.width / 2;
 				trigoY = -1 * e.touches[0].clientY + _canvas.height / 2;
-				var tan = trigoY / trigoX;
+				touchRatio = Math.abs(trigoY / trigoX);
+				canvasRatio = _canvas.height / _canvas.width;
 				// @TODO Store canvas ratio because never changes (except in case of window resize
-				if (trigoY > 0 && Math.abs(tan) > _canvas.height / _canvas.width) {
+				if (trigoY > 0 && touchRatio > canvasRatio) {
 					_player.startMotion('up');
 				}
-				else if (trigoY < 0 && Math.abs(tan) > _canvas.height / _canvas.width) {
+				else if (trigoY < 0 && touchRatio > canvasRatio) {
 					_player.startMotion('down');
 				}
 				else if (trigoX > 0) {
