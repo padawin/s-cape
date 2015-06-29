@@ -147,8 +147,8 @@
 
 	function _createObstacle (type, cellX, cellY) {
 		_obstacles.push({
-			'x': _tileWidth * cellX,
-			'y': _tileHeight * cellY,
+			'x': _tileWidth * cellX + (_tileWidth - _resources[type].w) / 2,
+			'y': _tileHeight * cellY + (_tileHeight - _resources[type].h),
 			'hitbox': _resources[type].hitbox
 		});
 	}
