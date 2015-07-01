@@ -256,7 +256,6 @@
 				trigoY = -1 * e.touches[0].clientY + _canvas.height / 2;
 				touchRatio = Math.abs(trigoY / trigoX);
 				canvasRatio = _canvas.height / _canvas.width;
-				// @TODO Store canvas ratio because never changes (except in case of window resize
 				if (trigoY > 0 && touchRatio > canvasRatio) {
 					_player.startMotion('up');
 				}
