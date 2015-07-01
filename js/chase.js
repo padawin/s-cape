@@ -71,15 +71,12 @@
 			this.moveFrame = 0;
 		};
 
-		/**
-		 * May contain factorizable calculations
-		 */
 		this.isColliding = function () {
 			// Map borders
 			if (this.x < 0
 				|| this.y < 0
-				|| this.x + this.w == _levels[_currentLevelIndex].map[0].length * _tileWidth
-				|| this.y + this.h == _levels[_currentLevelIndex].map.length * _tileHeight
+				|| this.x + this.w == _canvas.width
+				|| this.y + this.h == _canvas.height
 			) {
 				return true;
 			}
@@ -125,9 +122,6 @@
 		_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
 	}
 
-	/**
-	 * May contain factorizable calculations
-	 */
 	function _draw (x, y, resource, direction, moveFrame) {
 		var resource = _resources[resource];
 		// the animations have 4 frames
