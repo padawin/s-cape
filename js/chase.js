@@ -187,7 +187,7 @@
 
 	}
 
-	function _drawDeath (death, index) {
+	function _drawDeath (death) {
 		_draw(
 			death.x, death.y, 'death',
 			death.direction, death.moveFrame
@@ -218,7 +218,7 @@
 				_drawTree(row, col);
 			},
 			'D': function (col, row) {
-				_drawDeath(_deaths[d], d);
+				_drawDeath(_deaths[d]);
 				++d;
 			}
 		});
