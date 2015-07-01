@@ -99,6 +99,18 @@
 
 	deathClass = function (x, y, direction) {
 		movableClass.call(this, x, y, _resources['death'], direction);
+		this.rotationFrequency = parseInt(Math.random() * (1000 - 100 + 1)) + 100;
+		this.frameBeforeRotation = 1;
+
+		this.increaseRotationFrequency = function () {
+			this.frameBeforeRotation = (this.frameBeforeRotation + 1) % this.rotationFrequency;
+			if (this.frameBeforeRotation == 0) {
+				this.direction = _directions[parseInt(Math.random() * 100) % 4];
+				return true;
+			}
+
+			return false;
+		};
 	};
 
 	function _getObjectDisplayXFromCell (cellX, resourceWidth) {
@@ -358,7 +370,8 @@
 	 * May contain factorizable calculations
 	 */
 	function _updateState () {
-		var d, oldX = _player.x, oldY = _player.y, newPX, newPY;
+		var d, oldX = _player.x, oldY = _player.y, newPX, newPY,
+			changed;
 
 		if (_player.isMoving()) {
 			_player.x += _player.speedX;
@@ -390,6 +403,12 @@
 				_deaths[d].y += _deaths[d].speedY;
 				_worldChanged = true;
 				_deaths[d].moveFrame = (_deaths[d].moveFrame + 0.25) % 4;
+			}
+			else {
+				changed = _deaths[d].increaseRotationFrequency();
+				if (changed) {
+					_worldChanged = true;
+				}
 			}
 		}
 	}
