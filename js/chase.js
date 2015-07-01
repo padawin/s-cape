@@ -10,6 +10,7 @@
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
 		_levels,
+		_currentLevelIndex,
 		_resources = {
 			// url, tile dimensions, top left position in grid's cell to be
 			// middle bottom aligned
@@ -32,8 +33,8 @@
 	movableClass = function (cellX, cellY, resource, direction) {
 		this.cellX = cellX;
 		this.cellY = cellY;
-		this.x = cellX * _tileWidth + (_tileWidth - resource.w) / 2;
-		this.y = cellY * _tileHeight + _tileHeight - resource.h;
+		this.x = _getObjectDisplayXFromCell(cellX, resource.w);
+		this.y = _getObjectDisplayYFromCell(cellY, resource.h);
 		this.w = resource.w;
 		this.h = resource.h;
 		this.cellChange = resource.cellChange;
@@ -74,17 +75,18 @@
 			// Map borders
 			if (this.x < 0
 				|| this.y < 0
-				|| this.x + this.w == _levels[_currentLevel].map[0].length * _tileWidth
-				|| this.y + this.h == _levels[_currentLevel].map.length * _tileHeight
+				|| this.x + this.w == _canvas.width
+				|| this.y + this.h == _canvas.height
 			) {
 				return true;
 			}
+			// Object in map
 			else {
 				var o, nbObstacles = _obstacles.length;
 				for (o = 0; o < nbObstacles; ++o) {
-					if (this.x + this.hitbox[0] < _obstacles[o].x + _obstacles[o].hitbox[0] + _obstacles[o].hitbox[2]
+					if (this.x + this.hitbox[0] < (_obstacles[o].x + _obstacles[o].hitbox[0]) + _obstacles[o].hitbox[2]
 						&& this.x + this.hitbox[0] + this.hitbox[2] > _obstacles[o].x + _obstacles[o].hitbox[0]
-						&& this.y + this.hitbox[1] < _obstacles[o].y + _obstacles[o].hitbox[1] + _obstacles[o].hitbox[3]
+						&& this.y + this.hitbox[1] < (_obstacles[o].y + _obstacles[o].hitbox[1]) + _obstacles[o].hitbox[3]
 						&& this.y + this.hitbox[1] + this.hitbox[3] > _obstacles[o].y + _obstacles[o].hitbox[1]
 					) {
 						return true;
@@ -103,6 +105,14 @@
 	deathClass = function (x, y, direction) {
 		movableClass.call(this, x, y, _resources['death'], direction);
 	};
+
+	function _getObjectDisplayXFromCell (cellX, resourceWidth) {
+		return cellX * _tileWidth + (_tileWidth - resourceWidth) / 2;
+	}
+
+	function _getObjectDisplayYFromCell (cellY, resourceHeight) {
+		return cellY * _tileHeight + _tileHeight - resourceHeight;
+	}
 
 	function _drawBackground () {
 		var img = _resources.grass.resource;
@@ -148,8 +158,8 @@
 
 	function _createObstacle (type, cellX, cellY) {
 		_obstacles.push({
-			'x': _tileWidth * cellX + (_tileWidth - _resources[type].w) / 2,
-			'y': _tileHeight * cellY + (_tileHeight - _resources[type].h),
+			'x': _getObjectDisplayXFromCell(cellX, _resources[type].w),
+			'y': _getObjectDisplayYFromCell(cellY, _resources[type].h),
 			'hitbox': _resources[type].hitbox
 		});
 	}
@@ -167,8 +177,8 @@
 
 	function _drawTree (cellX, cellY) {
 		_draw(
-			cellX * _tileWidth + (_tileWidth - _resources['tree'].w) / 2,
-			cellY * _tileHeight + (_tileHeight - _resources['tree'].h),
+			_getObjectDisplayXFromCell(cellX, _resources['tree'].w),
+			_getObjectDisplayYFromCell(cellY, _resources['tree'].h),
 			'tree'
 		);
 	}
@@ -177,57 +187,59 @@
 
 	}
 
-	function _drawDeath (death, index) {
+	function _drawDeath (death) {
 		_draw(
 			death.x, death.y, 'death',
 			death.direction, death.moveFrame
 		);
 	}
 
-	function _drawLevel () {
-		var row, col, d = 0;
+	function _loopThroughMap (callbacks) {
+		var row, col, d = 0, currCell;
 
-		for (col = 0; col < _levels[_currentLevel].map.length; col++) {
-			for (row = 0; row < _levels[_currentLevel].map[col].length; row++) {
-				switch (_levels[_currentLevel].map[col][row]) {
-					case 'P':
-						_drawPlayer();
-						break;
-						break;
-					case 'T':
-						_drawTree(row, col);
-						break;
-					case 'D':
-						_drawDeath(_deaths[d], d);
-						++d;
-						break;
+		for (col = 0; col < _levels[_currentLevelIndex].map.length; col++) {
+			for (row = 0; row < _levels[_currentLevelIndex].map[col].length; row++) {
+				currCell = _levels[_currentLevelIndex].map[col][row];
+				if (currCell != '' && callbacks[currCell]) {
+					callbacks[currCell](col, row);
 				}
 			}
 		}
 	}
 
-	function _initLevel () {
-		var row, col;
+	function _drawLevel () {
+		var d = 0;
 
-		_canvas.width = _levels[_currentLevel].map[0].length * _tileWidth;
-		_canvas.height = _levels[_currentLevel].map.length * _tileHeight;
-
-		for (col = 0; col < _levels[_currentLevel].map.length; col++) {
-			for (row = 0; row < _levels[_currentLevel].map[col].length; row++) {
-				switch (_levels[_currentLevel].map[col][row]) {
-					case 'P':
-						_createPlayer(row, col);
-						break;
-					case 'T':
-						_createObstacle('tree', row, col);
-						break;
-					case 'D':
-						_createObstacle('death', row, col);
-						_createDeath(row, col);
-						break;
-				}
+		_loopThroughMap({
+			'P': function (col, row) {
+				_drawPlayer();
+			},
+			'T': function (col, row) {
+				_drawTree(row, col);
+			},
+			'D': function (col, row) {
+				_drawDeath(_deaths[d]);
+				++d;
 			}
-		}
+		});
+	}
+
+	function _initLevel () {
+		_canvas.width = _levels[_currentLevelIndex].map[0].length * _tileWidth;
+		_canvas.height = _levels[_currentLevelIndex].map.length * _tileHeight;
+
+		_loopThroughMap({
+			'P': function (col, row) {
+				_createPlayer(row, col);
+			},
+			'T': function (col, row) {
+				_createObstacle('tree', row, col);
+			},
+			'D': function (col, row) {
+				_createObstacle('death', row, col);
+				_createDeath(row, col);
+			}
+		});
 	}
 
 	function _initEvents () {
@@ -238,7 +250,6 @@
 				trigoY = -1 * e.touches[0].clientY + _canvas.height / 2;
 				touchRatio = Math.abs(trigoY / trigoX);
 				canvasRatio = _canvas.height / _canvas.width;
-				// @TODO Store canvas ratio because never changes (except in case of window resize
 				if (trigoY > 0 && touchRatio > canvasRatio) {
 					_player.startMotion('up');
 				}
@@ -349,6 +360,7 @@
 
 	/**
 	 * Update the position of the movable entities
+	 * May contain factorizable calculations
 	 */
 	function _updateState () {
 		var d, oldX = _player.x, oldY = _player.y, newPX, newPY;
@@ -368,11 +380,11 @@
 
 				newPX = parseInt((_player.x + _player.cellChange[0]) / _tileWidth);
 				newPY = parseInt((_player.y + _player.cellChange[1]) / _tileHeight);
-				if (_levels[_currentLevel].map[newPY][newPX] == '') {
-					_levels[_currentLevel].map[_player.cellY][_player.cellX] = '';
+				if (_levels[_currentLevelIndex].map[newPY][newPX] == '') {
+					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = '';
 					_player.cellX = newPX;
 					_player.cellY = newPY;
-					_levels[_currentLevel].map[_player.cellY][_player.cellX] = 'P';
+					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = 'P';
 				}
 			}
 		}
@@ -402,7 +414,7 @@
 
 	chase.start = function (canvas, isMobile) {
 		_isMobile = isMobile;
-		_ctx, _currentLevel = 0;
+		_ctx, _currentLevelIndex = 0;
 
 		_canvas = B.$id(canvas);
 		_ctx = _canvas.getContext('2d');
