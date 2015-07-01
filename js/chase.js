@@ -194,50 +194,52 @@
 		);
 	}
 
-	function _drawLevel () {
-		var row, col, d = 0;
+	function _loopThroughMap (callbacks) {
+		var row, col, d = 0, currCell;
 
 		for (col = 0; col < _levels[_currentLevelIndex].map.length; col++) {
 			for (row = 0; row < _levels[_currentLevelIndex].map[col].length; row++) {
-				switch (_levels[_currentLevelIndex].map[col][row]) {
-					case 'P':
-						_drawPlayer();
-						break;
-						break;
-					case 'T':
-						_drawTree(row, col);
-						break;
-					case 'D':
-						_drawDeath(_deaths[d], d);
-						++d;
-						break;
+				currCell = _levels[_currentLevelIndex].map[col][row];
+				if (currCell != '' && callbacks[currCell]) {
+					callbacks[currCell](col, row);
 				}
 			}
 		}
 	}
 
-	function _initLevel () {
-		var row, col;
+	function _drawLevel () {
+		var d = 0;
 
+		_loopThroughMap({
+			'P': function (col, row) {
+				_drawPlayer();
+			},
+			'T': function (col, row) {
+				_drawTree(row, col);
+			},
+			'D': function (col, row) {
+				_drawDeath(_deaths[d], d);
+				++d;
+			}
+		});
+	}
+
+	function _initLevel () {
 		_canvas.width = _levels[_currentLevelIndex].map[0].length * _tileWidth;
 		_canvas.height = _levels[_currentLevelIndex].map.length * _tileHeight;
 
-		for (col = 0; col < _levels[_currentLevelIndex].map.length; col++) {
-			for (row = 0; row < _levels[_currentLevelIndex].map[col].length; row++) {
-				switch (_levels[_currentLevelIndex].map[col][row]) {
-					case 'P':
-						_createPlayer(row, col);
-						break;
-					case 'T':
-						_createObstacle('tree', row, col);
-						break;
-					case 'D':
-						_createObstacle('death', row, col);
-						_createDeath(row, col);
-						break;
-				}
+		_loopThroughMap({
+			'P': function (col, row) {
+				_createPlayer(row, col);
+			},
+			'T': function (col, row) {
+				_createObstacle('tree', row, col);
+			},
+			'D': function (col, row) {
+				_createObstacle('death', row, col);
+				_createDeath(row, col);
 			}
-		}
+		});
 	}
 
 	function _initEvents () {
