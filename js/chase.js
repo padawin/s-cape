@@ -84,9 +84,9 @@
 			else {
 				var o, nbObstacles = _obstacles.length;
 				for (o = 0; o < nbObstacles; ++o) {
-					if (this.x + this.hitbox[0] < _obstacles[o].x + _obstacles[o].hitbox[0] + _obstacles[o].hitbox[2]
+					if (this.x + this.hitbox[0] < (_obstacles[o].x + _obstacles[o].hitbox[0]) + _obstacles[o].hitbox[2]
 						&& this.x + this.hitbox[0] + this.hitbox[2] > _obstacles[o].x + _obstacles[o].hitbox[0]
-						&& this.y + this.hitbox[1] < _obstacles[o].y + _obstacles[o].hitbox[1] + _obstacles[o].hitbox[3]
+						&& this.y + this.hitbox[1] < (_obstacles[o].y + _obstacles[o].hitbox[1]) + _obstacles[o].hitbox[3]
 						&& this.y + this.hitbox[1] + this.hitbox[3] > _obstacles[o].y + _obstacles[o].hitbox[1]
 					) {
 						return true;
