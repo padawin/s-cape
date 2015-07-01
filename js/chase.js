@@ -71,6 +71,9 @@
 			this.moveFrame = 0;
 		};
 
+		/**
+		 * May contain factorizable calculations
+		 */
 		this.isColliding = function () {
 			// Map borders
 			if (this.x < 0
@@ -122,6 +125,9 @@
 		_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
 	}
 
+	/**
+	 * May contain factorizable calculations
+	 */
 	function _draw (x, y, resource, direction, moveFrame) {
 		var resource = _resources[resource];
 		// the animations have 4 frames
@@ -361,6 +367,7 @@
 
 	/**
 	 * Update the position of the movable entities
+	 * May contain factorizable calculations
 	 */
 	function _updateState () {
 		var d, oldX = _player.x, oldY = _player.y, newPX, newPY;
