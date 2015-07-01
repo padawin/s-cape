@@ -1,12 +1,7 @@
 (function () {
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
-		_directionsSetup = {
-			'down': {x: 0, y: 2, spriteRow: 0},
-			'left': {x: -2, y: 0, spriteRow: 1},
-			'right': {x: 2, y: 0, spriteRow: 2},
-			'up': {x: 0, y: -2, spriteRow: 3}
-		},
+		_directionsSetup = {},
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
 		_levels,
