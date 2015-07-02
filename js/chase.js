@@ -465,6 +465,8 @@
 					Math.pow(_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0]), 2)
 					+ Math.pow(_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]), 2)
 				);
+
+				_deaths[d].detectPlayer(dist <= _deaths[d].visionDepth);
 			}
 		}
 	}
