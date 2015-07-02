@@ -459,7 +459,6 @@
 				}
 			}
 
-
 			if (_worldChanged) {
 				var distance;
 				// Try to detect player
