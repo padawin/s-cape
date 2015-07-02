@@ -20,10 +20,18 @@
 		_obstacles = [],
 		_isMobile;
 
-	_directionsSetup[_directions[0]] = {x: 0, y: 2, spriteRow: 0};
-	_directionsSetup[_directions[1]] = {x: -2, y: 0, spriteRow: 1};
-	_directionsSetup[_directions[2]] = {x: 2, y: 0, spriteRow: 2};
-	_directionsSetup[_directions[3]] = {x: 0, y: -2, spriteRow: 3};
+	_directionsSetup[_directions[0]] = {
+		x: 0, y: 2, spriteRow: 0, vAngleStart: 5 * Math.PI / 8, vAngleEnd: 7 * Math.PI / 8
+	};
+	_directionsSetup[_directions[1]] = {
+		x: -2, y: 0, spriteRow: 1, vAngleStart: 3 * Math.PI / 8, vAngleEnd: 5 * Math.PI / 8
+	};
+	_directionsSetup[_directions[2]] = {
+		x: 2, y: 0, spriteRow: 2, vAngleStart: 7 * Math.PI / 8, vAngleEnd: Math.PI / 8
+	};
+	_directionsSetup[_directions[3]] = {
+		x: 0, y: -2, spriteRow: 3, vAngleStart: Math.PI / 8, vAngleEnd: 3 * Math.PI / 8
+	};
 
 	movableClass = function (cellX, cellY, resource, direction) {
 		this.cellX = cellX;
@@ -101,6 +109,8 @@
 		movableClass.call(this, x, y, _resources['death'], direction);
 		this.rotationFrequency = parseInt(Math.random() * (1000 - 100 + 1)) + 100;
 		this.frameBeforeRotation = 1;
+
+		this.visionDepth = 100;
 
 		this.increaseRotationFrequency = function () {
 			this.frameBeforeRotation = (this.frameBeforeRotation + 1) % this.rotationFrequency;
@@ -409,6 +419,16 @@
 				if (changed) {
 					_worldChanged = true;
 				}
+			}
+
+
+			if (_worldChanged && d == 0) {
+				// Try to detect player
+				var dist = Math.sqrt(
+					Math.pow(_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0]), 2),
+					Math.pow(_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]), 2)
+				);
+				console.log(dist);
 			}
 		}
 	}
