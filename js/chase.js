@@ -123,9 +123,11 @@
 			return false;
 		};
 
-		this.detectPlayer = function (distance) {
-			var inReach = distance <= this.visionDepth;
-			if (inReach) {
+		this.detectPlayer = function (distance, angle) {
+			var inReach = distance <= this.visionDepth,
+				inSight = _directionsSetup[this.direction].vAngleStart <= angle
+					&& angle <= _directionsSetup[this.direction].vAngleEnd;
+			if (inReach && inSight) {
 				this.seesPlayer = true;
 			}
 			else {
@@ -460,14 +462,18 @@
 			}
 
 			if (_worldChanged) {
-				var distance;
+				var distance, angle;
 				// Try to detect player
 				distance = Math.sqrt(
 					Math.pow(_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0]), 2)
 					+ Math.pow(_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]), 2)
 				);
+				angle = Math.atan2(
+					_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]),
+					_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0])
+				);
 
-				_deaths[d].detectPlayer(distance);
+				_deaths[d].detectPlayer(distance, angle);
 			}
 		}
 	}
