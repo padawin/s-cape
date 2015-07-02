@@ -459,13 +459,12 @@
 			}
 
 
-			if (_worldChanged && d == 0) {
+			if (_worldChanged) {
 				// Try to detect player
 				var dist = Math.sqrt(
 					Math.pow(_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0]), 2),
 					Math.pow(_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]), 2)
 				);
-				console.log(dist);
 			}
 		}
 	}
