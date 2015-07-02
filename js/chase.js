@@ -205,6 +205,28 @@
 	}
 
 	function _drawDeath (death) {
+		_ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
+		_ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+		_ctx.beginPath();
+		_ctx.moveTo(
+			death.x + death.cellChange[0],
+			death.y + death.cellChange[1]
+		);
+		_ctx.arc(
+			death.x + death.cellChange[0],
+			death.y + death.cellChange[1],
+			death.visionDepth,
+			_directionsSetup[death.direction].vAngleStart,
+			_directionsSetup[death.direction].vAngleEnd
+		);
+		_ctx.lineTo(
+			death.x + death.cellChange[0],
+			death.y + death.cellChange[1]
+		);
+		_ctx.fill();
+		_ctx.stroke();
+		_ctx.closePath();
+
 		_draw(
 			death.x, death.y, 'death',
 			death.direction, death.moveFrame
