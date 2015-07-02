@@ -123,8 +123,9 @@
 			return false;
 		};
 
-		this.detectPlayer = function (detects) {
-			if (detects) {
+		this.detectPlayer = function (distance) {
+			var inReach = distance <= this.visionDepth;
+			if (inReach) {
 				this.seesPlayer = true;
 			}
 			else {
@@ -460,13 +461,14 @@
 
 
 			if (_worldChanged) {
+				var distance;
 				// Try to detect player
-				var dist = Math.sqrt(
+				distance = Math.sqrt(
 					Math.pow(_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0]), 2)
 					+ Math.pow(_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]), 2)
 				);
 
-				_deaths[d].detectPlayer(dist <= _deaths[d].visionDepth);
+				_deaths[d].detectPlayer(distance);
 			}
 		}
 	}
