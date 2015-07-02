@@ -109,6 +109,7 @@
 		movableClass.call(this, x, y, _resources['death'], direction);
 		this.rotationFrequency = parseInt(Math.random() * (1000 - 100 + 1)) + 100;
 		this.frameBeforeRotation = 1;
+		this.seesPlayer = false;
 
 		this.visionDepth = 100;
 
@@ -121,6 +122,15 @@
 
 			return false;
 		};
+
+		this.detectPlayer = function (detects) {
+			if (detects) {
+				this.seesPlayer = true;
+			}
+			else {
+				this.seesPlayer = false;
+			}
+		}
 	};
 
 	function _getObjectDisplayXFromCell (cellX, resourceWidth) {
