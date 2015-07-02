@@ -215,7 +215,12 @@
 	}
 
 	function _drawDeath (death) {
-		_ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
+		if (death.seesPlayer) {
+			_ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+		}
+		else {
+			_ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
+		}
 		_ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
 		_ctx.beginPath();
 		_ctx.moveTo(
