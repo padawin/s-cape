@@ -21,16 +21,16 @@
 		_isMobile;
 
 	_directionsSetup[_directions[0]] = {
-		x: 0, y: 2, spriteRow: 0, vAngleStart: 5 * Math.PI / 8, vAngleEnd: 7 * Math.PI / 8
+		x: 0, y: 2, spriteRow: 0, vAngleStart: Math.PI / 4, vAngleEnd: 3 * Math.PI / 4
 	};
 	_directionsSetup[_directions[1]] = {
-		x: -2, y: 0, spriteRow: 1, vAngleStart: 3 * Math.PI / 8, vAngleEnd: 5 * Math.PI / 8
+		x: -2, y: 0, spriteRow: 1, vAngleStart: 3 * Math.PI / 4, vAngleEnd: 5 * Math.PI / 4
 	};
 	_directionsSetup[_directions[2]] = {
-		x: 2, y: 0, spriteRow: 2, vAngleStart: 7 * Math.PI / 8, vAngleEnd: Math.PI / 8
+		x: 2, y: 0, spriteRow: 2, vAngleStart: 7 * Math.PI / 4, vAngleEnd: Math.PI / 4
 	};
 	_directionsSetup[_directions[3]] = {
-		x: 0, y: -2, spriteRow: 3, vAngleStart: Math.PI / 8, vAngleEnd: 3 * Math.PI / 8
+		x: 0, y: -2, spriteRow: 3, vAngleStart: 5 * Math.PI / 4, vAngleEnd: 7 * Math.PI / 4
 	};
 
 	movableClass = function (cellX, cellY, resource, direction) {
