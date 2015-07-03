@@ -27,7 +27,10 @@
 		x: -2, y: 0, spriteRow: 1, vAngleStart: 3 * Math.PI / 4, vAngleEnd: 5 * Math.PI / 4
 	};
 	_directionsSetup[_directions[2]] = {
-		x: 2, y: 0, spriteRow: 2, vAngleStart: 7 * Math.PI / 4, vAngleEnd: Math.PI / 4
+		// This angle overlaps with the angle 0 of the trigonometry circle,
+		// so the end angle ends up being smaller than the start angle
+		// lets add one whole turn to the angle
+		x: 2, y: 0, spriteRow: 2, vAngleStart: 7 * Math.PI / 4, vAngleEnd: Math.PI / 4 + 2 * Math.PI
 	};
 	_directionsSetup[_directions[3]] = {
 		x: 0, y: -2, spriteRow: 3, vAngleStart: 5 * Math.PI / 4, vAngleEnd: 7 * Math.PI / 4
@@ -472,6 +475,10 @@
 					_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]),
 					_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0])
 				);
+
+				// Hack for to test if the player is in the vision of the death
+				// when turned toward the right (to handle the angle 0)
+				angle = angle < Math.PI / 4 ? angle + 2 * Math.PI : angle;
 
 				_deaths[d].detectPlayer(distance, angle);
 			}
