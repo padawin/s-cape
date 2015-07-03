@@ -1,12 +1,7 @@
 (function () {
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
-		_directionsSetup = {
-			'down': {x: 0, y: 2, spriteRow: 0},
-			'left': {x: -2, y: 0, spriteRow: 1},
-			'right': {x: 2, y: 0, spriteRow: 2},
-			'up': {x: 0, y: -2, spriteRow: 3}
-		},
+		_directionsSetup = {},
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
 		_levels,
@@ -23,12 +18,28 @@
 		_tileWidth = 48,
 		_tileHeight = 24,
 		_obstacles = [],
-		_isMobile;
+		_isMobile
 
-	_directionsSetup[_directions[0]] = {x: 0, y: 2, spriteRow: 0};
-	_directionsSetup[_directions[1]] = {x: -2, y: 0, spriteRow: 1};
-	_directionsSetup[_directions[2]] = {x: 2, y: 0, spriteRow: 2};
-	_directionsSetup[_directions[3]] = {x: 0, y: -2, spriteRow: 3};
+		ANGLE_TOP_RIGHT = 7 * Math.PI / 4,
+		ANGLE_TOP_LEFT = 5 * Math.PI / 4,
+		ANGLE_BOTTOM_LEFT = 3 * Math.PI / 4,
+		ANGLE_BOTTOM_RIGHT = Math.PI / 4;
+
+	_directionsSetup[_directions[0]] = {
+		x: 0, y: 2, spriteRow: 0, vAngleStart: ANGLE_BOTTOM_RIGHT, vAngleEnd: ANGLE_BOTTOM_LEFT
+	};
+	_directionsSetup[_directions[1]] = {
+		x: -2, y: 0, spriteRow: 1, vAngleStart: ANGLE_BOTTOM_LEFT, vAngleEnd: ANGLE_TOP_LEFT
+	};
+	_directionsSetup[_directions[2]] = {
+		// This angle overlaps with the angle 0 of the trigonometry circle,
+		// so the end angle ends up being smaller than the start angle
+		// lets add one whole turn to the angle
+		x: 2, y: 0, spriteRow: 2, vAngleStart: ANGLE_TOP_RIGHT, vAngleEnd: ANGLE_BOTTOM_RIGHT + 2 * Math.PI
+	};
+	_directionsSetup[_directions[3]] = {
+		x: 0, y: -2, spriteRow: 3, vAngleStart: ANGLE_TOP_LEFT, vAngleEnd: ANGLE_TOP_RIGHT
+	};
 
 	movableClass = function (cellX, cellY, resource, direction) {
 		this.cellX = cellX;
@@ -104,6 +115,33 @@
 
 	deathClass = function (x, y, direction) {
 		movableClass.call(this, x, y, _resources['death'], direction);
+		this.rotationFrequency = parseInt(Math.random() * (1000 - 100 + 1)) + 100;
+		this.frameBeforeRotation = 1;
+		this.seesPlayer = false;
+
+		this.visionDepth = 100;
+
+		this.increaseRotationFrequency = function () {
+			this.frameBeforeRotation = (this.frameBeforeRotation + 1) % this.rotationFrequency;
+			if (this.frameBeforeRotation == 0) {
+				this.direction = _directions[parseInt(Math.random() * 100) % 4];
+				return true;
+			}
+
+			return false;
+		};
+
+		this.detectPlayer = function (distance, angle) {
+			var inReach = distance <= this.visionDepth,
+				inSight = _directionsSetup[this.direction].vAngleStart <= angle
+					&& angle <= _directionsSetup[this.direction].vAngleEnd;
+			if (inReach && inSight) {
+				this.seesPlayer = true;
+			}
+			else {
+				this.seesPlayer = false;
+			}
+		}
 	};
 
 	function _getObjectDisplayXFromCell (cellX, resourceWidth) {
@@ -188,6 +226,33 @@
 	}
 
 	function _drawDeath (death) {
+		if (death.seesPlayer) {
+			_ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+		}
+		else {
+			_ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
+		}
+		_ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+		_ctx.beginPath();
+		_ctx.moveTo(
+			death.x + death.cellChange[0],
+			death.y + death.cellChange[1]
+		);
+		_ctx.arc(
+			death.x + death.cellChange[0],
+			death.y + death.cellChange[1],
+			death.visionDepth,
+			_directionsSetup[death.direction].vAngleStart,
+			_directionsSetup[death.direction].vAngleEnd
+		);
+		_ctx.lineTo(
+			death.x + death.cellChange[0],
+			death.y + death.cellChange[1]
+		);
+		_ctx.fill();
+		_ctx.stroke();
+		_ctx.closePath();
+
 		_draw(
 			death.x, death.y, 'death',
 			death.direction, death.moveFrame
@@ -363,7 +428,8 @@
 	 * May contain factorizable calculations
 	 */
 	function _updateState () {
-		var d, oldX = _player.x, oldY = _player.y, newPX, newPY;
+		var d, oldX = _player.x, oldY = _player.y, newPX, newPY,
+			changed;
 
 		if (_player.isMoving()) {
 			_player.x += _player.speedX;
@@ -395,6 +461,31 @@
 				_deaths[d].y += _deaths[d].speedY;
 				_worldChanged = true;
 				_deaths[d].moveFrame = (_deaths[d].moveFrame + 0.25) % 4;
+			}
+			else {
+				changed = _deaths[d].increaseRotationFrequency();
+				if (changed) {
+					_worldChanged = true;
+				}
+			}
+
+			if (_worldChanged) {
+				var distance, angle;
+				// Try to detect player
+				distance = Math.sqrt(
+					Math.pow(_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0]), 2)
+					+ Math.pow(_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]), 2)
+				);
+				angle = Math.atan2(
+					_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]),
+					_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0])
+				);
+
+				// Hack for to test if the player is in the vision of the death
+				// when turned toward the right (to handle the angle 0)
+				angle = angle < Math.PI / 4 ? angle + 2 * Math.PI : angle;
+
+				_deaths[d].detectPlayer(distance, angle);
 			}
 		}
 	}
