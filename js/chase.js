@@ -18,22 +18,27 @@
 		_tileWidth = 48,
 		_tileHeight = 24,
 		_obstacles = [],
-		_isMobile;
+		_isMobile
+
+		ANGLE_TOP_RIGHT = 7 * Math.PI / 4,
+		ANGLE_TOP_LEFT = 5 * Math.PI / 4,
+		ANGLE_BOTTOM_LEFT = 3 * Math.PI / 4,
+		ANGLE_BOTTOM_RIGHT = Math.PI / 4;
 
 	_directionsSetup[_directions[0]] = {
-		x: 0, y: 2, spriteRow: 0, vAngleStart: Math.PI / 4, vAngleEnd: 3 * Math.PI / 4
+		x: 0, y: 2, spriteRow: 0, vAngleStart: ANGLE_BOTTOM_RIGHT, vAngleEnd: ANGLE_BOTTOM_LEFT
 	};
 	_directionsSetup[_directions[1]] = {
-		x: -2, y: 0, spriteRow: 1, vAngleStart: 3 * Math.PI / 4, vAngleEnd: 5 * Math.PI / 4
+		x: -2, y: 0, spriteRow: 1, vAngleStart: ANGLE_BOTTOM_LEFT, vAngleEnd: ANGLE_TOP_LEFT
 	};
 	_directionsSetup[_directions[2]] = {
 		// This angle overlaps with the angle 0 of the trigonometry circle,
 		// so the end angle ends up being smaller than the start angle
 		// lets add one whole turn to the angle
-		x: 2, y: 0, spriteRow: 2, vAngleStart: 7 * Math.PI / 4, vAngleEnd: Math.PI / 4 + 2 * Math.PI
+		x: 2, y: 0, spriteRow: 2, vAngleStart: ANGLE_TOP_RIGHT, vAngleEnd: ANGLE_BOTTOM_RIGHT + 2 * Math.PI
 	};
 	_directionsSetup[_directions[3]] = {
-		x: 0, y: -2, spriteRow: 3, vAngleStart: 5 * Math.PI / 4, vAngleEnd: 7 * Math.PI / 4
+		x: 0, y: -2, spriteRow: 3, vAngleStart: ANGLE_TOP_LEFT, vAngleEnd: ANGLE_TOP_RIGHT
 	};
 
 	movableClass = function (cellX, cellY, resource, direction) {
