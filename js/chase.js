@@ -93,13 +93,24 @@
 			}
 			// Object in map
 			else {
-				var o, nbObstacles = _obstacles.length;
+				var o, nbObstacles = _obstacles.length, colliding;
 				for (o = 0; o < nbObstacles; ++o) {
-					if (this.x + this.hitbox[0] < (_obstacles[o].x + _obstacles[o].hitbox[0]) + _obstacles[o].hitbox[2]
-						&& this.x + this.hitbox[0] + this.hitbox[2] > _obstacles[o].x + _obstacles[o].hitbox[0]
-						&& this.y + this.hitbox[1] < (_obstacles[o].y + _obstacles[o].hitbox[1]) + _obstacles[o].hitbox[3]
-						&& this.y + this.hitbox[1] + this.hitbox[3] > _obstacles[o].y + _obstacles[o].hitbox[1]
-					) {
+					colliding = _areRectanglesColliding(
+						{
+							x: this.x + this.hitbox[0],
+							y: this.y + this.hitbox[1],
+							w: this.hitbox[2],
+							h: this.hitbox[3]
+						},
+						{
+							x: _obstacles[o].x + _obstacles[o].hitbox[0],
+							y: _obstacles[o].y + _obstacles[o].hitbox[1],
+							w: _obstacles[o].hitbox[2],
+							h: _obstacles[o].hitbox[3]
+						}
+					);
+
+					if (colliding) {
 						return true;
 					}
 				}
@@ -143,6 +154,13 @@
 			}
 		}
 	};
+
+	function _areRectanglesColliding (rect1, rect2) {
+		return rect1.x < rect2.x + rect2.w
+			&& rect1.x + rect1.w > rect2.x
+			&& rect1.y < rect2.y + rect2.h
+			&& rect1.y + rect1.h > rect2.y
+	}
 
 	function _getObjectDisplayXFromCell (cellX, resourceWidth) {
 		return cellX * _tileWidth + (_tileWidth - resourceWidth) / 2;
