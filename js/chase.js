@@ -93,13 +93,24 @@
 			}
 			// Object in map
 			else {
-				var o, nbObstacles = _obstacles.length;
+				var o, nbObstacles = _obstacles.length, colliding;
 				for (o = 0; o < nbObstacles; ++o) {
-					if (this.x + this.hitbox[0] < (_obstacles[o].x + _obstacles[o].hitbox[0]) + _obstacles[o].hitbox[2]
-						&& this.x + this.hitbox[0] + this.hitbox[2] > _obstacles[o].x + _obstacles[o].hitbox[0]
-						&& this.y + this.hitbox[1] < (_obstacles[o].y + _obstacles[o].hitbox[1]) + _obstacles[o].hitbox[3]
-						&& this.y + this.hitbox[1] + this.hitbox[3] > _obstacles[o].y + _obstacles[o].hitbox[1]
-					) {
+					colliding = _areRectanglesColliding(
+						{
+							x: this.x + this.hitbox[0],
+							y: this.y + this.hitbox[1],
+							w: this.hitbox[2],
+							h: this.hitbox[3]
+						},
+						{
+							x: _obstacles[o].x + _obstacles[o].hitbox[0],
+							y: _obstacles[o].y + _obstacles[o].hitbox[1],
+							w: _obstacles[o].hitbox[2],
+							h: _obstacles[o].hitbox[3]
+						}
+					);
+
+					if (colliding) {
 						return true;
 					}
 				}
@@ -134,8 +145,32 @@
 		this.detectPlayer = function (distance, angle) {
 			var inReach = distance <= this.visionDepth,
 				inSight = _directionsSetup[this.direction].vAngleStart <= angle
-					&& angle <= _directionsSetup[this.direction].vAngleEnd;
-			if (inReach && inSight) {
+					&& angle <= _directionsSetup[this.direction].vAngleEnd,
+				obstaclesInWay = false, o;
+
+			for (o = 0; o < _obstacles.length; o++) {
+				if (_obstacles[o].type !== 'tree') {
+					continue;
+				}
+
+				obstaclesInWay = obstaclesInWay || _areSegmentAndRectangleColliding(
+					{
+						// death's cellChange
+						p1: {x: this.x + this.cellChange[0], y: this.y + this.cellChange[1]},
+						// player's cellChange
+						p2: {x: _player.x + _player.cellChange[0], y: _player.y + _player.cellChange[1]},
+					},
+					// Obstacle's hitbox
+					{
+						x: _obstacles[o].x + _obstacles[o].hitbox[0],
+						y: _obstacles[o].y + _obstacles[o].hitbox[1],
+						w: _obstacles[o].hitbox[2],
+						h: _obstacles[o].hitbox[3]
+					}
+				);
+			}
+
+			if (inReach && inSight && !obstaclesInWay) {
 				this.seesPlayer = true;
 			}
 			else {
@@ -143,6 +178,64 @@
 			}
 		}
 	};
+
+	function _areRectanglesColliding (rect1, rect2) {
+		return rect1.x < rect2.x + rect2.w
+			&& rect1.x + rect1.w > rect2.x
+			&& rect1.y < rect2.y + rect2.h
+			&& rect1.y + rect1.h > rect2.y
+	}
+
+	function _areSegmentAndRectangleColliding (line, rect) {
+		var minX, maxX,
+			minY, maxY,
+			tmp,
+			dx,
+			a, b,
+			p1 = line.p1, p2 = line.p2,
+			MathMin = Math.min, MathMax = Math.max;
+
+		// minX is the right most point between the left most point of the segment
+		// and the left coordinate of the rectangle
+		minX = MathMax(rect.x, MathMin(p1.x, p2.x));
+		// maxX is the left most point between the right most point of the segment
+		// and the right coordinate of the rectangle
+		maxX = MathMin(rect.x + rect.w, MathMax(p1.x, p2.x));
+
+		// the segment is completely on the left of the rectangle or completely on
+		// the right of the rectangle, no collision
+		if (minX > maxX) {
+			return false;
+		}
+
+		// Here, [minX, maxX] is the interval of collision of the projection on the
+		// X axis of the segment and the projection on the X axis of the rectangle
+
+		// x-length of the segment
+		dx = p2.x - p1.x;
+
+		minY = p1.y;
+		maxY = p2.y;
+		// if segment not vertical, get its equation
+		if (Math.abs(dx) > 0.0000001) {
+			a = (p2.y - p1.y) / dx;
+			b = p1.y - a * p1.x;
+			// The segment has for equation y = ax + b
+			// get the segment coordinate on the part which is colliding on the
+			// projection on X
+			minY = a * minX + b;
+			maxY = a * maxX + b;
+		}
+
+		// minY is the bottom most point between the top most point of the segment
+		// and the top coordinate of the rectangle
+		// maxY is the top most point between the bottom most point of the segment
+		// and the bottom coordinate of the rectangle
+		// Here, [minY, maxY] is the interval of collision of the projection on the
+		// Y axis of the segment and the projection on the Y axis of the rectangle
+		// if minY > maxY, the interval is null, and so there is no collision
+		return MathMax(rect.y, MathMin(minY, maxY)) <= MathMin(rect.y + rect.h, MathMax(minY, maxY));
+	}
 
 	function _getObjectDisplayXFromCell (cellX, resourceWidth) {
 		return cellX * _tileWidth + (_tileWidth - resourceWidth) / 2;
@@ -196,6 +289,7 @@
 
 	function _createObstacle (type, cellX, cellY) {
 		_obstacles.push({
+			'type': type,
 			'x': _getObjectDisplayXFromCell(cellX, _resources[type].w),
 			'y': _getObjectDisplayYFromCell(cellY, _resources[type].h),
 			'hitbox': _resources[type].hitbox
