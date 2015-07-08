@@ -265,6 +265,7 @@
 
 	function _createObstacle (type, cellX, cellY) {
 		_obstacles.push({
+			'type': type,
 			'x': _getObjectDisplayXFromCell(cellX, _resources[type].w),
 			'y': _getObjectDisplayYFromCell(cellY, _resources[type].h),
 			'hitbox': _resources[type].hitbox
