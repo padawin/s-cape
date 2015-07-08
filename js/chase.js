@@ -1,6 +1,7 @@
 (function () {
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
+		_Geometry,
 		_directionsSetup = {},
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
@@ -41,15 +42,46 @@
 		x: 0, y: -2, spriteRow: 3, vAngleStart: ANGLE_TOP_LEFT, vAngleEnd: ANGLE_TOP_RIGHT
 	};
 
-	movableClass = function (cellX, cellY, resource, direction) {
+	_Geometry = {};
+
+	_Geometry.Point = function (x, y) {
+		this.x = x;
+		this.y = y;
+	};
+
+	_Geometry.Rectangle = function (x, y, w, h) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	};
+
+	_Geometry.Segment = function (p1, p2) {
+		this.p1 = p1;
+		this.p2 = p2;
+	};
+
+	entityClass = function (cellX, cellY, resource) {
 		this.cellX = cellX;
 		this.cellY = cellY;
 		this.x = _getObjectDisplayXFromCell(cellX, resource.w);
 		this.y = _getObjectDisplayYFromCell(cellY, resource.h);
 		this.w = resource.w;
 		this.h = resource.h;
-		this.cellChange = resource.cellChange;
-		this.hitbox = resource.hitbox;
+		this.hitbox = new _Geometry.Rectangle(
+			this.x + resource.hitbox[0],
+			this.y + resource.hitbox[1],
+			resource.hitbox[2],
+			resource.hitbox[3]
+		);
+	}
+
+	movableClass = function (cellX, cellY, resource, direction) {
+		entityClass.call(this, cellX, cellY, resource);
+		this.cellChange = new _Geometry.Point(
+			this.x + resource.cellChange[0],
+			this.y + resource.cellChange[1]
+		);
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
@@ -95,20 +127,7 @@
 			else {
 				var o, nbObstacles = _obstacles.length, colliding;
 				for (o = 0; o < nbObstacles; ++o) {
-					colliding = _areRectanglesColliding(
-						{
-							x: this.x + this.hitbox[0],
-							y: this.y + this.hitbox[1],
-							w: this.hitbox[2],
-							h: this.hitbox[3]
-						},
-						{
-							x: _obstacles[o].x + _obstacles[o].hitbox[0],
-							y: _obstacles[o].y + _obstacles[o].hitbox[1],
-							w: _obstacles[o].hitbox[2],
-							h: _obstacles[o].hitbox[3]
-						}
-					);
+					colliding = _areRectanglesColliding(this.hitbox, _obstacles[o].obstacle.hitbox);
 
 					if (colliding) {
 						return true;
@@ -154,19 +173,11 @@
 				}
 
 				obstaclesInWay = obstaclesInWay || _areSegmentAndRectangleColliding(
-					{
-						// death's cellChange
-						p1: {x: this.x + this.cellChange[0], y: this.y + this.cellChange[1]},
-						// player's cellChange
-						p2: {x: _player.x + _player.cellChange[0], y: _player.y + _player.cellChange[1]},
-					},
-					// Obstacle's hitbox
-					{
-						x: _obstacles[o].x + _obstacles[o].hitbox[0],
-						y: _obstacles[o].y + _obstacles[o].hitbox[1],
-						w: _obstacles[o].hitbox[2],
-						h: _obstacles[o].hitbox[3]
-					}
+					new _Geometry.Segment(
+						this.cellChange,
+						_player.cellChange
+					),
+					_obstacles[o].obstacle.hitbox
 				);
 			}
 
@@ -259,9 +270,7 @@
 		// the grid has cells of _tileWidth * _tileHeight px
 		// there are 4 directions, so 4 rows in the sprite
 		// To set the sprite on the middle bottom of the tile
-		var coordX = x,
-			coordY = y,
-			spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
+		var spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
 			spriteStartY = direction ? _directionsSetup[direction].spriteRow * resource.h : 0;
 
 		_ctx.drawImage(
@@ -271,7 +280,7 @@
 			// Dimensions in the sprite board
 			resource.w, resource.h,
 			// Position in the canvas
-			coordX, coordY,
+			x, y,
 			// Dimensions in the canvas
 			resource.w, resource.h
 		);
@@ -282,17 +291,22 @@
 	}
 
 	function _createDeath (x, y) {
-		_deaths.push(
-			new deathClass(x, y, _directions[parseInt(Math.random() * 100) % 4])
-		);
+		var d = new deathClass(x, y, _directions[parseInt(Math.random() * 100) % 4]);
+		_deaths.push(d);
+
+		return d;
 	}
 
-	function _createObstacle (type, cellX, cellY) {
+	function _createTree (x, y) {
+		var t = new entityClass(x, y, _resources['tree']);
+
+		return t;
+	}
+
+	function _createObstacle (type, obstacle) {
 		_obstacles.push({
 			'type': type,
-			'x': _getObjectDisplayXFromCell(cellX, _resources[type].w),
-			'y': _getObjectDisplayYFromCell(cellY, _resources[type].h),
-			'hitbox': _resources[type].hitbox
+			'obstacle': obstacle
 		});
 	}
 
@@ -329,19 +343,19 @@
 		_ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
 		_ctx.beginPath();
 		_ctx.moveTo(
-			death.x + death.cellChange[0],
-			death.y + death.cellChange[1]
+			death.cellChange.x,
+			death.cellChange.y
 		);
 		_ctx.arc(
-			death.x + death.cellChange[0],
-			death.y + death.cellChange[1],
+			death.cellChange.x,
+			death.cellChange.y,
 			death.visionDepth,
 			_directionsSetup[death.direction].vAngleStart,
 			_directionsSetup[death.direction].vAngleEnd
 		);
 		_ctx.lineTo(
-			death.x + death.cellChange[0],
-			death.y + death.cellChange[1]
+			death.cellChange.x,
+			death.cellChange.y
 		);
 		_ctx.fill();
 		_ctx.stroke();
@@ -392,11 +406,11 @@
 				_createPlayer(row, col);
 			},
 			'T': function (col, row) {
-				_createObstacle('tree', row, col);
+				_createObstacle('tree', _createTree(row, col));
 			},
 			'D': function (col, row) {
-				_createObstacle('death', row, col);
-				_createDeath(row, col);
+				_createObstacle('death', _createDeath(row, col));
+
 			}
 		});
 	}
@@ -536,10 +550,12 @@
 				_player.stopMotion();
 			}
 			else {
+				_player.cellChange.x += _player.speedX;
+				_player.cellChange.y += _player.speedY;
 				_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
-				newPX = parseInt((_player.x + _player.cellChange[0]) / _tileWidth);
-				newPY = parseInt((_player.y + _player.cellChange[1]) / _tileHeight);
+				newPX = parseInt(_player.cellChange.x / _tileWidth);
+				newPY = parseInt(_player.cellChange.y / _tileHeight);
 				if (_levels[_currentLevelIndex].map[newPY][newPX] == '') {
 					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = '';
 					_player.cellX = newPX;
@@ -553,6 +569,8 @@
 			if (_deaths[d].isMoving()) {
 				_deaths[d].x += _deaths[d].speedX;
 				_deaths[d].y += _deaths[d].speedY;
+				_deaths[d].cellChange.x += _deaths[d].speedX;
+				_deaths[d].cellChange.y += _deaths[d].speedY;
 				_worldChanged = true;
 				_deaths[d].moveFrame = (_deaths[d].moveFrame + 0.25) % 4;
 			}
@@ -567,12 +585,12 @@
 				var distance, angle;
 				// Try to detect player
 				distance = Math.sqrt(
-					Math.pow(_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0]), 2)
-					+ Math.pow(_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]), 2)
+					Math.pow(_player.cellChange.x - _deaths[d].cellChange.x, 2)
+					+ Math.pow(_player.cellChange.y - _deaths[d].cellChange.y, 2)
 				);
 				angle = Math.atan2(
-					_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]),
-					_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0])
+					_player.cellChange.y - _deaths[d].cellChange.y,
+					_player.cellChange.x - _deaths[d].cellChange.x
 				);
 
 				// Hack for to test if the player is in the vision of the death
