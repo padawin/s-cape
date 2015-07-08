@@ -1,6 +1,7 @@
 (function () {
 	var _ctx, _canvas, chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
+		_Geometry,
 		_directionsSetup = {},
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
@@ -39,6 +40,24 @@
 	};
 	_directionsSetup[_directions[3]] = {
 		x: 0, y: -2, spriteRow: 3, vAngleStart: ANGLE_TOP_LEFT, vAngleEnd: ANGLE_TOP_RIGHT
+	};
+
+	_Geometry = {};
+
+	_Geometry.Point = function (x, y) {
+		this.x = x;
+		this.y = y;
+	};
+
+	_Geometry.Rectangle = function (x, y, w, h) {
+		this.origin = new _Geometry.Point(x, y);
+		this.w = w;
+		this.h = h;
+	};
+
+	_Geometry.Segment = function (x1, y1, x2, y2) {
+		this.p1 = new _Geometry.Point(x1, y1);
+		this.p2 = new _Geometry.Point(x2, y2);
 	};
 
 	movableClass = function (cellX, cellY, resource, direction) {
