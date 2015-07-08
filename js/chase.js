@@ -554,8 +554,8 @@
 				_player.cellChange.y += _player.speedY;
 				_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
-				newPX = parseInt((_player.cellChange.x) / _tileWidth);
-				newPY = parseInt((_player.cellChange.y) / _tileHeight);
+				newPX = parseInt(_player.cellChange.x / _tileWidth);
+				newPY = parseInt(_player.cellChange.y / _tileHeight);
 				if (_levels[_currentLevelIndex].map[newPY][newPX] == '') {
 					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = '';
 					_player.cellX = newPX;
