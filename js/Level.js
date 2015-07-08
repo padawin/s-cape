@@ -20,7 +20,7 @@
 
 	sCape.Level = function (grid) {
 		this.grid = grid;
-	}
+	};
 
 })(sCape);
 
