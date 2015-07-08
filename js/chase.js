@@ -307,9 +307,10 @@
 	}
 
 	function _createDeath (x, y) {
-		_deaths.push(
-			new deathClass(x, y, _directions[parseInt(Math.random() * 100) % 4])
-		);
+		var d = new deathClass(x, y, _directions[parseInt(Math.random() * 100) % 4]);
+		_deaths.push(d);
+
+		return d;
 	}
 
 	function _createObstacle (type, cellX, cellY) {
