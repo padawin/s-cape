@@ -6,7 +6,6 @@
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
 		_levels,
-		_currentLevel,
 		_currentLevelIndex,
 		_resources = {
 			// url, tile dimensions, top left position in grid's cell to be
@@ -171,11 +170,11 @@
 	};
 
 	function _getObjectDisplayXFromCell (cellX, resourceWidth) {
-		return cellX * _currentLevel.grid.tileWidth + (_currentLevel.grid.tileWidth - resourceWidth) / 2;
+		return cellX * sCape.Level.currentLevel.grid.tileWidth + (sCape.Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
 	}
 
 	function _getObjectDisplayYFromCell (cellY, resourceHeight) {
-		return cellY * _currentLevel.grid.tileHeight + _currentLevel.grid.tileHeight - resourceHeight;
+		return cellY * sCape.Level.currentLevel.grid.tileHeight + sCape.Level.currentLevel.grid.tileHeight - resourceHeight;
 	}
 
 	function _drawBackground () {
@@ -189,7 +188,7 @@
 	function _draw (x, y, resource, direction, moveFrame) {
 		var resource = _resources[resource];
 		// the animations have 4 frames
-		// the grid has cells of _currentLevel.grid.tileWidth * _currentLevel.grid.tileHeight px
+		// the grid has cells of sCape.Level.currentLevel.grid.tileWidth * sCape.Level.currentLevel.grid.tileHeight px
 		// there are 4 directions, so 4 rows in the sprite
 		// To set the sprite on the middle bottom of the tile
 		var spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
@@ -292,9 +291,9 @@
 	function _loopThroughMap (callbacks) {
 		var row, col, d = 0, currCell;
 
-		for (col = 0; col < _levels[_currentLevelIndex].map.length; col++) {
-			for (row = 0; row < _levels[_currentLevelIndex].map[col].length; row++) {
-				currCell = _levels[_currentLevelIndex].map[col][row];
+		for (col = 0; col < sCape.Level.currentLevel.grid.map.length; col++) {
+			for (row = 0; row < sCape.Level.currentLevel.grid.map[col].length; row++) {
+				currCell = sCape.Level.currentLevel.grid.map[col][row];
 				if (currCell != '' && callbacks[currCell]) {
 					callbacks[currCell](col, row);
 				}
@@ -320,15 +319,15 @@
 	}
 
 	function _initLevel () {
-		_currentLevel = new sCape.Level(
+		sCape.Level.currentLevel = new sCape.Level(
 			new sCape.Grid(
 				_levels[_currentLevelIndex].tileWidth,
 				_levels[_currentLevelIndex].tileHeight,
 				_levels[_currentLevelIndex].map
 			)
 		);
-		_canvas.width = _levels[_currentLevelIndex].map[0].length * _currentLevel.grid.tileWidth;
-		_canvas.height = _levels[_currentLevelIndex].map.length * _currentLevel.grid.tileHeight;
+		_canvas.width = sCape.Level.currentLevel.grid.map[0].length * sCape.Level.currentLevel.grid.tileWidth;
+		_canvas.height = sCape.Level.currentLevel.grid.map.length * sCape.Level.currentLevel.grid.tileHeight;
 
 		_loopThroughMap({
 			'P': function (col, row) {
@@ -487,13 +486,13 @@
 				_player.cellChange.y += _player.speedY;
 				_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
-				newPX = parseInt(_player.cellChange.x / _currentLevel.grid.tileWidth);
-				newPY = parseInt(_player.cellChange.y / _currentLevel.grid.tileHeight);
-				if (_levels[_currentLevelIndex].map[newPY][newPX] == '') {
-					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = '';
+				newPX = parseInt(_player.cellChange.x / sCape.Level.currentLevel.grid.tileWidth);
+				newPY = parseInt(_player.cellChange.y / sCape.Level.currentLevel.grid.tileHeight);
+				if (sCape.Level.currentLevel.grid.map[newPY][newPX] == '') {
+					sCape.Level.currentLevel.grid.map[_player.cellY][_player.cellX] = '';
 					_player.cellX = newPX;
 					_player.cellY = newPY;
-					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = 'P';
+					sCape.Level.currentLevel.grid.map[_player.cellY][_player.cellX] = 'P';
 				}
 			}
 		}

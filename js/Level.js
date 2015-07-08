@@ -23,5 +23,6 @@
 		this.grid = grid;
 	};
 
+	sCape.Level.currentLevel = null;
 })(sCape);
 
