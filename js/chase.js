@@ -42,25 +42,6 @@
 		x: 0, y: -2, spriteRow: 3, vAngleStart: ANGLE_TOP_LEFT, vAngleEnd: ANGLE_TOP_RIGHT
 	};
 
-	_Geometry = {};
-
-	_Geometry.Point = function (x, y) {
-		this.x = x;
-		this.y = y;
-	};
-
-	_Geometry.Rectangle = function (x, y, w, h) {
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
-	};
-
-	_Geometry.Segment = function (p1, p2) {
-		this.p1 = p1;
-		this.p2 = p2;
-	};
-
 	entityClass = function (cellX, cellY, resource) {
 		this.cellX = cellX;
 		this.cellY = cellY;
@@ -68,7 +49,7 @@
 		this.y = _getObjectDisplayYFromCell(cellY, resource.h);
 		this.w = resource.w;
 		this.h = resource.h;
-		this.hitbox = new _Geometry.Rectangle(
+		this.hitbox = new sCape.Geometry.Rectangle(
 			this.x + resource.hitbox[0],
 			this.y + resource.hitbox[1],
 			resource.hitbox[2],
@@ -78,7 +59,7 @@
 
 	movableClass = function (cellX, cellY, resource, direction) {
 		entityClass.call(this, cellX, cellY, resource);
-		this.cellChange = new _Geometry.Point(
+		this.cellChange = new sCape.Geometry.Point(
 			this.x + resource.cellChange[0],
 			this.y + resource.cellChange[1]
 		);
@@ -173,7 +154,7 @@
 				}
 
 				obstaclesInWay = obstaclesInWay || _areSegmentAndRectangleColliding(
-					new _Geometry.Segment(
+					new sCape.Geometry.Segment(
 						this.cellChange,
 						_player.cellChange
 					),
