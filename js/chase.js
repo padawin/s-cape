@@ -68,7 +68,10 @@
 		this.y = _getObjectDisplayYFromCell(cellY, resource.h);
 		this.w = resource.w;
 		this.h = resource.h;
-		this.cellChange = resource.cellChange;
+		this.cellChange = new _Geometry.Point(
+			this.x + resource.cellChange[0],
+			this.y + resource.cellChange[1]
+		);
 		this.hitbox = resource.hitbox;
 		this.speedX = 0;
 		this.speedY = 0;
@@ -174,12 +177,10 @@
 				}
 
 				obstaclesInWay = obstaclesInWay || _areSegmentAndRectangleColliding(
-					{
-						// death's cellChange
-						p1: {x: this.x + this.cellChange[0], y: this.y + this.cellChange[1]},
-						// player's cellChange
-						p2: {x: _player.x + _player.cellChange[0], y: _player.y + _player.cellChange[1]},
-					},
+					new _Geometry.Segment(
+						this.cellChange,
+						_player.cellChange
+					),
 					// Obstacle's hitbox
 					{
 						x: _obstacles[o].x + _obstacles[o].hitbox[0],
@@ -349,19 +350,19 @@
 		_ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
 		_ctx.beginPath();
 		_ctx.moveTo(
-			death.x + death.cellChange[0],
-			death.y + death.cellChange[1]
+			death.cellChange.x,
+			death.cellChange.y
 		);
 		_ctx.arc(
-			death.x + death.cellChange[0],
-			death.y + death.cellChange[1],
+			death.cellChange.x,
+			death.cellChange.y,
 			death.visionDepth,
 			_directionsSetup[death.direction].vAngleStart,
 			_directionsSetup[death.direction].vAngleEnd
 		);
 		_ctx.lineTo(
-			death.x + death.cellChange[0],
-			death.y + death.cellChange[1]
+			death.cellChange.x,
+			death.cellChange.y
 		);
 		_ctx.fill();
 		_ctx.stroke();
@@ -556,10 +557,12 @@
 				_player.stopMotion();
 			}
 			else {
+				_player.cellChange.x += _player.speedX;
+				_player.cellChange.y += _player.speedY;
 				_player.moveFrame = (_player.moveFrame + 0.25) % 4;
 
-				newPX = parseInt((_player.x + _player.cellChange[0]) / _tileWidth);
-				newPY = parseInt((_player.y + _player.cellChange[1]) / _tileHeight);
+				newPX = parseInt((_player.cellChange.x) / _tileWidth);
+				newPY = parseInt((_player.cellChange.y) / _tileHeight);
 				if (_levels[_currentLevelIndex].map[newPY][newPX] == '') {
 					_levels[_currentLevelIndex].map[_player.cellY][_player.cellX] = '';
 					_player.cellX = newPX;
@@ -573,6 +576,8 @@
 			if (_deaths[d].isMoving()) {
 				_deaths[d].x += _deaths[d].speedX;
 				_deaths[d].y += _deaths[d].speedY;
+				_deaths[d].cellChange.x += _deaths[d].speedX;
+				_deaths[d].cellChange.y += _deaths[d].speedY;
 				_worldChanged = true;
 				_deaths[d].moveFrame = (_deaths[d].moveFrame + 0.25) % 4;
 			}
@@ -587,12 +592,12 @@
 				var distance, angle;
 				// Try to detect player
 				distance = Math.sqrt(
-					Math.pow(_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0]), 2)
-					+ Math.pow(_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]), 2)
+					Math.pow(_player.cellChange.x - _deaths[d].cellChange.x, 2)
+					+ Math.pow(_player.cellChange.y - _deaths[d].cellChange.y, 2)
 				);
 				angle = Math.atan2(
-					_player.y + _player.cellChange[1] - (_deaths[d].y + _deaths[d].cellChange[1]),
-					_player.x + _player.cellChange[0] - (_deaths[d].x + _deaths[d].cellChange[0])
+					_player.cellChange.y - _deaths[d].cellChange.y,
+					_player.cellChange.x - _deaths[d].cellChange.x
 				);
 
 				// Hack for to test if the player is in the vision of the death
