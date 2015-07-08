@@ -61,22 +61,26 @@
 		this.p2 = p2;
 	};
 
-	movableClass = function (cellX, cellY, resource, direction) {
+	entityClass = function (cellX, cellY, resource) {
 		this.cellX = cellX;
 		this.cellY = cellY;
 		this.x = _getObjectDisplayXFromCell(cellX, resource.w);
 		this.y = _getObjectDisplayYFromCell(cellY, resource.h);
 		this.w = resource.w;
 		this.h = resource.h;
-		this.cellChange = new _Geometry.Point(
-			this.x + resource.cellChange[0],
-			this.y + resource.cellChange[1]
-		);
 		this.hitbox = new _Geometry.Rectangle(
 			this.x + resource.hitbox[0],
 			this.y + resource.hitbox[1],
 			resource.hitbox[2],
 			resource.hitbox[3]
+		);
+	}
+
+	movableClass = function (cellX, cellY, resource, direction) {
+		entityClass.call(this, cellX, cellY, resource);
+		this.cellChange = new _Geometry.Point(
+			this.x + resource.cellChange[0],
+			this.y + resource.cellChange[1]
 		);
 		this.speedX = 0;
 		this.speedY = 0;
