@@ -56,9 +56,9 @@
 		this.h = h;
 	};
 
-	_Geometry.Segment = function (x1, y1, x2, y2) {
-		this.p1 = new _Geometry.Point(x1, y1);
-		this.p2 = new _Geometry.Point(x2, y2);
+	_Geometry.Segment = function (p1, p2) {
+		this.p1 = p1;
+		this.p2 = p2;
 	};
 
 	movableClass = function (cellX, cellY, resource, direction) {
