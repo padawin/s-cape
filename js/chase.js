@@ -50,7 +50,8 @@
 	};
 
 	_Geometry.Rectangle = function (x, y, w, h) {
-		this.origin = new _Geometry.Point(x, y);
+		this.x = x;
+		this.y = y;
 		this.w = w;
 		this.h = h;
 	};
