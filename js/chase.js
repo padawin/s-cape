@@ -536,7 +536,7 @@
 	 * May contain factorizable calculations
 	 */
 	function _updateState () {
-		var d, oldX = _player.x, oldY = _player.y, newPX, newPY,
+		var d, newPX, newPY,
 			changed;
 
 		if (_player.isMoving()) {
@@ -547,8 +547,8 @@
 			_worldChanged = true;
 
 			if (_player.isColliding()) {
-				_player.x = oldX;
-				_player.y = oldY;
+				_player.x -= _player.speedX;
+				_player.y -= _player.speedY;
 				_player.hitbox.x -= _player.speedX;
 				_player.hitbox.y -= _player.speedY;
 				_player.stopMotion();
