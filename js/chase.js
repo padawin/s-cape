@@ -542,11 +542,15 @@
 		if (_player.isMoving()) {
 			_player.x += _player.speedX;
 			_player.y += _player.speedY;
+			_player.hitbox.x += _player.speedX;
+			_player.hitbox.y += _player.speedY;
 			_worldChanged = true;
 
 			if (_player.isColliding()) {
 				_player.x = oldX;
 				_player.y = oldY;
+				_player.hitbox.x -= _player.speedX;
+				_player.hitbox.y -= _player.speedY;
 				_player.stopMotion();
 			}
 			else {
@@ -571,6 +575,8 @@
 				_deaths[d].y += _deaths[d].speedY;
 				_deaths[d].cellChange.x += _deaths[d].speedX;
 				_deaths[d].cellChange.y += _deaths[d].speedY;
+				_deaths[d].hitbox.x += _deaths[d].speedX;
+				_deaths[d].hitbox.y += _deaths[d].speedY;
 				_worldChanged = true;
 				_deaths[d].moveFrame = (_deaths[d].moveFrame + 0.25) % 4;
 			}
