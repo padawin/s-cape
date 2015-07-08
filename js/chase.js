@@ -313,6 +313,12 @@
 		return d;
 	}
 
+	function _createTree (x, y) {
+		var t = new entityClass(x, y, _resources['tree']);
+
+		return t;
+	}
+
 	function _createObstacle (type, cellX, cellY) {
 		_obstacles.push({
 			'type': type,
