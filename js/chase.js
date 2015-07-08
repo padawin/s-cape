@@ -270,9 +270,7 @@
 		// the grid has cells of _tileWidth * _tileHeight px
 		// there are 4 directions, so 4 rows in the sprite
 		// To set the sprite on the middle bottom of the tile
-		var coordX = x,
-			coordY = y,
-			spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
+		var spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
 			spriteStartY = direction ? _directionsSetup[direction].spriteRow * resource.h : 0;
 
 		_ctx.drawImage(
@@ -282,7 +280,7 @@
 			// Dimensions in the sprite board
 			resource.w, resource.h,
 			// Position in the canvas
-			coordX, coordY,
+			x, y,
 			// Dimensions in the canvas
 			resource.w, resource.h
 		);
