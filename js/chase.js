@@ -127,15 +127,7 @@
 			else {
 				var o, nbObstacles = _obstacles.length, colliding;
 				for (o = 0; o < nbObstacles; ++o) {
-					colliding = _areRectanglesColliding(
-						this.hitbox,
-						{
-							x: _obstacles[o].x + _obstacles[o].hitbox[0],
-							y: _obstacles[o].y + _obstacles[o].hitbox[1],
-							w: _obstacles[o].hitbox[2],
-							h: _obstacles[o].hitbox[3]
-						}
-					);
+					colliding = _areRectanglesColliding(this.hitbox, _obstacles[o].obstacle.hitbox);
 
 					if (colliding) {
 						return true;
@@ -185,13 +177,7 @@
 						this.cellChange,
 						_player.cellChange
 					),
-					// Obstacle's hitbox
-					{
-						x: _obstacles[o].x + _obstacles[o].hitbox[0],
-						y: _obstacles[o].y + _obstacles[o].hitbox[1],
-						w: _obstacles[o].hitbox[2],
-						h: _obstacles[o].hitbox[3]
-					}
+					_obstacles[o].obstacle.hitbox
 				);
 			}
 
@@ -319,12 +305,10 @@
 		return t;
 	}
 
-	function _createObstacle (type, cellX, cellY) {
+	function _createObstacle (type, obstacle) {
 		_obstacles.push({
 			'type': type,
-			'x': _getObjectDisplayXFromCell(cellX, _resources[type].w),
-			'y': _getObjectDisplayYFromCell(cellY, _resources[type].h),
-			'hitbox': _resources[type].hitbox
+			'obstacle': obstacle
 		});
 	}
 
@@ -424,11 +408,11 @@
 				_createPlayer(row, col);
 			},
 			'T': function (col, row) {
-				_createObstacle('tree', row, col);
+				_createObstacle('tree', _createTree(row, col));
 			},
 			'D': function (col, row) {
-				_createObstacle('death', row, col);
-				_createDeath(row, col);
+				_createObstacle('death', _createDeath(row, col));
+
 			}
 		});
 	}
