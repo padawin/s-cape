@@ -145,8 +145,32 @@
 		this.detectPlayer = function (distance, angle) {
 			var inReach = distance <= this.visionDepth,
 				inSight = _directionsSetup[this.direction].vAngleStart <= angle
-					&& angle <= _directionsSetup[this.direction].vAngleEnd;
-			if (inReach && inSight) {
+					&& angle <= _directionsSetup[this.direction].vAngleEnd,
+				obstaclesInWay = false, o;
+
+			for (o = 0; o < _obstacles.length; o++) {
+				if (_obstacles[o].type !== 'tree') {
+					continue;
+				}
+
+				obstaclesInWay = obstaclesInWay || _areSegmentAndRectangleColliding(
+					{
+						// death's cellChange
+						p1: {x: this.x + this.cellChange[0], y: this.y + this.cellChange[1]},
+						// player's cellChange
+						p2: {x: _player.x + _player.cellChange[0], y: _player.y + _player.cellChange[1]},
+					},
+					// Obstacle's hitbox
+					{
+						x: _obstacles[o].x + _obstacles[o].hitbox[0],
+						y: _obstacles[o].y + _obstacles[o].hitbox[1],
+						w: _obstacles[o].hitbox[2],
+						h: _obstacles[o].hitbox[3]
+					}
+				);
+			}
+
+			if (inReach && inSight && !obstaclesInWay) {
 				this.seesPlayer = true;
 			}
 			else {
