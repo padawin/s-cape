@@ -72,7 +72,12 @@
 			this.x + resource.cellChange[0],
 			this.y + resource.cellChange[1]
 		);
-		this.hitbox = resource.hitbox;
+		this.hitbox = new _Geometry.Rectangle(
+			this.x + resource.hitbox[0],
+			this.y + resource.hitbox[1],
+			resource.hitbox[2],
+			resource.hitbox[3]
+		);
 		this.speedX = 0;
 		this.speedY = 0;
 		this.moving = false;
@@ -119,12 +124,7 @@
 				var o, nbObstacles = _obstacles.length, colliding;
 				for (o = 0; o < nbObstacles; ++o) {
 					colliding = _areRectanglesColliding(
-						{
-							x: this.x + this.hitbox[0],
-							y: this.y + this.hitbox[1],
-							w: this.hitbox[2],
-							h: this.hitbox[3]
-						},
+						this.hitbox,
 						{
 							x: _obstacles[o].x + _obstacles[o].hitbox[0],
 							y: _obstacles[o].y + _obstacles[o].hitbox[1],
