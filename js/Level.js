@@ -3,9 +3,10 @@
 		throw "sCape is needed to use the Level module";
 	}
 
-	sCape.Grid = function (tileWidth, tileHeight) {
+	sCape.Grid = function (tileWidth, tileHeight, map) {
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
+		this.map = map;
 
 		// The position of a resource according to its grid's cell is horizontally
 		// centered and at the bottom of the cell

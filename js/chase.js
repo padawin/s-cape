@@ -323,7 +323,8 @@
 		_currentLevel = new sCape.Level(
 			new sCape.Grid(
 				_levels[_currentLevelIndex].tileWidth,
-				_levels[_currentLevelIndex].tileHeight
+				_levels[_currentLevelIndex].tileHeight,
+				_levels[_currentLevelIndex].map
 			)
 		);
 		_canvas.width = _levels[_currentLevelIndex].map[0].length * _currentLevel.grid.tileWidth;
