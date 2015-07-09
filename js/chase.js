@@ -5,17 +5,7 @@
 		_directionsSetup = {},
 		_directions = ['down', 'left', 'right', 'up'],
 		_worldChanged = true,
-		_levels,
 		_currentLevelIndex,
-		_resources = {
-			// url, tile dimensions, top left position in grid's cell to be
-			// middle bottom aligned
-			'grass': {'url': 'resources/bg-grass.png', 'w': 40, 'h': 40},
-			'tree': {'url': 'resources/tree.png', 'w': 48, 'h': 48, 'hitbox': [12, 36, 24, 12]},
-			'player': {'url': 'resources/player.png', 'w': 32, 'h': 48, 'cellChange': [16, 36], 'hitbox': [8, 24, 16, 24]},
-			'death': {'url': 'resources/death.png', 'w': 50, 'h': 48, 'cellChange': [25, 36], 'hitbox': [12, 24, 24, 24]}
-		},
-		_nbResources = 4,
 		_obstacles = [],
 		_isMobile
 
@@ -119,11 +109,11 @@
 	};
 
 	playerClass = function (x, y, direction) {
-		movableClass.call(this, x, y, _resources['player'], direction);
+		movableClass.call(this, x, y, sCape.data.resources['player'], direction);
 	};
 
 	deathClass = function (x, y, direction) {
-		movableClass.call(this, x, y, _resources['death'], direction);
+		movableClass.call(this, x, y, sCape.data.resources['death'], direction);
 		this.rotationFrequency = parseInt(Math.random() * (1000 - 100 + 1)) + 100;
 		this.frameBeforeRotation = 1;
 		this.seesPlayer = false;
@@ -178,7 +168,7 @@
 	}
 
 	function _drawBackground () {
-		var img = _resources.grass.resource;
+		var img = sCape.data.resources.grass.resource;
 		// create pattern
 		var pattern = _ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
 		_ctx.fillStyle = pattern;
@@ -186,7 +176,7 @@
 	}
 
 	function _draw (x, y, resource, direction, moveFrame) {
-		var resource = _resources[resource];
+		var resource = sCape.data.resources[resource];
 		// the animations have 4 frames
 		// the grid has cells of sCape.Level.currentLevel.grid.tileWidth * sCape.Level.currentLevel.grid.tileHeight px
 		// there are 4 directions, so 4 rows in the sprite
@@ -219,7 +209,7 @@
 	}
 
 	function _createTree (x, y) {
-		var t = new entityClass(x, y, _resources['tree']);
+		var t = new entityClass(x, y, sCape.data.resources['tree']);
 
 		return t;
 	}
@@ -244,8 +234,8 @@
 
 	function _drawTree (cellX, cellY) {
 		_draw(
-			_getObjectDisplayXFromCell(cellX, _resources['tree'].w),
-			_getObjectDisplayYFromCell(cellY, _resources['tree'].h),
+			_getObjectDisplayXFromCell(cellX, sCape.data.resources['tree'].w),
+			_getObjectDisplayYFromCell(cellY, sCape.data.resources['tree'].h),
 			'tree'
 		);
 	}
@@ -321,9 +311,9 @@
 	function _initLevel () {
 		sCape.Level.currentLevel = new sCape.Level(
 			new sCape.Grid(
-				_levels[_currentLevelIndex].tileWidth,
-				_levels[_currentLevelIndex].tileHeight,
-				_levels[_currentLevelIndex].map
+				sCape.data.levels[_currentLevelIndex].tileWidth,
+				sCape.data.levels[_currentLevelIndex].tileHeight,
+				sCape.data.levels[_currentLevelIndex].map
 			)
 		);
 		_canvas.width = sCape.Level.currentLevel.grid.map[0].length * sCape.Level.currentLevel.grid.tileWidth;
@@ -414,18 +404,18 @@
 		);
 		_ctx.stroke();
 
-		for (r in _resources) {
-			if (_resources.hasOwnProperty(r)) {
-				_resources[r].resource = new Image();
-				_resources[r].resource.src = _resources[r].url;
-				_resources[r].resource.onload = function () {
-					if (++loaded == _nbResources) {
+		for (r in sCape.data.resources) {
+			if (sCape.data.resources.hasOwnProperty(r)) {
+				sCape.data.resources[r].resource = new Image();
+				sCape.data.resources[r].resource.src = sCape.data.resources[r].url;
+				sCape.data.resources[r].resource.onload = function () {
+					if (++loaded == sCape.data.nbResources) {
 						loadedCallback();
 					}
 					else {
 						_ctx.fillRect(
 							0.15 * _canvas.width, _canvas.height / 2 - 10,
-							loadingWidth * loaded / _nbResources, 20
+							loadingWidth * loaded / sCape.data.nbResources, 20
 						);
 					}
 				};
@@ -563,41 +553,6 @@
 			_startMainLoop();
 		});
 	};
-
-	/**
-	 * P = Player
-	 * R = Rock
-	 * T = Tree
-	 * H = Home
-	 * D = Death
-	 */
-	_levels = [
-		{
-			'tileWidth': 48,
-			'tileHeight': 24,
-			'map': [
-				['','','','','','','','','',''],
-				['','','','','','P','','','',''],
-				['','','','T','','','','','',''],
-				['','','','','','','','','',''],
-				['','D','','','','','','T','',''],
-				['','','','','','','','','',''],
-				['','T','','D','T','','','','',''],
-				['','','','','','','','','',''],
-				['','','','','','','T','D','',''],
-				['','','','','','','','','',''],
-				['','','','','','','','','',''],
-				['','','','T','','','','','',''],
-				['','','','','','','','','',''],
-				['','','D','','','','','T','',''],
-				['','','','','','','','','',''],
-				['','T','','','T','','','','',''],
-				['','','','','','','','D','',''],
-				['','','','','','','T','','',''],
-				['','','','','','','','','','H']
-			]
-		}
-	];
 
 	window.chase = chase;
 })();
