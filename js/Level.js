@@ -17,6 +17,19 @@
 		this.getResourceAbsoluteYCoordinatesFromCell = function (cellY, resourceHeight) {
 			return cellY * _tileHeight + _tileHeight - resourceHeight;
 		};
+
+		this.loopThroughMap = function (callbacks) {
+			var row, col, d = 0, currCell;
+
+			for (col = 0; col < this.map.length; col++) {
+				for (row = 0; row < this.map[col].length; row++) {
+					currCell = this.map[col][row];
+					if (currCell != '' && callbacks[currCell]) {
+						callbacks[currCell](col, row);
+					}
+				}
+			}
+		};
 	};
 
 	sCape.Level = function (grid) {

@@ -278,23 +278,10 @@
 		);
 	}
 
-	function _loopThroughMap (callbacks) {
-		var row, col, d = 0, currCell;
-
-		for (col = 0; col < sCape.Level.currentLevel.grid.map.length; col++) {
-			for (row = 0; row < sCape.Level.currentLevel.grid.map[col].length; row++) {
-				currCell = sCape.Level.currentLevel.grid.map[col][row];
-				if (currCell != '' && callbacks[currCell]) {
-					callbacks[currCell](col, row);
-				}
-			}
-		}
-	}
-
-	function _drawLevel () {
+	function _drawLevel (level) {
 		var d = 0;
 
-		_loopThroughMap({
+		level.grid.loopThroughMap({
 			'P': function (col, row) {
 				_drawPlayer();
 			},
@@ -318,7 +305,7 @@
 		_canvas.height = grid.map.length * grid.tileHeight;
 
 		sCape.Level.currentLevel = new sCape.Level(grid);
-		_loopThroughMap({
+		grid.loopThroughMap({
 			'P': function (col, row) {
 				_createPlayer(row, col);
 			},
@@ -534,7 +521,7 @@
 		}
 
 		_drawBackground();
-		_drawLevel();
+		_drawLevel(sCape.Level.currentLevel);
 		_worldChanged = false;
 	}
 
