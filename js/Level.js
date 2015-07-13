@@ -32,8 +32,24 @@
 		};
 	};
 
+	sCape.Grid.getObjectDisplayXFromCell = function (cellX, resourceWidth) {
+		return cellX * sCape.Level.currentLevel.grid.tileWidth + (sCape.Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
+	}
+
+	sCape.Grid.getObjectDisplayYFromCell = function (cellY, resourceHeight) {
+		return cellY * sCape.Level.currentLevel.grid.tileHeight + sCape.Level.currentLevel.grid.tileHeight - resourceHeight;
+	}
+
 	sCape.Level = function (grid) {
 		this.grid = grid;
+		this.obstacles = [];
+
+		this.createObstacle = function (type, obstacle) {
+			this.obstacles.push({
+				'type': type,
+				'obstacle': obstacle
+			});
+		};
 	};
 
 	sCape.Level.currentLevel = null;
