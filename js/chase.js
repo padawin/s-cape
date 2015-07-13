@@ -167,8 +167,8 @@
 		return cellY * sCape.Level.currentLevel.grid.tileHeight + sCape.Level.currentLevel.grid.tileHeight - resourceHeight;
 	}
 
-	function _drawBackground () {
-		var img = sCape.data.resources.grass.resource,
+	function _drawBackground (bgResource) {
+		var img = sCape.data.resources[bgResource].resource,
 			pattern = sCape.GUI.ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
 		sCape.GUI.ctx.fillStyle = pattern;
 		sCape.GUI.ctx.fillRect(0, 0, sCape.GUI.canvas.width, sCape.GUI.canvas.height); // context.fillRect(x, y, width, height);
@@ -519,7 +519,7 @@
 			return;
 		}
 
-		_drawBackground();
+		_drawBackground('grass');
 		_drawLevel(sCape.Level.currentLevel);
 		_worldChanged = false;
 	}
