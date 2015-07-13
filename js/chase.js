@@ -309,16 +309,15 @@
 	}
 
 	function _initLevel () {
-		sCape.Level.currentLevel = new sCape.Level(
-			new sCape.Grid(
-				sCape.data.levels[_currentLevelIndex].tileWidth,
-				sCape.data.levels[_currentLevelIndex].tileHeight,
-				sCape.data.levels[_currentLevelIndex].map
-			)
+		var grid = new sCape.Grid(
+			sCape.data.levels[_currentLevelIndex].tileWidth,
+			sCape.data.levels[_currentLevelIndex].tileHeight,
+			sCape.data.levels[_currentLevelIndex].map
 		);
-		_canvas.width = sCape.Level.currentLevel.grid.map[0].length * sCape.Level.currentLevel.grid.tileWidth;
-		_canvas.height = sCape.Level.currentLevel.grid.map.length * sCape.Level.currentLevel.grid.tileHeight;
+		_canvas.width = grid.map[0].length * grid.tileWidth;
+		_canvas.height = grid.map.length * grid.tileHeight;
 
+		sCape.Level.currentLevel = new sCape.Level(grid);
 		_loopThroughMap({
 			'P': function (col, row) {
 				_createPlayer(row, col);
