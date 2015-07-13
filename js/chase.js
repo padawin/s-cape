@@ -1,5 +1,5 @@
 (function () {
-	var _ctx, _canvas, chase = {},
+	var chase = {},
 		_player, movableClass, playerClass, _deaths = [], deathClass,
 		_Geometry,
 		_directionsSetup = {},
@@ -87,8 +87,8 @@
 			// Map borders
 			if (this.x < 0
 				|| this.y < 0
-				|| this.x + this.w == _canvas.width
-				|| this.y + this.h == _canvas.height
+				|| this.x + this.w == sCape.GUI.canvas.width
+				|| this.y + this.h == sCape.GUI.canvas.height
 			) {
 				return true;
 			}
@@ -168,11 +168,10 @@
 	}
 
 	function _drawBackground () {
-		var img = sCape.data.resources.grass.resource;
-		// create pattern
-		var pattern = _ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
-		_ctx.fillStyle = pattern;
-		_ctx.fillRect(0, 0, _canvas.width, _canvas.height); // context.fillRect(x, y, width, height);
+		var img = sCape.data.resources.grass.resource,
+			pattern = sCape.GUI.ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+		sCape.GUI.ctx.fillStyle = pattern;
+		sCape.GUI.ctx.fillRect(0, 0, sCape.GUI.canvas.width, sCape.GUI.canvas.height); // context.fillRect(x, y, width, height);
 	}
 
 	function _draw (x, y, resource, direction, moveFrame) {
@@ -184,7 +183,7 @@
 		var spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
 			spriteStartY = direction ? _directionsSetup[direction].spriteRow * resource.h : 0;
 
-		_ctx.drawImage(
+		sCape.GUI.ctx.drawImage(
 			resource.resource,
 			// Start in the sprite board
 			spriteStartX, spriteStartY,
@@ -246,31 +245,31 @@
 
 	function _drawDeath (death) {
 		if (death.seesPlayer) {
-			_ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+			sCape.GUI.ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
 		}
 		else {
-			_ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
+			sCape.GUI.ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
 		}
-		_ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-		_ctx.beginPath();
-		_ctx.moveTo(
+		sCape.GUI.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+		sCape.GUI.ctx.beginPath();
+		sCape.GUI.ctx.moveTo(
 			death.cellChange.x,
 			death.cellChange.y
 		);
-		_ctx.arc(
+		sCape.GUI.ctx.arc(
 			death.cellChange.x,
 			death.cellChange.y,
 			death.visionDepth,
 			_directionsSetup[death.direction].vAngleStart,
 			_directionsSetup[death.direction].vAngleEnd
 		);
-		_ctx.lineTo(
+		sCape.GUI.ctx.lineTo(
 			death.cellChange.x,
 			death.cellChange.y
 		);
-		_ctx.fill();
-		_ctx.stroke();
-		_ctx.closePath();
+		sCape.GUI.ctx.fill();
+		sCape.GUI.ctx.stroke();
+		sCape.GUI.ctx.closePath();
 
 		_draw(
 			death.x, death.y, 'death',
@@ -301,8 +300,8 @@
 			sCape.data.levels[_currentLevelIndex].tileHeight,
 			sCape.data.levels[_currentLevelIndex].map
 		);
-		_canvas.width = grid.map[0].length * grid.tileWidth;
-		_canvas.height = grid.map.length * grid.tileHeight;
+		sCape.GUI.canvas.width = grid.map[0].length * grid.tileWidth;
+		sCape.GUI.canvas.height = grid.map.length * grid.tileHeight;
 
 		sCape.Level.currentLevel = new sCape.Level(grid);
 		grid.loopThroughMap({
@@ -323,10 +322,10 @@
 		if (_isMobile) {
 			function _touchEvent (e) {
 				var trigoX, trigoY, touchRatio, canvasRatio;
-				trigoX = e.touches[0].clientX - _canvas.width / 2;
-				trigoY = -1 * e.touches[0].clientY + _canvas.height / 2;
+				trigoX = e.touches[0].clientX - sCape.GUI.canvas.width / 2;
+				trigoY = -1 * e.touches[0].clientY + sCape.GUI.canvas.height / 2;
 				touchRatio = Math.abs(trigoY / trigoX);
-				canvasRatio = _canvas.height / _canvas.width;
+				canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
 				if (trigoY > 0 && touchRatio > canvasRatio) {
 					_player.startMotion('up');
 				}
@@ -341,11 +340,11 @@
 				}
 			}
 
-			B.addEvent(_canvas, 'touchstart', _touchEvent);
+			B.addEvent(sCape.GUI.canvas, 'touchstart', _touchEvent);
 
-			B.addEvent(_canvas, 'touchmove', _touchEvent);
+			B.addEvent(sCape.GUI.canvas, 'touchmove', _touchEvent);
 
-			B.addEvent(_canvas, 'touchend', function (e) {
+			B.addEvent(sCape.GUI.canvas, 'touchend', function (e) {
 				_player.stopMotion();
 			});
 		}
@@ -381,14 +380,14 @@
 	}
 
 	function _loadResources (loadedCallback) {
-		var r, loaded = 0, loadingWidth = 0.70 * _canvas.width;
+		var r, loaded = 0, loadingWidth = 0.70 * sCape.GUI.canvas.width;
 
 		// rect starts from 15% from the border of the canvas
-		_ctx.rect(
-			0.15 * _canvas.width, _canvas.height / 2 - 10,
+		sCape.GUI.ctx.rect(
+			0.15 * sCape.GUI.canvas.width, sCape.GUI.canvas.height / 2 - 10,
 			loadingWidth, 20
 		);
-		_ctx.stroke();
+		sCape.GUI.ctx.stroke();
 
 		for (r in sCape.data.resources) {
 			if (sCape.data.resources.hasOwnProperty(r)) {
@@ -399,8 +398,8 @@
 						loadedCallback();
 					}
 					else {
-						_ctx.fillRect(
-							0.15 * _canvas.width, _canvas.height / 2 - 10,
+						sCape.GUI.ctx.fillRect(
+							0.15 * sCape.GUI.canvas.width, sCape.GUI.canvas.height / 2 - 10,
 							loadingWidth * loaded / sCape.data.nbResources, 20
 						);
 					}
@@ -527,10 +526,9 @@
 
 	chase.start = function (canvas, isMobile) {
 		_isMobile = isMobile;
-		_ctx, _currentLevelIndex = 0;
+		_currentLevelIndex = 0;
 
-		_canvas = B.$id(canvas);
-		_ctx = _canvas.getContext('2d');
+		sCape.GUI.init(B.$id(canvas));
 
 		_initLevel();
 		_loadResources(function () {
