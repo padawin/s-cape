@@ -31,14 +31,14 @@
 				B.addEvent(sCape.GUI.canvas, 'touchmove', _touchEvent);
 
 				B.addEvent(sCape.GUI.canvas, 'touchend', function (e) {
-					sCape.Engine.player.stopMotion();
+					sCape.Level.currentLevel.player.stopMotion();
 				});
 			}
 			else {
 				B.addEvent(document, 'keyup', function (e) {
-					if (sCape.Engine.player.isMoving()) {
+					if (sCape.Level.currentLevel.player.isMoving()) {
 						_worldChanged = true;
-						sCape.Engine.player.stopMotion();
+						sCape.Level.currentLevel.player.stopMotion();
 					}
 				});
 

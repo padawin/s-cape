@@ -42,6 +42,7 @@
 
 	sCape.Level = function (grid) {
 		this.grid = grid;
+		this.player = null;
 		this.obstacles = [];
 
 		this.createObstacle = function (type, obstacle) {

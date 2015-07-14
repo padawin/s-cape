@@ -11,8 +11,8 @@
 
 		drawPlayer: function () {
 			sCape.GUI.draw(
-				sCape.Engine.player.x, sCape.Engine.player.y,
-				'player', sCape.Engine.player.direction, sCape.Engine.player.moveFrame
+				sCape.Level.currentLevel.player.x, sCape.Level.currentLevel.player.y,
+				'player', sCape.Level.currentLevel.player.direction, sCape.Level.currentLevel.player.moveFrame
 			);
 		},
 
