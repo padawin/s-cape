@@ -44,6 +44,7 @@
 		this.grid = grid;
 		this.player = null;
 		this.obstacles = [];
+		this.deaths = [];
 
 		this.createObstacle = function (type, obstacle) {
 			this.obstacles.push({

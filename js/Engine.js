@@ -8,7 +8,6 @@
 		_worldChanged = true;
 
 	sCape.Engine = {};
-	sCape.Engine.deaths = [];
 	_directions = ['down', 'left', 'right', 'up'];
 	sCape.Engine.directions = _directions;
 	sCape.Engine.directionsSetup = {};
@@ -128,7 +127,7 @@
 		var deathClass = sCape.data.deathClass || sCape.Entities.deathClass,
 			direction = _directions[parseInt(Math.random() * 100) % 4],
 			d = new deathClass(x, y, sCape.Engine.directionsSetup[direction]);
-		sCape.Engine.deaths.push(d);
+		sCape.Level.currentLevel.deaths.push(d);
 		return d;
 	}
 
@@ -190,21 +189,21 @@
 			}
 		}
 
-		for (d = 0; d < sCape.Engine.deaths.length; d++) {
-			if (sCape.Engine.deaths[d].isMoving()) {
-				sCape.Engine.deaths[d].x += sCape.Engine.deaths[d].speedX;
-				sCape.Engine.deaths[d].y += sCape.Engine.deaths[d].speedY;
-				sCape.Engine.deaths[d].cellChange.x += sCape.Engine.deaths[d].speedX;
-				sCape.Engine.deaths[d].cellChange.y += sCape.Engine.deaths[d].speedY;
-				sCape.Engine.deaths[d].hitbox.x += sCape.Engine.deaths[d].speedX;
-				sCape.Engine.deaths[d].hitbox.y += sCape.Engine.deaths[d].speedY;
+		for (d = 0; d < sCape.Level.currentLevel.deaths.length; d++) {
+			if (sCape.Level.currentLevel.deaths[d].isMoving()) {
+				sCape.Level.currentLevel.deaths[d].x += sCape.Level.currentLevel.deaths[d].speedX;
+				sCape.Level.currentLevel.deaths[d].y += sCape.Level.currentLevel.deaths[d].speedY;
+				sCape.Level.currentLevel.deaths[d].cellChange.x += sCape.Level.currentLevel.deaths[d].speedX;
+				sCape.Level.currentLevel.deaths[d].cellChange.y += sCape.Level.currentLevel.deaths[d].speedY;
+				sCape.Level.currentLevel.deaths[d].hitbox.x += sCape.Level.currentLevel.deaths[d].speedX;
+				sCape.Level.currentLevel.deaths[d].hitbox.y += sCape.Level.currentLevel.deaths[d].speedY;
 				_worldChanged = true;
-				sCape.Engine.deaths[d].moveFrame = (sCape.Engine.deaths[d].moveFrame + 0.25) % 4;
+				sCape.Level.currentLevel.deaths[d].moveFrame = (sCape.Level.currentLevel.deaths[d].moveFrame + 0.25) % 4;
 			}
 			else {
-				changed = sCape.Engine.deaths[d].increaseRotationFrequency();
+				changed = sCape.Level.currentLevel.deaths[d].increaseRotationFrequency();
 				if (changed) {
-					sCape.Engine.deaths[d].direction = sCape.Engine.directionsSetup[
+					sCape.Level.currentLevel.deaths[d].direction = sCape.Engine.directionsSetup[
 						sCape.Engine.directions[parseInt(Math.random() * 100) % 4]
 					];
 					_worldChanged = true;
@@ -215,19 +214,19 @@
 				var distance, angle;
 				// Try to detect player
 				distance = Math.sqrt(
-					Math.pow(player.cellChange.x - sCape.Engine.deaths[d].cellChange.x, 2)
-					+ Math.pow(player.cellChange.y - sCape.Engine.deaths[d].cellChange.y, 2)
+					Math.pow(player.cellChange.x - sCape.Level.currentLevel.deaths[d].cellChange.x, 2)
+					+ Math.pow(player.cellChange.y - sCape.Level.currentLevel.deaths[d].cellChange.y, 2)
 				);
 				angle = Math.atan2(
-					player.cellChange.y - sCape.Engine.deaths[d].cellChange.y,
-					player.cellChange.x - sCape.Engine.deaths[d].cellChange.x
+					player.cellChange.y - sCape.Level.currentLevel.deaths[d].cellChange.y,
+					player.cellChange.x - sCape.Level.currentLevel.deaths[d].cellChange.x
 				);
 
 				// Hack for to test if the player is in the vision of the death
 				// when turned toward the right (to handle the angle 0)
 				angle = angle < Math.PI / 4 ? angle + 2 * Math.PI : angle;
 
-				sCape.Engine.deaths[d].detectPlayer(player, distance, angle);
+				sCape.Level.currentLevel.deaths[d].detectPlayer(player, distance, angle);
 			}
 		}
 	}

@@ -69,7 +69,7 @@
 					sCape.GUI.drawTree(row, col);
 				},
 				'D': function (col, row) {
-					sCape.GUI.drawDeath(sCape.Engine.deaths[d]);
+					sCape.GUI.drawDeath(sCape.Level.currentLevel.deaths[d]);
 					++d;
 				}
 			});
