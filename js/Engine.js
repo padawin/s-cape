@@ -157,34 +157,35 @@
 	 */
 	function _updateState () {
 		var d, newPX, newPY,
-			changed;
+			changed
+			player = sCape.Level.currentLevel.player;
 
-		if (sCape.Level.currentLevel.player.isMoving()) {
-			sCape.Level.currentLevel.player.x += sCape.Level.currentLevel.player.speedX;
-			sCape.Level.currentLevel.player.y += sCape.Level.currentLevel.player.speedY;
-			sCape.Level.currentLevel.player.hitbox.x += sCape.Level.currentLevel.player.speedX;
-			sCape.Level.currentLevel.player.hitbox.y += sCape.Level.currentLevel.player.speedY;
+		if (player.isMoving()) {
+			player.x += player.speedX;
+			player.y += player.speedY;
+			player.hitbox.x += player.speedX;
+			player.hitbox.y += player.speedY;
 			_worldChanged = true;
 
-			if (sCape.Level.currentLevel.player.isColliding()) {
-				sCape.Level.currentLevel.player.x -= sCape.Level.currentLevel.player.speedX;
-				sCape.Level.currentLevel.player.y -= sCape.Level.currentLevel.player.speedY;
-				sCape.Level.currentLevel.player.hitbox.x -= sCape.Level.currentLevel.player.speedX;
-				sCape.Level.currentLevel.player.hitbox.y -= sCape.Level.currentLevel.player.speedY;
-				sCape.Level.currentLevel.player.stopMotion();
+			if (player.isColliding()) {
+				player.x -= player.speedX;
+				player.y -= player.speedY;
+				player.hitbox.x -= player.speedX;
+				player.hitbox.y -= player.speedY;
+				player.stopMotion();
 			}
 			else {
-				sCape.Level.currentLevel.player.cellChange.x += sCape.Level.currentLevel.player.speedX;
-				sCape.Level.currentLevel.player.cellChange.y += sCape.Level.currentLevel.player.speedY;
-				sCape.Level.currentLevel.player.moveFrame = (sCape.Level.currentLevel.player.moveFrame + 0.25) % 4;
+				player.cellChange.x += player.speedX;
+				player.cellChange.y += player.speedY;
+				player.moveFrame = (player.moveFrame + 0.25) % 4;
 
-				newPX = parseInt(sCape.Level.currentLevel.player.cellChange.x / sCape.Level.currentLevel.grid.tileWidth);
-				newPY = parseInt(sCape.Level.currentLevel.player.cellChange.y / sCape.Level.currentLevel.grid.tileHeight);
+				newPX = parseInt(player.cellChange.x / sCape.Level.currentLevel.grid.tileWidth);
+				newPY = parseInt(player.cellChange.y / sCape.Level.currentLevel.grid.tileHeight);
 				if (sCape.Level.currentLevel.grid.map[newPY][newPX] == '') {
-					sCape.Level.currentLevel.grid.map[sCape.Level.currentLevel.player.cellY][sCape.Level.currentLevel.player.cellX] = '';
-					sCape.Level.currentLevel.player.cellX = newPX;
-					sCape.Level.currentLevel.player.cellY = newPY;
-					sCape.Level.currentLevel.grid.map[sCape.Level.currentLevel.player.cellY][sCape.Level.currentLevel.player.cellX] = 'P';
+					sCape.Level.currentLevel.grid.map[player.cellY][player.cellX] = '';
+					player.cellX = newPX;
+					player.cellY = newPY;
+					sCape.Level.currentLevel.grid.map[player.cellY][player.cellX] = 'P';
 				}
 			}
 		}
@@ -214,19 +215,19 @@
 				var distance, angle;
 				// Try to detect player
 				distance = Math.sqrt(
-					Math.pow(sCape.Level.currentLevel.player.cellChange.x - sCape.Engine.deaths[d].cellChange.x, 2)
-					+ Math.pow(sCape.Level.currentLevel.player.cellChange.y - sCape.Engine.deaths[d].cellChange.y, 2)
+					Math.pow(player.cellChange.x - sCape.Engine.deaths[d].cellChange.x, 2)
+					+ Math.pow(player.cellChange.y - sCape.Engine.deaths[d].cellChange.y, 2)
 				);
 				angle = Math.atan2(
-					sCape.Level.currentLevel.player.cellChange.y - sCape.Engine.deaths[d].cellChange.y,
-					sCape.Level.currentLevel.player.cellChange.x - sCape.Engine.deaths[d].cellChange.x
+					player.cellChange.y - sCape.Engine.deaths[d].cellChange.y,
+					player.cellChange.x - sCape.Engine.deaths[d].cellChange.x
 				);
 
 				// Hack for to test if the player is in the vision of the death
 				// when turned toward the right (to handle the angle 0)
 				angle = angle < Math.PI / 4 ? angle + 2 * Math.PI : angle;
 
-				sCape.Engine.deaths[d].detectPlayer(sCape.Level.currentLevel.player, distance, angle);
+				sCape.Engine.deaths[d].detectPlayer(player, distance, angle);
 			}
 		}
 	}
