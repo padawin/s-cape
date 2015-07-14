@@ -158,6 +158,7 @@
 		var d, newPX, newPY,
 			changed
 			player = sCape.Level.currentLevel.player;
+			deaths = sCape.Level.currentLevel.deaths;
 
 		if (player.isMoving()) {
 			player.x += player.speedX;
@@ -189,21 +190,21 @@
 			}
 		}
 
-		for (d = 0; d < sCape.Level.currentLevel.deaths.length; d++) {
-			if (sCape.Level.currentLevel.deaths[d].isMoving()) {
-				sCape.Level.currentLevel.deaths[d].x += sCape.Level.currentLevel.deaths[d].speedX;
-				sCape.Level.currentLevel.deaths[d].y += sCape.Level.currentLevel.deaths[d].speedY;
-				sCape.Level.currentLevel.deaths[d].cellChange.x += sCape.Level.currentLevel.deaths[d].speedX;
-				sCape.Level.currentLevel.deaths[d].cellChange.y += sCape.Level.currentLevel.deaths[d].speedY;
-				sCape.Level.currentLevel.deaths[d].hitbox.x += sCape.Level.currentLevel.deaths[d].speedX;
-				sCape.Level.currentLevel.deaths[d].hitbox.y += sCape.Level.currentLevel.deaths[d].speedY;
+		for (d = 0; d < deaths.length; d++) {
+			if (deaths[d].isMoving()) {
+				deaths[d].x += deaths[d].speedX;
+				deaths[d].y += deaths[d].speedY;
+				deaths[d].cellChange.x += deaths[d].speedX;
+				deaths[d].cellChange.y += deaths[d].speedY;
+				deaths[d].hitbox.x += deaths[d].speedX;
+				deaths[d].hitbox.y += deaths[d].speedY;
 				_worldChanged = true;
-				sCape.Level.currentLevel.deaths[d].moveFrame = (sCape.Level.currentLevel.deaths[d].moveFrame + 0.25) % 4;
+				deaths[d].moveFrame = (deaths[d].moveFrame + 0.25) % 4;
 			}
 			else {
-				changed = sCape.Level.currentLevel.deaths[d].increaseRotationFrequency();
+				changed = deaths[d].increaseRotationFrequency();
 				if (changed) {
-					sCape.Level.currentLevel.deaths[d].direction = sCape.Engine.directionsSetup[
+					deaths[d].direction = sCape.Engine.directionsSetup[
 						sCape.Engine.directions[parseInt(Math.random() * 100) % 4]
 					];
 					_worldChanged = true;
@@ -214,19 +215,19 @@
 				var distance, angle;
 				// Try to detect player
 				distance = Math.sqrt(
-					Math.pow(player.cellChange.x - sCape.Level.currentLevel.deaths[d].cellChange.x, 2)
-					+ Math.pow(player.cellChange.y - sCape.Level.currentLevel.deaths[d].cellChange.y, 2)
+					Math.pow(player.cellChange.x - deaths[d].cellChange.x, 2)
+					+ Math.pow(player.cellChange.y - deaths[d].cellChange.y, 2)
 				);
 				angle = Math.atan2(
-					player.cellChange.y - sCape.Level.currentLevel.deaths[d].cellChange.y,
-					player.cellChange.x - sCape.Level.currentLevel.deaths[d].cellChange.x
+					player.cellChange.y - deaths[d].cellChange.y,
+					player.cellChange.x - deaths[d].cellChange.x
 				);
 
 				// Hack for to test if the player is in the vision of the death
 				// when turned toward the right (to handle the angle 0)
 				angle = angle < Math.PI / 4 ? angle + 2 * Math.PI : angle;
 
-				sCape.Level.currentLevel.deaths[d].detectPlayer(player, distance, angle);
+				deaths[d].detectPlayer(player, distance, angle);
 			}
 		}
 	}
