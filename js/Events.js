@@ -13,16 +13,16 @@
 					touchRatio = Math.abs(trigoY / trigoX);
 					canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
 					if (trigoY > 0 && touchRatio > canvasRatio) {
-						sCape.Engine.player.startMotion('up');
+						sCape.Engine.startPlayerMotion('up');
 					}
 					else if (trigoY < 0 && touchRatio > canvasRatio) {
-						sCape.Engine.player.startMotion('down');
+						sCape.Engine.startPlayerMotion('down');
 					}
 					else if (trigoX > 0) {
-						sCape.Engine.player.startMotion('right');
+						sCape.Engine.startPlayerMotion('right');
 					}
 					else {
-						sCape.Engine.player.startMotion('left');
+						sCape.Engine.startPlayerMotion('left');
 					}
 				}
 
@@ -45,19 +45,19 @@
 				B.addEvent(document, 'keydown', function (e) {
 					switch (e.which) {
 						case 37: // left
-							sCape.Engine.player.startMotion('left');
+							sCape.Engine.startPlayerMotion('left');
 							e.preventDefault();
 							break;
 						case 38: // up
-							sCape.Engine.player.startMotion('up');
+							sCape.Engine.startPlayerMotion('up');
 							e.preventDefault();
 							break;
 						case 39: // right
-							sCape.Engine.player.startMotion('right');
+							sCape.Engine.startPlayerMotion('right');
 							e.preventDefault();
 							break;
 						case 40: // down
-							sCape.Engine.player.startMotion('down');
+							sCape.Engine.startPlayerMotion('down');
 							e.preventDefault();
 							break;
 					};

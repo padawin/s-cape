@@ -84,6 +84,16 @@
 		}
 	};
 
+	sCape.Engine.startPlayerMotion = function (direction) {
+		if (!sCape.Engine.directionsSetup[direction]) {
+			throw 'Unknown direction: ' + direction;
+		}
+
+		sCape.Engine.player.startMotion(
+			sCape.Engine.directionsSetup[direction]
+		);
+	};
+
 	sCape.Engine.startMainLoop = function () {
 
 		var fps = 60,
@@ -112,12 +122,13 @@
 
 	function _createPlayer (x, y) {
 		var playerClass = sCape.data.playerClass || sCape.Entities.playerClass;
-		return new playerClass(x, y);
+		return new playerClass(x, y, sCape.Engine.directionsSetup['down']);
 	}
 
 	function _createDeath (x, y) {
 		var deathClass = sCape.data.deathClass || sCape.Entities.deathClass,
-			d = new deathClass(x, y, _directions[parseInt(Math.random() * 100) % 4]);
+			direction = _directions[parseInt(Math.random() * 100) % 4],
+			d = new deathClass(x, y, sCape.Engine.directionsSetup[direction]);
 		sCape.Engine.deaths.push(d);
 		return d;
 	}
@@ -193,6 +204,9 @@
 			else {
 				changed = sCape.Engine.deaths[d].increaseRotationFrequency();
 				if (changed) {
+					sCape.Engine.deaths[d].direction = sCape.Engine.directionsSetup[
+						sCape.Engine.directions[parseInt(Math.random() * 100) % 4]
+					];
 					_worldChanged = true;
 				}
 			}

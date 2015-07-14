@@ -29,7 +29,7 @@
 			this.speedY = 0;
 			this.moving = false;
 			this.moveFrame = 0;
-			this.direction = direction || 'down';
+			this.direction = direction;
 
 			this.isMoving = function () {
 				return this.moving;
@@ -40,14 +40,10 @@
 					return;
 				}
 
-				if (!sCape.Engine.directionsSetup[direction]) {
-					throw 'Unknown direction: ' + direction;
-				}
-
 				this.direction = direction;
 				this.moving = true;
-				this.speedX = sCape.Engine.directionsSetup[direction].x;
-				this.speedY = sCape.Engine.directionsSetup[direction].y;
+				this.speedX = direction.x;
+				this.speedY = direction.y;
 			};
 
 			this.stopMotion = function () {
@@ -96,18 +92,13 @@
 
 			this.increaseRotationFrequency = function () {
 				this.frameBeforeRotation = (this.frameBeforeRotation + 1) % this.rotationFrequency;
-				if (this.frameBeforeRotation == 0) {
-					this.direction = sCape.Engine.directions[parseInt(Math.random() * 100) % 4];
-					return true;
-				}
-
-				return false;
+				return this.frameBeforeRotation == 0;
 			};
 
 			this.detectPlayer = function (player, distance, angle) {
 				var inReach = distance <= this.visionDepth,
-					inSight = sCape.Engine.directionsSetup[this.direction].vAngleStart <= angle
-						&& angle <= sCape.Engine.directionsSetup[this.direction].vAngleEnd,
+					inSight = this.direction.vAngleStart <= angle
+						&& angle <= this.direction.vAngleEnd,
 					obstaclesInWay = false, o;
 
 				for (o = 0; o < sCape.Level.currentLevel.obstacles.length; o++) {

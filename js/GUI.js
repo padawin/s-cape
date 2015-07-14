@@ -41,8 +41,8 @@
 				death.cellChange.x,
 				death.cellChange.y,
 				death.visionDepth,
-				sCape.Engine.directionsSetup[death.direction].vAngleStart,
-				sCape.Engine.directionsSetup[death.direction].vAngleEnd
+				death.direction.vAngleStart,
+				death.direction.vAngleEnd
 			);
 			sCape.GUI.ctx.lineTo(
 				death.cellChange.x,
@@ -89,7 +89,7 @@
 			// there are 4 directions, so 4 rows in the sprite
 			// To set the sprite on the middle bottom of the tile
 			var spriteStartX = moveFrame ? parseInt(moveFrame) * resource.w : 0,
-				spriteStartY = direction ? sCape.Engine.directionsSetup[direction].spriteRow * resource.h : 0;
+				spriteStartY = direction ? direction.spriteRow * resource.h : 0;
 
 			sCape.GUI.ctx.drawImage(
 				resource.resource,
