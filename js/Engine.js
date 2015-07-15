@@ -92,6 +92,16 @@
 		);
 	};
 
+	sCape.Engine.startDeathMotion = function (death, direction) {
+		if (!sCape.Engine.directionsSetup[direction]) {
+			throw 'Unknown direction: ' + direction;
+		}
+
+		death.startMotion(
+			sCape.Engine.directionsSetup[direction]
+		);
+	};
+
 	sCape.Engine.startMainLoop = function () {
 
 		var fps = 60,
@@ -228,6 +238,13 @@
 				angle = angle < Math.PI / 4 ? angle + 2 * Math.PI : angle;
 
 				deaths[d].detectPlayer(player, distance, angle);
+
+				if (deaths[d].seesPlayer) {
+					deaths[d].startMotion(deaths[d].direction);
+				}
+				else {
+					deaths[d].stopMotion();
+				}
 			}
 		}
 	}
