@@ -20,9 +20,24 @@
 
 		this.loopThroughMap = function (callbacks) {
 			var row, col, d = 0, currCell;
+			sCape.GUI.ctx.beginPath();
+			sCape.GUI.ctx.moveTo(0, 0);
+			sCape.GUI.ctx.lineTo(this.map[0].length * tileWidth, this.map.length * tileHeight);
+			sCape.GUI.ctx.stroke();
+			sCape.GUI.ctx.moveTo(0, this.map.length * tileHeight);
+			sCape.GUI.ctx.lineTo(this.map[0].length * tileWidth, 0);
+			sCape.GUI.ctx.stroke();
 
 			for (col = 0; col < this.map.length; col++) {
+				sCape.GUI.ctx.moveTo(0, col * tileHeight);
+				sCape.GUI.ctx.lineTo(this.map[col].length * tileWidth, col * tileHeight);
+				sCape.GUI.ctx.stroke();
 				for (row = 0; row < this.map[col].length; row++) {
+					if (col == 0) {
+						sCape.GUI.ctx.moveTo(row * tileWidth, 0);
+						sCape.GUI.ctx.lineTo(row * tileWidth, this.map.length * tileHeight);
+						sCape.GUI.ctx.stroke();
+					}
 					currCell = this.map[col][row];
 					if (currCell != '' && callbacks[currCell]) {
 						callbacks[currCell](col, row);
