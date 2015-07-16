@@ -15,7 +15,7 @@
 		};
 
 		this.getResourceAbsoluteYCoordinatesFromCell = function (cellY, resourceHeight) {
-			return cellY * _tileHeight + _tileHeight - resourceHeight;
+			return cellY * tileHeight + tileHeight - resourceHeight;
 		};
 
 		this.loopThroughMap = function (callbacks) {
