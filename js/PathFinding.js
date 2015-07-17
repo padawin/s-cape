@@ -46,6 +46,10 @@
 
 				var neighbours = grid.getNeighbours(current);
 				for (var next in neighbours) {
+					if (neighbours[next].content == 'T') {
+						continue;
+					}
+
 					var nextKey = _getKey(neighbours[next]);
 					// 1 should be grid.cost(current, next)
 					var newCost = costSoFar[_getKey(current)] + 1;
