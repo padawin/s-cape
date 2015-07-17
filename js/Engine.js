@@ -165,53 +165,15 @@
 	 * May contain factorizable calculations
 	 */
 	function _updateState () {
-		var d, newPX, newPY,
-			changed
-			player = sCape.Level.currentLevel.player;
+		var d,
+			changed,
+			player = sCape.Level.currentLevel.player,
 			deaths = sCape.Level.currentLevel.deaths;
 
-		if (player.isMoving()) {
-			player.x += player.speedX;
-			player.y += player.speedY;
-			player.hitbox.x += player.speedX;
-			player.hitbox.y += player.speedY;
-			_worldChanged = true;
-
-			if (player.isColliding()) {
-				player.x -= player.speedX;
-				player.y -= player.speedY;
-				player.hitbox.x -= player.speedX;
-				player.hitbox.y -= player.speedY;
-				player.stopMotion();
-			}
-			else {
-				player.cellChange.x += player.speedX;
-				player.cellChange.y += player.speedY;
-				player.moveFrame = (player.moveFrame + 0.25) % 4;
-
-				newPX = parseInt(player.cellChange.x / sCape.Level.currentLevel.grid.tileWidth);
-				newPY = parseInt(player.cellChange.y / sCape.Level.currentLevel.grid.tileHeight);
-				if (sCape.Level.currentLevel.grid.map[newPY][newPX] == '') {
-					sCape.Level.currentLevel.grid.map[player.cellY][player.cellX] = '';
-					player.cellX = newPX;
-					player.cellY = newPY;
-					sCape.Level.currentLevel.grid.map[player.cellY][player.cellX] = 'P';
-				}
-			}
-		}
+		_worldChanged = _worldChanged || player.updatePosition();
 
 		for (d = 0; d < deaths.length; d++) {
-			if (deaths[d].isMoving()) {
-				deaths[d].x += deaths[d].speedX;
-				deaths[d].y += deaths[d].speedY;
-				deaths[d].cellChange.x += deaths[d].speedX;
-				deaths[d].cellChange.y += deaths[d].speedY;
-				deaths[d].hitbox.x += deaths[d].speedX;
-				deaths[d].hitbox.y += deaths[d].speedY;
-				_worldChanged = true;
-				deaths[d].moveFrame = (deaths[d].moveFrame + 0.25) % 4;
-			}
-			else {
+			if (!deaths[d].updatePosition()) {
 				changed = deaths[d].increaseRotationFrequency();
 				if (changed) {
 					deaths[d].direction = sCape.Engine.directionsSetup[
@@ -219,6 +181,9 @@
 					];
 					_worldChanged = true;
 				}
+			}
+			else {
+				_worldChanged = true;
 			}
 
 			if (_worldChanged) {
