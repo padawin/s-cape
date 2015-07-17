@@ -44,14 +44,15 @@
 					break;
 				}
 
-				for (var next in grid.getNeighbours(current)) {
-					var nextKey = _getKey(next);
+				var neighbours = grid.getNeighbours(current);
+				for (var next in neighbours) {
+					var nextKey = _getKey(neighbours[next]);
 					// 1 should be grid.cost(current, next)
 					var newCost = costSoFar[_getKey(current)] + 1;
 					if (!(nextKey in costSoFar) || newCost < costSoFar[nextKey]) {
 						costSoFar[nextKey] = newCost;
-						next.priority = newCost + heuristic(end, next)
-						frontier.push(next);
+						next.priority = newCost + heuristic(end, neighbours[next])
+						frontier.push(neighbours[next]);
 						cameFrom[nextKey] = current;
 					}
 				}
