@@ -240,10 +240,11 @@
 				deaths[d].detectPlayer(player, distance, angle);
 
 				if (deaths[d].seesPlayer) {
-					deaths[d].startMotion(deaths[d].direction);
-				}
-				else {
-					deaths[d].stopMotion();
+					var path = sCape.PathFinding.shortestPath(
+						sCape.Level.currentLevel.grid,
+						player,
+						deaths[d]
+					);
 				}
 			}
 		}

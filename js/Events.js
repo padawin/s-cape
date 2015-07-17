@@ -62,19 +62,6 @@
 							break;
 					};
 				});
-
-				B.addEvent(document, 'keypress', function (e) {
-					switch (e.which) {
-						case 97: // a
-							var path = sCape.PathFinding.shortestPath(
-								sCape.Level.currentLevel.grid,
-								sCape.Level.currentLevel.player,
-								sCape.Level.currentLevel.deaths[0]
-							);
-							console.log(path);
-							break;
-					};
-				});
 			}
 		}
 	};
