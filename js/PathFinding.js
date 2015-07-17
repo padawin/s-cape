@@ -57,8 +57,7 @@
 					}
 				}
 			}
-
-			return getPath(cameFrom, start, end[0]);
+			return getPath(cameFrom, start, end);
 		}
 	};
 

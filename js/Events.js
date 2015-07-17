@@ -69,7 +69,7 @@
 							var path = sCape.PathFinding.shortestPath(
 								sCape.Level.currentLevel.grid,
 								sCape.Level.currentLevel.player,
-								[sCape.Level.currentLevel.deaths[0]]
+								sCape.Level.currentLevel.deaths[0]
 							);
 							console.log(path);
 							break;
