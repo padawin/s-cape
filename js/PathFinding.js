@@ -3,8 +3,8 @@
 		throw "sCape is needed to use the PathFinding module";
 	}
 
-	function _getKey(object) {
-		return object.x + '-' + object.y;
+	function _getKey(object, a) {
+		return object.cellX + '-' + object.cellY;
 	}
 
 	function heuristic(a, b) {
