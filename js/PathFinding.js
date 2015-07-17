@@ -13,8 +13,8 @@
 	}
 
 	function getPath(cameFrom, start, end) {
-		var current = end;
-		var path = [current];
+		var current = end,
+			path = [current];
 		while (current != start) {
 			current = cameFrom[_getKey(current)];
 			path.push(current);
@@ -25,17 +25,23 @@
 
 	sCape.PathFinding = {
 		shortestPath: function (grid, start, end) {
-			var frontier = new HeapQueue(function(a, b) {
+			var cameFrom = {},
+				costSoFar = {},
+				current,
+				frontier,
+				neighbours,
+				next,
+				nextKey,
+				newCost;
+
+			frontier = new HeapQueue(function(a, b) {
 				return a.priority - b.priority;
 			});
 			start.priority = 0;
 
 			frontier.push(start);
-			var cameFrom = {};
-			var costSoFar = {};
 			cameFrom[_getKey(start)] = null;
 			costSoFar[_getKey(start)] = 0;
-			var current;
 
 			while (frontier.length > 0) {
 				current = frontier.pop();
@@ -44,15 +50,15 @@
 					break;
 				}
 
-				var neighbours = grid.getNeighbours(current);
-				for (var next in neighbours) {
+				neighbours = grid.getNeighbours(current);
+				for (next in neighbours) {
 					if (neighbours[next].content == 'T') {
 						continue;
 					}
 
-					var nextKey = _getKey(neighbours[next]);
+					nextKey = _getKey(neighbours[next]);
 					// 1 should be grid.cost(current, next)
-					var newCost = costSoFar[_getKey(current)] + 1;
+					newCost = costSoFar[_getKey(current)] + 1;
 					if (!(nextKey in costSoFar) || newCost < costSoFar[nextKey]) {
 						costSoFar[nextKey] = newCost;
 						next.priority = newCost + heuristic(end, neighbours[next])
