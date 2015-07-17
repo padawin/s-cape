@@ -14,21 +14,11 @@
 
 	function getPath(cameFrom, start, end) {
 		var current = end,
-			path = [current],
-			previous = current,
-			oldDirection = null,
-			newDirection = null;
+			path = [current];
 		while (current != start) {
 			current = cameFrom[_getKey(current)];
-			// store just the changes of direction to move on bigger vectors
-			oldDirection = newDirection;
-			newDirection = current.cellX - previous.cellX || current.cellY - previous.cellY;
-			if (newDirection == oldDirection) {
-				path.push(current);
-			}
-			previous = current;
+			path.push(current);
 		}
-		path.push(start);
 		path.reverse();
 		return path;
 	}
