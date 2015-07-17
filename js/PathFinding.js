@@ -57,7 +57,6 @@
 					}
 
 					nextKey = _getKey(neighbours[next]);
-					// 1 should be grid.cost(current, next)
 					newCost = costSoFar[_getKey(current)] + 1;
 					if (!(nextKey in costSoFar) || newCost < costSoFar[nextKey]) {
 						costSoFar[nextKey] = newCost;
