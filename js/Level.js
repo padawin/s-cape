@@ -50,16 +50,16 @@
 			var n = [];
 
 			if (point.cellY > 0 && this.map[point.cellY - 1][point.cellX] == '') {
-				n.push({cellX: point.cellY - 1, cellY: point.cellX});
+				n.push({cellX: point.cellX, cellY: point.cellY - 1});
 			}
 			if (point.cellX > 0 && this.map[point.cellY][point.cellX - 1] == '') {
-				n.push({cellX: point.cellY, cellY: point.cellX - 1});
+				n.push({cellX: point.cellX - 1, cellY: point.cellY});
 			}
 			if (point.cellY < this.map.length - 1 && this.map[point.cellY + 1][point.cellX] == '') {
-				n.push({cellX: point.cellY + 1, cellY: point.cellX});
+				n.push({cellX: point.cellX, cellY: point.cellY + 1});
 			}
 			if (point.cellX < this.map[0].length - 1 && this.map[point.cellY][point.cellX + 1] == '') {
-				n.push({cellX: point.cellY, cellY: point.cellX + 1});
+				n.push({cellX: point.cellX + 1, cellY: point.cellY});
 			}
 
 			return n;
