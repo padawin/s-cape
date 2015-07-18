@@ -210,6 +210,7 @@
 						player,
 						deaths[d]
 					);
+					deaths[d].chase(path);
 				}
 			}
 		}

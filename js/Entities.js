@@ -156,7 +156,12 @@
 				else {
 					this.seesPlayer = false;
 				}
-			}
+			};
+
+			this.chase = function (path) {
+				this.path = path;
+				this.nextTarget = null;
+			};
 		}
 	};
 })(sCape);
