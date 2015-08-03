@@ -207,8 +207,8 @@
 				if (deaths[d].seesPlayer) {
 					var path = sCape.PathFinding.shortestPath(
 						sCape.Level.currentLevel.grid,
-						player,
-						deaths[d]
+						deaths[d],
+						player
 					);
 					deaths[d].chase(path);
 				}
