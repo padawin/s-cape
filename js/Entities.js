@@ -131,18 +131,17 @@
 
 		this.updatePosition = function () {
 			var targetCoordinates,
-				nextTargetVector,
-				nextTargetX, nextTargetY;
+				nextTargetVector;
 			if (this.path != null) {
 				if (this.nextTarget == null) {
 					this.nextTarget = this.path.shift();
 				}
 
-				nextTargetX = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.x, this.w);
-				nextTargetY = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.y, this.h);
+				this.nextTarget.y = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.x, this.w);
+				this.nextTarget.y = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.y, this.h);
 				if (this.nextTarget == null ||
-					this.x == nextTargetX
-					&& this.y == nextTargetY
+					this.x == this.nextTarget.x
+					&& this.y == this.nextTarget.y
 				) {
 					this.nextTarget = this.path.shift();
 				}
@@ -152,8 +151,8 @@
 			if (this.nextTarget) {
 				// get direction towards next target
 				nextTargetVector = {
-					x: nextTargetX - this.x,
-					y: nextTargetY - this.y
+					x: this.nextTarget.x - this.x,
+					y: this.nextTarget.y - this.y
 				};
 
 				// target on the left
