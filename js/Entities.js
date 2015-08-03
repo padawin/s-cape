@@ -137,6 +137,7 @@
 					this.x == this.nextTarget.x
 					&& this.y == this.nextTarget.y
 				) {
+					this.stopMotion();
 					this.nextTarget = this.path.shift();
 
 					if (this.nextTarget) {
