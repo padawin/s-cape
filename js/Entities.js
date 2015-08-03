@@ -133,17 +133,16 @@
 			var targetCoordinates,
 				nextTargetVector;
 			if (this.path != null) {
-				if (this.nextTarget == null) {
-					this.nextTarget = this.path.shift();
-				}
-
-				this.nextTarget.y = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.x, this.w);
-				this.nextTarget.y = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.y, this.h);
 				if (this.nextTarget == null ||
 					this.x == this.nextTarget.x
 					&& this.y == this.nextTarget.y
 				) {
 					this.nextTarget = this.path.shift();
+
+					if (this.nextTarget) {
+						this.nextTarget.x = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w);
+						this.nextTarget.y = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h);
+					}
 				}
 			}
 
