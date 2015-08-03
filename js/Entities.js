@@ -123,6 +123,55 @@
 		this.seesPlayer = false;
 
 		this.visionDepth = 100;
+
+
+		this.updatePosition = function () {
+			// if has a path and (no next target or on the position of the next target
+			//		next target = pop path
+			var targetCoordinates,
+				nextTargetVector,
+				nextTargetX, nextTargetY;
+			if (this.path != null &&
+				(this.nextTarget == null ||
+					this.x == (nextTargetX = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w))
+					&& this.y == (nextTargetY = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h))
+				)
+			) {
+				this.nextTarget = this.path.shift();
+			}
+
+			// if has a next target
+			if (this.nextTarget) {
+				// get direction towards next target
+				nextTargetVector = {
+					x: nextTargetX - this.x,
+					y: nextTargetY - this.y
+				};
+
+				// target on the left
+				if (nextTargetVector.x < 0) {
+					this.startMotion(sCape.Engine.directionsSetup.left);
+					this.speedX = Math.max(this.speedX, nextTargetVector.x);
+				}
+				// target on the right
+				else if (nextTargetVector.x > 0) {
+					this.startMotion(sCape.Engine.directionsSetup.right);
+					this.speedX = Math.min(this.speedX, nextTargetVector.x);
+				}
+				// target above
+				if (nextTargetVector.y < 0) {
+					this.startMotion(sCape.Engine.directionsSetup.up);
+					this.speedY = Math.max(this.speedY, nextTargetVector.y);
+				}
+				// target below
+				else if (nextTargetVector.y > 0) {
+					this.startMotion(sCape.Engine.directionsSetup.down);
+					this.speedY = Math.min(this.speedY, nextTargetVector.y);
+				}
+			}
+
+			return sCape.Entities.movableClass.prototype.updatePosition.call(this);
+		};
 	};
 
 	deathClass.prototype.increaseRotationFrequency = function () {
@@ -161,55 +210,6 @@
 	deathClass.prototype.chase = function (path) {
 		this.path = path;
 		this.nextTarget = null;
-	};
-
-	deathClass.prototype.updatePosition = function () {
-		// if has a path and (no next target or on the position of the next target
-		//		next target = pop path
-		var targetCoordinates,
-			nextTargetVector,
-			nextTargetX, nextTargetY;
-		if (this.path != null &&
-			(this.nextTarget == null ||
-				this.x == (nextTargetX = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, resource.w))
-				&& this.y == (nextTargetY = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, resource.h))
-			)
-		) {
-			this.nextTarget = this.path.shift();
-		}
-
-		// if has a next target
-		if (this.nextTarget) {
-			// get direction towards next target
-			nextTargetVector = {
-				x: nextTargetX - this.x,
-				y: nextTargetY - this.y
-			};
-
-			// target on the left
-			if (nextTargetVector.x < 0) {
-				this.startMotion(sCape.Engine.directionsSetup.left);
-				this.speedX = Math.max(this.speedX, nextTargetVector.x);
-			}
-			// target on the right
-			else if (nextTargetVector.x > 0) {
-				this.startMotion(sCape.Engine.directionsSetup.right);
-				this.speedX = Math.min(this.speedX, nextTargetVector.x);
-			}
-			// target above
-			if (nextTargetVector.y < 0) {
-				this.startMotion(sCape.Engine.directionsSetup.up);
-				this.speedY = Math.max(this.speedY, nextTargetVector.y);
-			}
-			// target below
-			else if (nextTargetVector.y > 0) {
-				this.startMotion(sCape.Engine.directionsSetup.down);
-				this.speedY = Math.min(this.speedY, nextTargetVector.y);
-			}
-		}
-
-		return _updatePosition.call(this);
-		sCape.Entities.movableClass.prototype.updatePosition.call(this);
 	};
 
 	sCape.Entities = {
