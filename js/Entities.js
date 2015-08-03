@@ -131,13 +131,19 @@
 			var targetCoordinates,
 				nextTargetVector,
 				nextTargetX, nextTargetY;
-			if (this.path != null &&
-				(this.nextTarget == null ||
-					this.x == (nextTargetX = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w))
-					&& this.y == (nextTargetY = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h))
-				)
-			) {
-				this.nextTarget = this.path.shift();
+			if (this.path != null) {
+				if (this.nextTarget == null) {
+					this.nextTarget = this.path.shift();
+				}
+
+				nextTargetX = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.x, this.w);
+				nextTargetY = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.y, this.h);
+				if (this.nextTarget == null ||
+					this.x == nextTargetX
+					&& this.y == nextTargetY
+				) {
+					this.nextTarget = this.path.shift();
+				}
 			}
 
 			// if has a next target
