@@ -130,8 +130,6 @@
 
 
 		this.updatePosition = function () {
-			// if has a path and (no next target or on the position of the next target
-			//		next target = pop path
 			var targetCoordinates,
 				nextTargetVector,
 				nextTargetX, nextTargetY;
