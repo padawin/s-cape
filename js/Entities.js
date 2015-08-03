@@ -69,6 +69,9 @@
 		else {
 			var o, nbObstacles = sCape.Level.currentLevel.obstacles.length, colliding;
 			for (o = 0; o < nbObstacles; ++o) {
+				if (sCape.Level.currentLevel.obstacles[o].obstacle === this) {
+					continue;
+				}
 				colliding = sCape.Physics.areRectanglesColliding(this.hitbox, sCape.Level.currentLevel.obstacles[o].obstacle.hitbox);
 
 				if (colliding) {
