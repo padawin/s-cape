@@ -165,7 +165,7 @@
 					this.speedX = Math.min(this.speedX, nextTargetVector.x);
 				}
 				// target above
-				if (nextTargetVector.y < 0) {
+				else if (nextTargetVector.y < 0) {
 					this.startMotion(sCape.Engine.directionsSetup.up);
 					this.speedY = Math.max(this.speedY, nextTargetVector.y);
 				}
