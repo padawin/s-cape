@@ -103,12 +103,13 @@
 				this.moveFrame = (this.moveFrame + 0.25) % 4;
 
 				var newPX = parseInt(this.cellChange.x / sCape.Level.currentLevel.grid.tileWidth),
-					newPY = parseInt(this.cellChange.y / sCape.Level.currentLevel.grid.tileHeight);
+					newPY = parseInt(this.cellChange.y / sCape.Level.currentLevel.grid.tileHeight),
+					symbol = sCape.Level.currentLevel.grid.map[this.cellY][this.cellX];
 				if (sCape.Level.currentLevel.grid.map[newPY][newPX] == '') {
 					sCape.Level.currentLevel.grid.map[this.cellY][this.cellX] = '';
 					this.cellX = newPX;
 					this.cellY = newPY;
-					sCape.Level.currentLevel.grid.map[this.cellY][this.cellX] = 'P';
+					sCape.Level.currentLevel.grid.map[this.cellY][this.cellX] = symbol;
 				}
 			}
 
