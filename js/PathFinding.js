@@ -25,6 +25,7 @@
 
 	sCape.PathFinding = {
 		shortestPath: function (grid, start, end) {
+			// @TODO @XXX Fix implementation, too slow
 			var cameFrom = {},
 				costSoFar = {},
 				current,
@@ -69,6 +70,7 @@
 					}
 				}
 			}
+
 			return getPath(cameFrom, start, end);
 		}
 	};
