@@ -31,6 +31,10 @@
 			}
 		};
 
+		this.getCell = function (point) {
+			return {cellX: point.cellX, cellY: point.cellY, content: this.map[point.cellY][point.cellX]};
+		};
+
 		this.getNeighbours = function (point) {
 			var n = [];
 

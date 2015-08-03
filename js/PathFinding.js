@@ -37,6 +37,9 @@
 			frontier = new HeapQueue(function(a, b) {
 				return a.priority - b.priority;
 			});
+
+			start = grid.getCell(start);
+			end = grid.getCell(end);
 			start.priority = 0;
 
 			frontier.push(start);
