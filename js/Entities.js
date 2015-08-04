@@ -141,8 +141,8 @@
 					this.nextTarget = this.path.shift();
 
 					if (this.nextTarget) {
-						this.nextTarget.x = sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w);
-						this.nextTarget.y = sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h);
+						this.nextTarget.x = this.nextTarget.content == 'D' ? this.x : sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w);
+						this.nextTarget.y = this.nextTarget.content == 'D' ? this.y : sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h);
 					}
 				}
 			}
