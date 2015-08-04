@@ -186,11 +186,24 @@
 		return this.frameBeforeRotation == 0;
 	};
 
-	deathClass.prototype.detectPlayer = function (player, distance, angle) {
-		var inReach = distance <= this.visionDepth,
-			inSight = this.direction.vAngleStart <= angle
-				&& angle <= this.direction.vAngleEnd,
-			obstaclesInWay = false, o;
+	deathClass.prototype.detectPlayer = function (player) {
+		var distance, angle, inReach, inSight, obstaclesInWay, o;
+		// Try to detect player
+		distance = Math.sqrt(
+			Math.pow(player.cellChange.x - this.cellChange.x, 2)
+			+ Math.pow(player.cellChange.y - this.cellChange.y, 2)
+		);
+		angle = Math.atan2(
+			player.cellChange.y - this.cellChange.y,
+			player.cellChange.x - this.cellChange.x
+		);
+
+		// Hack for to test if the player is in the vision of the death
+		// when turned toward the right (to handle the angle 0)
+		angle = angle < Math.PI / 4 ? angle + 2 * Math.PI : angle;
+		inReach = distance <= this.visionDepth;
+		inSight = this.direction.vAngleStart <= angle && angle <= this.direction.vAngleEnd;
+		obstaclesInWay = false;
 
 		for (o = 0; o < sCape.Level.currentLevel.obstacles.length; o++) {
 			if (sCape.Level.currentLevel.obstacles[o].type == 'death') {

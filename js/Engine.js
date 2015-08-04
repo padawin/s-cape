@@ -187,22 +187,7 @@
 			}
 
 			if (_worldChanged) {
-				var distance, angle;
-				// Try to detect player
-				distance = Math.sqrt(
-					Math.pow(player.cellChange.x - deaths[d].cellChange.x, 2)
-					+ Math.pow(player.cellChange.y - deaths[d].cellChange.y, 2)
-				);
-				angle = Math.atan2(
-					player.cellChange.y - deaths[d].cellChange.y,
-					player.cellChange.x - deaths[d].cellChange.x
-				);
-
-				// Hack for to test if the player is in the vision of the death
-				// when turned toward the right (to handle the angle 0)
-				angle = angle < Math.PI / 4 ? angle + 2 * Math.PI : angle;
-
-				deaths[d].detectPlayer(player, distance, angle);
+				deaths[d].detectPlayer(player);
 
 				if (deaths[d].seesPlayer) {
 					var path = sCape.PathFinding.shortestPath(
