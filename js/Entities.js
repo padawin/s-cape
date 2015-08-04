@@ -128,7 +128,6 @@
 
 		this.visionDepth = 100;
 
-
 		this.updatePosition = function () {
 			var targetCoordinates,
 				nextTargetVector;
