@@ -189,7 +189,12 @@
 			if (_worldChanged) {
 				deaths[d].detectPlayer(player);
 
-				if (deaths[d].seesPlayer) {
+				if (deaths[d].seesPlayer
+					&& (
+						!deaths[d].isChasing()
+						|| player.changedCell
+					)
+				) {
 					var path = sCape.PathFinding.shortestPath(
 						sCape.Level.currentLevel.grid,
 						deaths[d],

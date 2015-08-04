@@ -84,6 +84,7 @@
 	};
 
 	movableClass.prototype.updatePosition = function () {
+		this.changedCell = false;
 		if (this.isMoving()) {
 			this.x += this.speedX;
 			this.y += this.speedY;
@@ -110,6 +111,7 @@
 					this.cellX = newPX;
 					this.cellY = newPY;
 					sCape.Level.currentLevel.grid.map[this.cellY][this.cellX] = symbol;
+					this.changedCell = true;
 				}
 			}
 
@@ -229,6 +231,10 @@
 	deathClass.prototype.chase = function (path) {
 		this.path = path;
 		this.nextTarget = null;
+	};
+
+	deathClass.prototype.isChasing = function () {
+		return this.path && this.path.length || this.nextTarget;
 	};
 
 	sCape.Entities = {
