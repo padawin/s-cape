@@ -60,8 +60,8 @@
 		// Map borders
 		if (this.x < 0
 			|| this.y < 0
-			|| this.x + this.w == sCape.GUI.canvas.width
-			|| this.y + this.h == sCape.GUI.canvas.height
+			|| this.x + this.w > sCape.GUI.canvas.width
+			|| this.y + this.h > sCape.GUI.canvas.height
 		) {
 			return true;
 		}
