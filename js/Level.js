@@ -15,7 +15,7 @@
 		};
 
 		this.getResourceAbsoluteYCoordinatesFromCell = function (cellY, resourceHeight) {
-			return cellY * _tileHeight + _tileHeight - resourceHeight;
+			return cellY * tileHeight + tileHeight - resourceHeight;
 		};
 
 		this.loopThroughMap = function (callbacks) {
@@ -30,14 +30,39 @@
 				}
 			}
 		};
+
+		this.getCell = function (point) {
+			return {cellX: point.cellX, cellY: point.cellY, content: this.map[point.cellY][point.cellX]};
+		};
+
+		this.getNeighbours = function (point) {
+			var n = [];
+
+			if (point.cellY > 0) {
+				n.push({cellX: point.cellX, cellY: point.cellY - 1, content: this.map[point.cellY - 1][point.cellX]});
+			}
+			if (point.cellX > 0) {
+				n.push({cellX: point.cellX - 1, cellY: point.cellY, content: this.map[point.cellY][point.cellX - 1]});
+			}
+			if (point.cellY < this.map.length - 1) {
+				n.push({cellX: point.cellX, cellY: point.cellY + 1, content: this.map[point.cellY + 1][point.cellX]});
+			}
+			if (point.cellX < this.map[0].length - 1) {
+				n.push({cellX: point.cellX + 1, cellY: point.cellY, content: this.map[point.cellY][point.cellX + 1]});
+			}
+
+			return n;
+		}
 	};
 
 	sCape.Grid.getObjectDisplayXFromCell = function (cellX, resourceWidth) {
-		return cellX * sCape.Level.currentLevel.grid.tileWidth + (sCape.Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
+		var x = cellX * sCape.Level.currentLevel.grid.tileWidth + (sCape.Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
+		return Math.max(0, Math.min(sCape.GUI.canvas.width - resourceWidth, x));
 	}
 
 	sCape.Grid.getObjectDisplayYFromCell = function (cellY, resourceHeight) {
-		return cellY * sCape.Level.currentLevel.grid.tileHeight + sCape.Level.currentLevel.grid.tileHeight - resourceHeight;
+		var y = cellY * sCape.Level.currentLevel.grid.tileHeight + sCape.Level.currentLevel.grid.tileHeight - resourceHeight;
+		return Math.max(0, Math.min(sCape.GUI.canvas.height - resourceHeight, y));
 	}
 
 	sCape.Level = function (grid) {
