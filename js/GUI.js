@@ -53,7 +53,7 @@
 		},
 
 		drawLevel: function (level) {
-			var d = 0;
+			var d = 0, grd;
 
 			level.grid.loopThroughMap({
 				'P': function (col, row) {
@@ -67,6 +67,21 @@
 					++d;
 				}
 			});
+
+			grd = sCape.GUI.ctx.createRadialGradient(
+				sCape.Level.currentLevel.player.cellChange.x,
+				sCape.Level.currentLevel.player.cellChange.y,
+				5,
+				sCape.Level.currentLevel.player.cellChange.x,
+				sCape.Level.currentLevel.player.cellChange.y,
+				100
+			);
+			grd.addColorStop(0, "rgba(0, 255, 255, 0)");
+			grd.addColorStop(1, "black");
+
+			// Fill with gradient
+			sCape.GUI.ctx.fillStyle = grd;
+			sCape.GUI.ctx.fillRect(0, 0, sCape.GUI.canvas.width, sCape.GUI.canvas.height);
 		},
 
 		drawBackground: function (bgResource) {
