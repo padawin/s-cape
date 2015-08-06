@@ -56,11 +56,13 @@
 	};
 
 	sCape.Grid.getObjectDisplayXFromCell = function (cellX, resourceWidth) {
-		return cellX * sCape.Level.currentLevel.grid.tileWidth + (sCape.Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
+		var x = cellX * sCape.Level.currentLevel.grid.tileWidth + (sCape.Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
+		return Math.max(0, Math.min(sCape.GUI.canvas.width - resourceWidth, x));
 	}
 
 	sCape.Grid.getObjectDisplayYFromCell = function (cellY, resourceHeight) {
-		return cellY * sCape.Level.currentLevel.grid.tileHeight + sCape.Level.currentLevel.grid.tileHeight - resourceHeight;
+		var y = cellY * sCape.Level.currentLevel.grid.tileHeight + sCape.Level.currentLevel.grid.tileHeight - resourceHeight;
+		return Math.max(0, Math.min(sCape.GUI.canvas.height - resourceHeight, y));
 	}
 
 	sCape.Level = function (grid) {
