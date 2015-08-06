@@ -138,8 +138,11 @@
 					this.x == this.nextTarget.x
 					&& this.y == this.nextTarget.y
 				) {
-					this.stopMotion();
 					this.nextTarget = this.path.shift();
+
+					if (this.nextTarget === undefined) {
+						this.stopChasing();
+					}
 
 					if (this.nextTarget) {
 						this.nextTarget.x = this.nextTarget.content == 'D' ? this.x : sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w);
@@ -230,6 +233,12 @@
 
 	deathClass.prototype.chase = function (path) {
 		this.path = path;
+		this.nextTarget = null;
+	};
+
+	deathClass.prototype.stopChasing = function () {
+		this.stopMotion();
+		this.path = null;
 		this.nextTarget = null;
 	};
 
