@@ -40,7 +40,7 @@
 
 	movableClass.prototype.startMotion = function (direction) {
 		if (this.isMoving()) {
-			return;
+			this.stopMotion();
 		}
 
 		this.direction = direction;
