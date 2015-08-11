@@ -19,8 +19,8 @@
 
 	function _startMotion (x, y) {
 		var trigoX, trigoY, touchRatio, canvasRatio;
-			trigoX = x - sCape.GUI.canvas.width / 2;
-			trigoY = -1 * y + sCape.GUI.canvas.height / 2;
+			trigoX = x - sCape.Level.currentLevel.player.cellChange.x;
+			trigoY = -1 * y + sCape.Level.currentLevel.player.cellChange.y;
 
 		touchRatio = Math.abs(trigoY / trigoX);
 		canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
