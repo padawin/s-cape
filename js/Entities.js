@@ -32,6 +32,7 @@
 		this.moving = false;
 		this.moveFrame = 0;
 		this.direction = direction;
+		this.baseSpeed = 1;
 	};
 
 	movableClass.prototype.isMoving = function () {
@@ -45,8 +46,8 @@
 
 		this.direction = direction;
 		this.moving = true;
-		this.speedX = direction.x;
-		this.speedY = direction.y;
+		this.speedX = direction.x * this.baseSpeed;
+		this.speedY = direction.y * this.baseSpeed;
 	};
 
 	movableClass.prototype.stopMotion = function () {
@@ -127,6 +128,7 @@
 		this.rotationFrequency = parseInt(Math.random() * (1000 - 100 + 1)) + 100;
 		this.frameBeforeRotation = 1;
 		this.seesPlayer = false;
+		this.baseSpeed = 3;
 
 		this.visionDepth = 100;
 
@@ -254,6 +256,8 @@
 		playerClass: function (x, y, direction) {
 			movableClass.call(this, x, y, sCape.data.resources['player'], direction);
 			this.extends(movableClass.prototype);
+
+			this.baseSpeed = 2;
 		},
 
 		deathClass: deathClass
