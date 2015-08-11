@@ -7,6 +7,8 @@
 
 	function _touchEvent (e) {
 		_startMotion(e.touches[0].clientX, e.touches[0].clientY);
+		e.preventDefault();
+		return false;
 	}
 
 	function _clickEvent (e) {
@@ -52,8 +54,7 @@
 
 				B.addEvent(sCape.GUI.canvas, 'touchmove', _touchEvent);
 
-				B.addEvent(sCape.GUI.canvas, 'touchend', function (e) {
-				});
+				B.addEvent(sCape.GUI.canvas, 'touchend', _stopEvent);
 			}
 			else {
 				B.addEvent(document, 'mouseup', function (e) {
