@@ -3,29 +3,44 @@
 		throw "sCape is needed to use the Events module";
 	}
 
+	var mouseIsDown = false;
+
+	function _touchEvent (e) {
+		_startMotion(e.touches[0].clientX, e.touches[0].clientY);
+	}
+
+	function _clickEvent (e) {
+		if (!mouseIsDown) {
+			return false;
+		}
+
+		_startMotion(e.clientX, e.clientY);
+	}
+
+	function _startMotion (x, y) {
+		var trigoX, trigoY, touchRatio, canvasRatio;
+			trigoX = x - sCape.GUI.canvas.width / 2;
+			trigoY = -1 * y + sCape.GUI.canvas.height / 2;
+
+		touchRatio = Math.abs(trigoY / trigoX);
+		canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
+		if (trigoY > 0 && touchRatio > canvasRatio) {
+			sCape.Engine.startPlayerMotion('up');
+		}
+		else if (trigoY < 0 && touchRatio > canvasRatio) {
+			sCape.Engine.startPlayerMotion('down');
+		}
+		else if (trigoX > 0) {
+			sCape.Engine.startPlayerMotion('right');
+		}
+		else {
+			sCape.Engine.startPlayerMotion('left');
+		}
+	}
+
 	sCape.Events = {
 		init: function () {
 			if (_isMobile) {
-				function _touchEvent (e) {
-					var trigoX, trigoY, touchRatio, canvasRatio;
-					trigoX = e.touches[0].clientX - sCape.GUI.canvas.width / 2;
-					trigoY = -1 * e.touches[0].clientY + sCape.GUI.canvas.height / 2;
-					touchRatio = Math.abs(trigoY / trigoX);
-					canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
-					if (trigoY > 0 && touchRatio > canvasRatio) {
-						sCape.Engine.startPlayerMotion('up');
-					}
-					else if (trigoY < 0 && touchRatio > canvasRatio) {
-						sCape.Engine.startPlayerMotion('down');
-					}
-					else if (trigoX > 0) {
-						sCape.Engine.startPlayerMotion('right');
-					}
-					else {
-						sCape.Engine.startPlayerMotion('left');
-					}
-				}
-
 				B.addEvent(sCape.GUI.canvas, 'touchstart', _touchEvent);
 
 				B.addEvent(sCape.GUI.canvas, 'touchmove', _touchEvent);
@@ -35,33 +50,19 @@
 				});
 			}
 			else {
-				B.addEvent(document, 'keyup', function (e) {
+				B.addEvent(document, 'mouseup', function (e) {
 					if (sCape.Level.currentLevel.player.isMoving()) {
 						_worldChanged = true;
 						sCape.Level.currentLevel.player.stopMotion();
 					}
+					mouseIsDown = false;
 				});
 
-				B.addEvent(document, 'keydown', function (e) {
-					switch (e.which) {
-						case 37: // left
-							sCape.Engine.startPlayerMotion('left');
-							e.preventDefault();
-							break;
-						case 38: // up
-							sCape.Engine.startPlayerMotion('up');
-							e.preventDefault();
-							break;
-						case 39: // right
-							sCape.Engine.startPlayerMotion('right');
-							e.preventDefault();
-							break;
-						case 40: // down
-							sCape.Engine.startPlayerMotion('down');
-							e.preventDefault();
-							break;
-					};
+				B.addEvent(document, 'mousedown', function (e) {
+					mouseIsDown = true;
+					_clickEvent(e);
 				});
+				B.addEvent(document, 'mousemove', _clickEvent);
 			}
 		}
 	};
