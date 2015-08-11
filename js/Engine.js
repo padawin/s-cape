@@ -14,19 +14,19 @@
 
 
 	sCape.Engine.directionsSetup[_directions[0]] = {
-		x: 0, y: 2, spriteRow: 0, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_LEFT
+		x: 0, y: 1, spriteRow: 0, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_LEFT
 	};
 	sCape.Engine.directionsSetup[_directions[1]] = {
-		x: -2, y: 0, spriteRow: 1, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_LEFT, vAngleEnd: sCape.Geometry.ANGLE_TOP_LEFT
+		x: -1, y: 0, spriteRow: 1, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_LEFT, vAngleEnd: sCape.Geometry.ANGLE_TOP_LEFT
 	};
 	sCape.Engine.directionsSetup[_directions[2]] = {
 		// This angle overlaps with the angle 0 of the trigonometry circle,
 		// so the end angle ends up being smaller than the start angle
 		// lets add one whole turn to the angle
-		x: 2, y: 0, spriteRow: 2, vAngleStart: sCape.Geometry.ANGLE_TOP_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_RIGHT + 2 * Math.PI
+		x: 1, y: 0, spriteRow: 2, vAngleStart: sCape.Geometry.ANGLE_TOP_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_RIGHT + 2 * Math.PI
 	};
 	sCape.Engine.directionsSetup[_directions[3]] = {
-		x: 0, y: -2, spriteRow: 3, vAngleStart: sCape.Geometry.ANGLE_TOP_LEFT, vAngleEnd: sCape.Geometry.ANGLE_TOP_RIGHT
+		x: 0, y: -1, spriteRow: 3, vAngleStart: sCape.Geometry.ANGLE_TOP_LEFT, vAngleEnd: sCape.Geometry.ANGLE_TOP_RIGHT
 	};
 
 	sCape.Engine.initLevel = function (levelIndex) {
