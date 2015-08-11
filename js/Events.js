@@ -7,6 +7,8 @@
 
 	function _touchEvent (e) {
 		_startMotion(e.touches[0].clientX, e.touches[0].clientY);
+		e.preventDefault();
+		return false;
 	}
 
 	function _clickEvent (e) {
