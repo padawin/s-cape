@@ -38,6 +38,13 @@
 		}
 	}
 
+	function _stopEvent () {
+		if (sCape.Level.currentLevel.player.isMoving()) {
+			_worldChanged = true;
+			sCape.Level.currentLevel.player.stopMotion();
+		}
+	}
+
 	sCape.Events = {
 		init: function () {
 			if (_isMobile) {
@@ -46,15 +53,11 @@
 				B.addEvent(sCape.GUI.canvas, 'touchmove', _touchEvent);
 
 				B.addEvent(sCape.GUI.canvas, 'touchend', function (e) {
-					sCape.Level.currentLevel.player.stopMotion();
 				});
 			}
 			else {
 				B.addEvent(document, 'mouseup', function (e) {
-					if (sCape.Level.currentLevel.player.isMoving()) {
-						_worldChanged = true;
-						sCape.Level.currentLevel.player.stopMotion();
-					}
+					_stopEvent(e);
 					mouseIsDown = false;
 				});
 
