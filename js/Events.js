@@ -54,8 +54,7 @@
 
 				B.addEvent(sCape.GUI.canvas, 'touchmove', _touchEvent);
 
-				B.addEvent(sCape.GUI.canvas, 'touchend', function (e) {
-				});
+				B.addEvent(sCape.GUI.canvas, 'touchend', _stopEvent);
 			}
 			else {
 				B.addEvent(document, 'mouseup', function (e) {
