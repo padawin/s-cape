@@ -34,6 +34,7 @@
 		this.moving = false;
 		this.moveFrame = 0;
 		this.direction = direction;
+		this.spriteRow = direction.spriteRow;
 		this.baseSpeed = 1;
 	};
 
@@ -47,6 +48,7 @@
 		}
 
 		this.direction = direction;
+		this.spriteRow = direction.spriteRow;
 		this.moving = true;
 		this.speedX = direction.x * this.baseSpeed;
 		this.speedY = direction.y * this.baseSpeed;
@@ -120,8 +122,16 @@
 
 			return true;
 		}
+		else if (this.isAttacking) {
+			this.moveFrame = (this.moveFrame + 0.25) % 4;
+		}
 
 		return false;
+	};
+
+	movableClass.prototype.attack = function () {
+		this.isAttacking = true;
+		this.spriteRow = this.direction.spriteRow + 4;
 	};
 
 	deathClass = function (x, y, direction) {

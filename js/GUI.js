@@ -83,7 +83,7 @@
 			// there are 4 directions, so 4 rows in the sprite
 			// To set the sprite on the middle bottom of the tile
 			var spriteStartX = object.moveFrame ? parseInt(object.moveFrame) * resource.w : 0,
-				spriteStartY = object.direction ? object.direction.spriteRow * resource.h : 0;
+				spriteStartY = object.spriteRow ? object.spriteRow * resource.h : 0;
 
 			sCape.GUI.ctx.drawImage(
 				resource.resource,

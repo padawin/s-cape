@@ -184,6 +184,13 @@
 			}
 			else {
 				_worldChanged = true;
+				if (!deaths[d].isAttacking) {
+					var distToPlayer = Math.sqrt(Math.pow(player.cellChange.x - deaths[d].cellChange.x, 2) + Math.pow(player.cellChange.y - deaths[d].cellChange.y, 2));
+					if (distToPlayer < 20) {
+						deaths[d].stopChasing();
+						deaths[d].attack();
+					}
+				}
 			}
 
 			if (_worldChanged) {
