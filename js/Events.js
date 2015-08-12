@@ -71,5 +71,41 @@
 		}
 	};
 
+	var events = {};
+
+	sCape.EventsManager = {
+		on: function(event, callback) {
+			if (!(event in events)) {
+				events[event] = [];
+			}
+
+			events[event].push(callback);
+		},
+
+		off: function (event, callback) {
+			if (!(event in events)) {
+				return false;
+			}
+
+			var e = 0;
+			while (e < events[event].length) {
+				if (callback == events[event][e]) {
+					events[event].splice(e, 1);
+				}
+				else {
+					e++;
+				}
+			}
+		},
+
+		fire: function (event) {
+			if (event in events) {
+				for (var e = 0; e < events[event].length; e++) {
+					events[event][e]();
+				}
+			}
+		}
+	};
+
 })(sCape);
 
