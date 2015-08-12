@@ -6,17 +6,19 @@
 	var entityClass, movableClass, deathClass;
 
 	entityClass = function (cellX, cellY, resource) {
+		this.resource = resource;
+
 		this.cellX = cellX;
 		this.cellY = cellY;
-		this.x = sCape.Grid.getObjectDisplayXFromCell(cellX, resource.w);
-		this.y = sCape.Grid.getObjectDisplayYFromCell(cellY, resource.h);
-		this.w = resource.w;
-		this.h = resource.h;
+		this.x = sCape.Grid.getObjectDisplayXFromCell(cellX, this.resource.w);
+		this.y = sCape.Grid.getObjectDisplayYFromCell(cellY, this.resource.h);
+		this.w = this.resource.w;
+		this.h = this.resource.h;
 		this.hitbox = new sCape.Geometry.Rectangle(
-			this.x + resource.hitbox[0],
-			this.y + resource.hitbox[1],
-			resource.hitbox[2],
-			resource.hitbox[3]
+			this.x + this.resource.hitbox[0],
+			this.y + this.resource.hitbox[1],
+			this.resource.hitbox[2],
+			this.resource.hitbox[3]
 		);
 	};
 
@@ -24,8 +26,8 @@
 		entityClass.call(this, cellX, cellY, resource);
 		this.extends(entityClass.prototype);
 		this.cellChange = new sCape.Geometry.Point(
-			this.x + resource.cellChange[0],
-			this.y + resource.cellChange[1]
+			this.x + this.resource.cellChange[0],
+			this.y + this.resource.cellChange[1]
 		);
 		this.speedX = 0;
 		this.speedY = 0;
