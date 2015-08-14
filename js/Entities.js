@@ -3,7 +3,7 @@
 		throw "sCape is needed to use the Entities module";
 	}
 
-	var entityClass, movableClass, deathClass;
+	var entityClass, movableClass, deathClass, playerClass;
 
 	entityClass = function (cellX, cellY, resource) {
 		this.resource = resource;
@@ -250,17 +250,19 @@
 		return this.path && this.path.length || this.nextTarget;
 	};
 
+	playerClass = function (x, y, direction) {
+		movableClass.call(this, x, y, sCape.data.resources['player'], direction);
+		this.extends(movableClass.prototype);
+
+		this.baseSpeed = 2;
+	};
+
 	sCape.Entities = {
 		entityClass: entityClass,
 
 		movableClass: movableClass,
 
-		playerClass: function (x, y, direction) {
-			movableClass.call(this, x, y, sCape.data.resources['player'], direction);
-			this.extends(movableClass.prototype);
-
-			this.baseSpeed = 2;
-		},
+		playerClass: playerClass,
 
 		deathClass: deathClass
 	};
