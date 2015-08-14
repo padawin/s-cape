@@ -116,7 +116,7 @@
 			var e = 0;
 			while (e < events[event].length) {
 				if (element == events[event][e][0]
-					&& (!callback || callback && callback == events[event][e][1]
+					&& (!callback || callback && callback == events[event][e][1])
 				) {
 					events[event].splice(e, 1);
 				}
