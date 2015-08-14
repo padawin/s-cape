@@ -8,9 +8,12 @@
 
 		ctx.font = "30px Arial";
 		var buttonSize = ctx.measureText(button.text);
+		// Button border
 		sCape.GUI.ctx.fillRect((sCape.GUI.canvas.width - buttonSize.width) / 2, y, buttonSize.width, 40);
+		// Button background
 		sCape.GUI.ctx.strokeRect((sCape.GUI.canvas.width - buttonSize.width) / 2, y, buttonSize.width, 40);
 		sCape.GUI.ctx.fillStyle = '#000';
+		// Button text
 		sCape.GUI.ctx.fillText(button.text, (sCape.GUI.canvas.width - buttonSize.width) / 2, y + 30);
 
 		return {
