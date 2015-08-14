@@ -3,32 +3,8 @@
 		throw "sCape is needed to use the Events module";
 	}
 
-	function _startMotion (x, y) {
-		var trigoX, trigoY, touchRatio, canvasRatio;
-			trigoX = x - sCape.Level.currentLevel.player.cellChange.x;
-			trigoY = -1 * y + sCape.Level.currentLevel.player.cellChange.y;
-
-		touchRatio = Math.abs(trigoY / trigoX);
-		canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
-		if (trigoY > 0 && touchRatio > canvasRatio) {
-			sCape.Engine.startPlayerMotion('up');
-		}
-		else if (trigoY < 0 && touchRatio > canvasRatio) {
-			sCape.Engine.startPlayerMotion('down');
-		}
-		else if (trigoX > 0) {
-			sCape.Engine.startPlayerMotion('right');
-		}
-		else {
-			sCape.Engine.startPlayerMotion('left');
-		}
-	}
-
 	function _stopEvent () {
-		if (sCape.Level.currentLevel.player.isMoving()) {
-			_worldChanged = true;
-			sCape.Level.currentLevel.player.stopMotion();
-		}
+		sCape.EventsManager.fire('event.action-off-screen');
 	}
 
 	sCape.Events = {
@@ -36,7 +12,7 @@
 			var mouseIsDown = false;
 
 			function _touchEvent (e) {
-				_startMotion(e.touches[0].clientX, e.touches[0].clientY);
+				sCape.EventsManager.fire('event.action-on-screen', [e.touches[0].clientX, e.touches[0].clientY]);
 				e.preventDefault();
 				return false;
 			}
@@ -46,7 +22,7 @@
 					return false;
 				}
 
-				_startMotion(e.clientX, e.clientY);
+				sCape.EventsManager.fire('event.action-on-screen', [e.clientX, e.clientY]);
 			}
 
 			if (_isMobile) {
