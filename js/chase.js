@@ -5,7 +5,7 @@
 		_isMobile = isMobile;
 
 		sCape.GUI.init(B.$id(canvas), width, height);
-		sCape.Events.init();
+		sCape.Events.init(B.$id(canvas));
 		sCape.GUI.drawMenu(sCape.Menus.mainmenu);
 	};
 

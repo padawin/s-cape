@@ -8,7 +8,7 @@
 	}
 
 	sCape.Events = {
-		init: function () {
+		init: function (canvas) {
 			var mouseIsDown = false;
 
 			function _touchEvent (e) {
@@ -26,11 +26,11 @@
 			}
 
 			if (_isMobile) {
-				B.addEvent(sCape.GUI.canvas, 'touchstart', _touchEvent);
+				B.addEvent(canvas, 'touchstart', _touchEvent);
 
-				B.addEvent(sCape.GUI.canvas, 'touchmove', _touchEvent);
+				B.addEvent(canvas, 'touchmove', _touchEvent);
 
-				B.addEvent(sCape.GUI.canvas, 'touchend', _stopEvent);
+				B.addEvent(canvas, 'touchend', _stopEvent);
 			}
 			else {
 				B.addEvent(document, 'mouseup', function (e) {
