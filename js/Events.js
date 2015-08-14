@@ -130,7 +130,7 @@
 			if (event in events) {
 				for (var e = 0; e < events[event].length; e++) {
 					if (element == events[event][e][0]) {
-						events[event][e].apply(element, args);
+						events[event][e][1].apply(element, args);
 					}
 				}
 			}
