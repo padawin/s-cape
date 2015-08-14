@@ -35,9 +35,11 @@
 			sCape.GUI.ctx.fillStyle = '#734B4B';
 			sCape.GUI.ctx.fillRect(0, 0, sCape.GUI.canvas.width, sCape.GUI.canvas.height); // context.fillRect(x, y, width, height);
 
+			var y = 100;
 			for (var i = 0; i < menu.length; i++) {
-				menu[i].coordinates = _drawButton(sCape.GUI.ctx, 100, menu[i]);
+				menu[i].coordinates = _drawButton(sCape.GUI.ctx, y, menu[i]);
 				sCape.EventsManager.on('event.clickbutton', menu[i], menu[i].event);
+				y = menu[i].coordinates.h + menu[i].coordinates.y + 20;
 			}
 
 			sCape.Events.initMenu(menu);
