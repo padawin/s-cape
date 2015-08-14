@@ -3,7 +3,7 @@
 		throw "sCape is needed to use the Entities module";
 	}
 
-	var entityClass, movableClass, deathClass;
+	var entityClass, movableClass, deathClass, playerClass;
 
 	entityClass = function (cellX, cellY, resource) {
 		this.resource = resource;
@@ -250,17 +250,54 @@
 		return this.path && this.path.length || this.nextTarget;
 	};
 
+	playerClass = function (x, y, direction) {
+		movableClass.call(this, x, y, sCape.data.resources['player'], direction);
+		sCape.EventsManager.on('event.action-on-screen', this, function (x, y) {
+			var trigoX, trigoY, touchRatio, canvasRatio;
+				trigoX = x - this.cellChange.x;
+				trigoY = -1 * y + this.cellChange.y;
+
+			touchRatio = Math.abs(trigoY / trigoX);
+			canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
+			if (trigoY > 0 && touchRatio > canvasRatio) {
+				sCape.Level.currentLevel.player.startMotion(
+					sCape.Engine.directionsSetup.up
+				);
+			}
+			else if (trigoY < 0 && touchRatio > canvasRatio) {
+				sCape.Level.currentLevel.player.startMotion(
+					sCape.Engine.directionsSetup.down
+				);
+			}
+			else if (trigoX > 0) {
+				sCape.Level.currentLevel.player.startMotion(
+					sCape.Engine.directionsSetup.right
+				);
+			}
+			else {
+				sCape.Level.currentLevel.player.startMotion(
+					sCape.Engine.directionsSetup.left
+				);
+			}
+		});
+
+		sCape.EventsManager.on('event.action-off-screen', this, function () {
+			if (this.isMoving()) {
+				_worldChanged = true;
+				this.stopMotion();
+			}
+		});
+		this.extends(movableClass.prototype);
+
+		this.baseSpeed = 2;
+	};
+
 	sCape.Entities = {
 		entityClass: entityClass,
 
 		movableClass: movableClass,
 
-		playerClass: function (x, y, direction) {
-			movableClass.call(this, x, y, sCape.data.resources['player'], direction);
-			this.extends(movableClass.prototype);
-
-			this.baseSpeed = 2;
-		},
+		playerClass: playerClass,
 
 		deathClass: deathClass
 	};
