@@ -7,19 +7,19 @@
 		sCape.GUI.ctx.fillStyle = '#E0995E';
 
 		ctx.font = "30px Arial";
-		var buttonSize = ctx.measureText(button.text);
+		var textSize = ctx.measureText(button.text);
 		// Button border
-		sCape.GUI.ctx.fillRect((sCape.GUI.canvas.width - buttonSize.width) / 2, y, buttonSize.width, 40);
+		sCape.GUI.ctx.fillRect((sCape.GUI.canvas.width - textSize.width) / 2, y, textSize.width, 40);
 		// Button background
-		sCape.GUI.ctx.strokeRect((sCape.GUI.canvas.width - buttonSize.width) / 2, y, buttonSize.width, 40);
+		sCape.GUI.ctx.strokeRect((sCape.GUI.canvas.width - textSize.width) / 2, y, textSize.width, 40);
 		sCape.GUI.ctx.fillStyle = '#000';
 		// Button text
-		sCape.GUI.ctx.fillText(button.text, (sCape.GUI.canvas.width - buttonSize.width) / 2, y + 30);
+		sCape.GUI.ctx.fillText(button.text, (sCape.GUI.canvas.width - textSize.width) / 2, y + 30);
 
 		return {
-			x: (sCape.GUI.canvas.width - buttonSize.width) / 2,
+			x: (sCape.GUI.canvas.width - textSize.width) / 2,
 			y: y,
-			w: buttonSize.width,
+			w: textSize.width,
 			h: 40
 		};
 	}
