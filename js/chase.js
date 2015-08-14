@@ -6,11 +6,7 @@
 
 		sCape.GUI.init(B.$id(canvas), width, height);
 
-		sCape.Engine.initLevel(0);
-		sCape.Engine.loadResources(function () {
-			sCape.Events.init();
-			sCape.Engine.startMainLoop();
-		});
+		sCape.GUI.drawMenu(sCape.Menus.mainmenu);
 	};
 
 	window.chase = chase;
