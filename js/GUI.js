@@ -3,10 +3,50 @@
 		throw "sCape is needed to use the GUI module";
 	}
 
+	function _drawButton(ctx, y, button) {
+		sCape.GUI.ctx.fillStyle = '#E0995E';
+
+		ctx.font = "30px Arial";
+		var textSize = ctx.measureText(button.text);
+		// Button border
+		sCape.GUI.ctx.fillRect((sCape.GUI.canvas.width - textSize.width) / 2 - 5, y, textSize.width + 10, 40);
+		// Button background
+		sCape.GUI.ctx.strokeRect((sCape.GUI.canvas.width - textSize.width) / 2 - 5, y, textSize.width + 10, 40);
+		sCape.GUI.ctx.fillStyle = '#000';
+		// Button text
+		sCape.GUI.ctx.fillText(button.text, (sCape.GUI.canvas.width - textSize.width) / 2, y + 30);
+
+		return {
+			x: (sCape.GUI.canvas.width - textSize.width) / 2,
+			y: y,
+			w: textSize.width + 10,
+			h: 40
+		};
+	}
+
 	sCape.GUI = {
-		init: function (canvasElement) {
+
+		init: function (canvasElement, width, height) {
 			sCape.GUI.canvas = canvasElement;
+			sCape.GUI.canvas.width = width;
+			sCape.GUI.canvas.height = height;
 			sCape.GUI.ctx = sCape.GUI.canvas.getContext('2d');
+		},
+
+		drawMenu: function (menu) {
+			// draw background
+			sCape.GUI.ctx.fillStyle = '#734B4B';
+			sCape.GUI.ctx.fillRect(0, 0, sCape.GUI.canvas.width, sCape.GUI.canvas.height); // context.fillRect(x, y, width, height);
+
+			var y = 100;
+			for (var i = 0; i < menu.length; i++) {
+				menu[i].coordinates = _drawButton(sCape.GUI.ctx, y, menu[i]);
+				sCape.EventsManager.on('event.clickbutton', menu[i], menu[i].event);
+				y = menu[i].coordinates.h + menu[i].coordinates.y + 20;
+			}
+
+			sCape.Events.initMenu(menu);
+
 		},
 
 		drawPlayer: function () {

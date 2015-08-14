@@ -3,22 +3,6 @@
 		throw "sCape is needed to use the Events module";
 	}
 
-	var mouseIsDown = false;
-
-	function _touchEvent (e) {
-		_startMotion(e.touches[0].clientX, e.touches[0].clientY);
-		e.preventDefault();
-		return false;
-	}
-
-	function _clickEvent (e) {
-		if (!mouseIsDown) {
-			return false;
-		}
-
-		_startMotion(e.clientX, e.clientY);
-	}
-
 	function _startMotion (x, y) {
 		var trigoX, trigoY, touchRatio, canvasRatio;
 			trigoX = x - sCape.Level.currentLevel.player.cellChange.x;
@@ -49,6 +33,22 @@
 
 	sCape.Events = {
 		init: function () {
+			var mouseIsDown = false;
+
+			function _touchEvent (e) {
+				_startMotion(e.touches[0].clientX, e.touches[0].clientY);
+				e.preventDefault();
+				return false;
+			}
+
+			function _clickEvent (e) {
+				if (!mouseIsDown) {
+					return false;
+				}
+
+				_startMotion(e.clientX, e.clientY);
+			}
+
 			if (_isMobile) {
 				B.addEvent(sCape.GUI.canvas, 'touchstart', _touchEvent);
 
@@ -67,6 +67,41 @@
 					_clickEvent(e);
 				});
 				B.addEvent(document, 'mousemove', _clickEvent);
+			}
+		},
+
+		initMenu: function (menu) {
+			function _touchEvent (e) {
+				_clickScreen(true, e.touches[0].clientX, e.touches[0].clientY);
+				e.preventDefault();
+				return false;
+			}
+
+			function _clickEvent (e) {
+				_clickScreen(false, e.clientX, e.clientY);
+			}
+
+			function _clickScreen (isMobile, x, y) {
+				for (var m = 0; m < menu.length; m++) {
+					if (x >= menu[m].coordinates.x && x <= menu[m].coordinates.x + menu[m].coordinates.w
+						&& y >= menu[m].coordinates.y && y <= menu[m].coordinates.y + menu[m].coordinates.h
+					) {
+						sCape.EventsManager.fire('event.clickbutton', menu[m]);
+						if (_isMobile) {
+							B.removeEvent(sCape.GUI.canvas, 'touch', _touchEvent);
+						}
+						else {
+							B.removeEvent(document, 'click', _clickEvent);
+						}
+					}
+				}
+			}
+
+			if (_isMobile) {
+				B.addEvent(sCape.GUI.canvas, 'touch', _touchEvent);
+			}
+			else {
+				B.addEvent(document, 'click', _clickEvent);
 			}
 		}
 	};
