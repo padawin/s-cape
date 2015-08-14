@@ -30,6 +30,20 @@
 			sCape.GUI.ctx = sCape.GUI.canvas.getContext('2d');
 		},
 
+		drawMenu: function (menu) {
+			// draw background
+			sCape.GUI.ctx.fillStyle = '#734B4B';
+			sCape.GUI.ctx.fillRect(0, 0, sCape.GUI.canvas.width, sCape.GUI.canvas.height); // context.fillRect(x, y, width, height);
+
+			for (var i = 0; i < menu.length; i++) {
+				menu[i].coordinates = _drawButton(sCape.GUI.ctx, 100, menu[i]);
+				sCape.EventsManager.on('event.clickbutton', menu[i], menu[i].event);
+			}
+
+			sCape.Events.initMenu(menu);
+
+		},
+
 		drawPlayer: function () {
 			sCape.GUI.draw(sCape.Level.currentLevel.player);
 		},
