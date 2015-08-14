@@ -4,8 +4,11 @@
 	}
 
 	sCape.GUI = {
-		init: function (canvasElement) {
+
+		init: function (canvasElement, width, height) {
 			sCape.GUI.canvas = canvasElement;
+			sCape.GUI.canvas.width = width;
+			sCape.GUI.canvas.height = height;
 			sCape.GUI.ctx = sCape.GUI.canvas.getContext('2d');
 		},
 
