@@ -3,6 +3,24 @@
 		throw "sCape is needed to use the GUI module";
 	}
 
+	function _drawButton(ctx, y, button) {
+		sCape.GUI.ctx.fillStyle = '#E0995E';
+
+		ctx.font = "30px Arial";
+		var buttonSize = ctx.measureText(button.text);
+		sCape.GUI.ctx.fillRect((sCape.GUI.canvas.width - buttonSize.width) / 2, y, buttonSize.width, 40);
+		sCape.GUI.ctx.strokeRect((sCape.GUI.canvas.width - buttonSize.width) / 2, y, buttonSize.width, 40);
+		sCape.GUI.ctx.fillStyle = '#000';
+		sCape.GUI.ctx.fillText(button.text, (sCape.GUI.canvas.width - buttonSize.width) / 2, y + 30);
+
+		return {
+			x: (sCape.GUI.canvas.width - buttonSize.width) / 2,
+			y: y,
+			w: buttonSize.width,
+			h: 40
+		};
+	}
+
 	sCape.GUI = {
 
 		init: function (canvasElement, width, height) {
