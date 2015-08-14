@@ -1,6 +1,6 @@
 (function (sCape) {
 	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the Entities module";
+		throw "sCape is needed to use the Physics module";
 	}
 
 	sCape.Physics = {
