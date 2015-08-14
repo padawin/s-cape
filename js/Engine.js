@@ -12,7 +12,6 @@
 	sCape.Engine.directions = _directions;
 	sCape.Engine.directionsSetup = {};
 
-
 	sCape.Engine.directionsSetup[_directions[0]] = {
 		x: 0, y: 1, spriteRow: 0, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_LEFT
 	};

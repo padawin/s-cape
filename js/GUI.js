@@ -24,6 +24,41 @@
 		};
 	}
 
+	function _initMenu (menu) {
+		function _touchEvent (e) {
+			_clickScreen(true, e.touches[0].clientX, e.touches[0].clientY);
+			e.preventDefault();
+			return false;
+		}
+
+		function _clickEvent (e) {
+			_clickScreen(false, e.clientX, e.clientY);
+		}
+
+		function _clickScreen (isMobile, x, y) {
+			for (var m = 0; m < menu.length; m++) {
+				if (x >= menu[m].coordinates.x && x <= menu[m].coordinates.x + menu[m].coordinates.w
+					&& y >= menu[m].coordinates.y && y <= menu[m].coordinates.y + menu[m].coordinates.h
+				) {
+					sCape.EventsManager.fire('event.clickbutton', menu[m]);
+					if (_isMobile) {
+						B.removeEvent(sCape.GUI.canvas, 'touch', _touchEvent);
+					}
+					else {
+						B.removeEvent(document, 'click', _clickEvent);
+					}
+				}
+			}
+		}
+
+		if (_isMobile) {
+			B.addEvent(sCape.GUI.canvas, 'touch', _touchEvent);
+		}
+		else {
+			B.addEvent(document, 'click', _clickEvent);
+		}
+	}
+
 	sCape.GUI = {
 
 		init: function (canvasElement, width, height) {
@@ -45,7 +80,7 @@
 				y = menu[i].coordinates.h + menu[i].coordinates.y + 20;
 			}
 
-			sCape.Events.initMenu(menu);
+			_initMenu(menu);
 
 		},
 
