@@ -8,7 +8,6 @@
 			{text: 'New game', event: function () {
 				sCape.Engine.initLevel(0);
 				sCape.Engine.loadResources(function () {
-					sCape.Events.init();
 					sCape.Engine.startMainLoop();
 				});
 			}}
