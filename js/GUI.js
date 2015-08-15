@@ -57,8 +57,8 @@
 			});
 		},
 
-		drawPlayer: function () {
-			sCape.GUI.draw(sCape.Level.currentLevel.player);
+		drawPlayer: function (player) {
+			sCape.GUI.draw(player);
 		},
 
 		drawTree: function (cellX, cellY) {
@@ -105,13 +105,13 @@
 
 			level.grid.loopThroughMap({
 				'P': function (col, row) {
-					sCape.GUI.drawPlayer();
+					sCape.GUI.drawPlayer(level.player);
 				},
 				'T': function (col, row) {
 					sCape.GUI.drawTree(row, col);
 				},
 				'D': function (col, row) {
-					sCape.GUI.drawDeath(sCape.Level.currentLevel.deaths[d]);
+					sCape.GUI.drawDeath(level.deaths[d]);
 					++d;
 				}
 			});
