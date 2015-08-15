@@ -1,60 +1,58 @@
-(function () {
-	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the Engine module";
-	}
-
+sCape.addModule('Engine',
+	'data', 'GUI', 'Level', 'Entities',
+function (data, GUI, Level, Entities) {
 	var _directions,
 		_isMobile,
-		_worldChanged = true;
+		_worldChanged = true,
+		Engine = {};
 
-	sCape.Engine = {};
-
-	sCape.Engine.initLevel = function (levelIndex) {
-		var grid = new sCape.Level.Grid(
-			sCape.data.levels[levelIndex].tileWidth,
-			sCape.data.levels[levelIndex].tileHeight,
-			sCape.data.levels[levelIndex].map
+	Engine.initLevel = function (levelIndex) {
+		// Create them differently, via calling new somewhere else
+		var grid = new Level.Grid(
+			data.levels[levelIndex].tileWidth,
+			data.levels[levelIndex].tileHeight,
+			data.levels[levelIndex].map
 		);
-		sCape.GUI.canvas.width = grid.map[0].length * grid.tileWidth;
-		sCape.GUI.canvas.height = grid.map.length * grid.tileHeight;
+		GUI.canvas.width = grid.map[0].length * grid.tileWidth;
+		GUI.canvas.height = grid.map.length * grid.tileHeight;
 
-		sCape.Level.currentLevel = new sCape.Level(grid);
+		Level.currentLevel = new Level(grid);
 		grid.loopThroughMap({
 			'P': function (col, row) {
-				sCape.Level.currentLevel.player = _createPlayer(row, col);
+				Level.currentLevel.player = _createPlayer(row, col);
 			},
 			'T': function (col, row) {
-				sCape.Level.currentLevel.createObstacle('tree', _createTree(row, col));
+				Level.currentLevel.createObstacle('tree', _createTree(row, col));
 			},
 			'D': function (col, row) {
-				sCape.Level.currentLevel.createObstacle('death', _createDeath(row, col));
+				Level.currentLevel.createObstacle('death', _createDeath(row, col));
 
 			}
 		});
 	};
 
-	sCape.Engine.loadResources = function (loadedCallback) {
-		var r, loaded = 0, loadingWidth = 0.70 * sCape.GUI.canvas.width;
+	Engine.loadResources = function (loadedCallback) {
+		var r, loaded = 0, loadingWidth = 0.70 * GUI.canvas.width;
 
 		// rect starts from 15% from the border of the canvas
-		sCape.GUI.ctx.rect(
-			0.15 * sCape.GUI.canvas.width, sCape.GUI.canvas.height / 2 - 10,
+		GUI.ctx.rect(
+			0.15 * GUI.canvas.width, GUI.canvas.height / 2 - 10,
 			loadingWidth, 20
 		);
-		sCape.GUI.ctx.stroke();
+		GUI.ctx.stroke();
 
-		for (r in sCape.data.resources) {
-			if (sCape.data.resources.hasOwnProperty(r)) {
-				sCape.data.resources[r].resource = new Image();
-				sCape.data.resources[r].resource.src = sCape.data.resources[r].url;
-				sCape.data.resources[r].resource.onload = function () {
-					if (++loaded == sCape.data.nbResources) {
+		for (r in data.resources) {
+			if (data.resources.hasOwnProperty(r)) {
+				data.resources[r].resource = new Image();
+				data.resources[r].resource.src = data.resources[r].url;
+				data.resources[r].resource.onload = function () {
+					if (++loaded == data.nbResources) {
 						loadedCallback();
 					}
 					else {
-						sCape.GUI.ctx.fillRect(
-							0.15 * sCape.GUI.canvas.width, sCape.GUI.canvas.height / 2 - 10,
-							loadingWidth * loaded / sCape.data.nbResources, 20
+						GUI.ctx.fillRect(
+							0.15 * GUI.canvas.width, GUI.canvas.height / 2 - 10,
+							loadingWidth * loaded / data.nbResources, 20
 						);
 					}
 				};
@@ -62,7 +60,7 @@
 		}
 	};
 
-	sCape.Engine.startMainLoop = function () {
+	Engine.startMainLoop = function () {
 
 		var fps = 60,
 			now,
@@ -89,20 +87,20 @@
 	};
 
 	function _createPlayer (x, y) {
-		var playerClass = sCape.data.playerClass || sCape.Entities.playerClass;
+		var playerClass = data.playerClass || Entities.playerClass;
 		return new playerClass(x, y, 'down');
 	}
 
 	function _createDeath (x, y) {
-		var deathClass = sCape.data.deathClass || sCape.Entities.deathClass,
+		var deathClass = data.deathClass || Entities.deathClass,
 			direction = _directions[parseInt(Math.random() * 100) % 4],
 			d = new deathClass(x, y, direction);
-		sCape.Level.currentLevel.deaths.push(d);
+		Level.currentLevel.deaths.push(d);
 		return d;
 	}
 
 	function _createTree (x, y) {
-		var t = new sCape.Entities.entityClass(x, y, sCape.data.resources['tree']);
+		var t = new Entities.entityClass(x, y, data.resources['tree']);
 
 		return t;
 	}
@@ -115,8 +113,8 @@
 			return;
 		}
 
-		sCape.GUI.drawBackground('grass');
-		sCape.GUI.drawLevel(sCape.Level.currentLevel);
+		GUI.drawBackground('grass');
+		GUI.drawLevel(Level.currentLevel);
 		_worldChanged = false;
 	};
 
@@ -127,8 +125,8 @@
 	function _updateState () {
 		var d,
 			changed,
-			player = sCape.Level.currentLevel.player,
-			deaths = sCape.Level.currentLevel.deaths;
+			player = Level.currentLevel.player,
+			deaths = Level.currentLevel.deaths;
 
 		_worldChanged = _worldChanged || player.updatePosition();
 
@@ -154,7 +152,7 @@
 					)
 				) {
 					var path = sCape.PathFinding.shortestPath(
-						sCape.Level.currentLevel.grid,
+						Level.currentLevel.grid,
 						deaths[d],
 						player
 					);
@@ -165,5 +163,5 @@
 		}
 	}
 
-	window.sCape = sCape;
-})();
+	return Engine;
+});
