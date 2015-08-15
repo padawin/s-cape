@@ -76,5 +76,7 @@ sCape.addModule('Level', 'GUI', function (GUI) {
 	}
 
 	Level.currentLevel = null;
+
+	return Level;
 });
 
