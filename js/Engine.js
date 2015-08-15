@@ -62,26 +62,6 @@
 		}
 	};
 
-	sCape.Engine.startPlayerMotion = function (direction) {
-		if (!sCape.Engine.directionsSetup[direction]) {
-			throw 'Unknown direction: ' + direction;
-		}
-
-		sCape.Level.currentLevel.player.startMotion(
-			sCape.Engine.directionsSetup[direction]
-		);
-	};
-
-	sCape.Engine.startDeathMotion = function (death, direction) {
-		if (!sCape.Engine.directionsSetup[direction]) {
-			throw 'Unknown direction: ' + direction;
-		}
-
-		death.startMotion(
-			sCape.Engine.directionsSetup[direction]
-		);
-	};
-
 	sCape.Engine.startMainLoop = function () {
 
 		var fps = 60,
