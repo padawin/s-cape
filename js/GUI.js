@@ -21,7 +21,6 @@ sCape.addModule('GUI', 'Events', 'Level', 'data', function (Events, Level, data)
 	}
 
 	var GUI = {
-
 		init: function (canvasElement, width, height) {
 			GUI.canvas = canvasElement;
 			GUI.canvas.width = width;
@@ -138,4 +137,6 @@ sCape.addModule('GUI', 'Events', 'Level', 'data', function (Events, Level, data)
 			);
 		}
 	};
+
+	return GUI;
 });
