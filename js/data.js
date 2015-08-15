@@ -1,8 +1,4 @@
-(function (sCape) {
-	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the data module";
-	}
-
+sCape.addModule('data', function () {
 	sCape.data = {
 		'resources': {
 			// url, tile dimensions, top left position in grid's cell to be
@@ -48,5 +44,4 @@
 			}
 		]
 	};
-
-})(sCape);
+});
