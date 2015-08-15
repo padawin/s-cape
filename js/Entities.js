@@ -269,6 +269,12 @@
 		return this.path && this.path.length || this.nextTarget;
 	};
 
+	deathClass.prototype.changeDirection = function () {
+		this.direction = _directionsSetup[
+			_directions[parseInt(Math.random() * 100) % 4]
+		];
+	};
+
 	playerClass = function (x, y, direction) {
 		movableClass.call(this, x, y, sCape.data.resources['player'], direction);
 		sCape.EventsManager.on('event.action-on-screen', this, function (x, y) {

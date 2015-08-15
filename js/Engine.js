@@ -136,9 +136,7 @@
 			if (!deaths[d].updatePosition()) {
 				changed = deaths[d].increaseRotationFrequency();
 				if (changed) {
-					deaths[d].direction = sCape.Entities.directionsSetup[
-						sCape.Entities.directions[parseInt(Math.random() * 100) % 4]
-					];
+					deaths[d].changeDirection();
 					_worldChanged = true;
 				}
 			}
