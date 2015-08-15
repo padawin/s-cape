@@ -3,17 +3,29 @@ var sCape = (function () {
 	_sCape = {};
 
 	_sCape.addModule = function () {
-		var args = arguments,
-			definition = args.pop(),
-			definitionName = args.shift(),
+		var args = [],
+			definition,
+			definitionName,
 			a;
 
-		if (definitionName in modules) {
-			throw 'The module ' + definitionName + ' already exists';
+		if (arguments.length < 2) {
+			throw 'Arguments missing';
 		}
 
-		for (a = 0; a < args; a++) {
-			args[a] = modules[a];
+		for (a = 0; a < arguments.length; a++) {
+			if (a === 0) {
+				definitionName = arguments[a];
+
+				if (definitionName in modules) {
+					throw 'The module ' + definitionName + ' already exists';
+				}
+			}
+			else if (a == arguments.length - 1) {
+				definition = arguments[a];
+			}
+			else {
+				args.push(modules[a]);
+			}
 		}
 
 		modules[definitionName] = definition.apply({}, args);
