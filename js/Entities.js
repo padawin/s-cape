@@ -52,7 +52,7 @@
 		this.speedY = 0;
 		this.moving = false;
 		this.moveFrame = 0;
-		this.direction = direction;
+		this.direction = _directionsSetup[direction];
 		this.baseSpeed = 1;
 	};
 

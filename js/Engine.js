@@ -90,13 +90,13 @@
 
 	function _createPlayer (x, y) {
 		var playerClass = sCape.data.playerClass || sCape.Entities.playerClass;
-		return new playerClass(x, y, sCape.Entities.directionsSetup['down']);
+		return new playerClass(x, y, 'down');
 	}
 
 	function _createDeath (x, y) {
 		var deathClass = sCape.data.deathClass || sCape.Entities.deathClass,
 			direction = _directions[parseInt(Math.random() * 100) % 4],
-			d = new deathClass(x, y, sCape.Entities.directionsSetup[direction]);
+			d = new deathClass(x, y, direction);
 		sCape.Level.currentLevel.deaths.push(d);
 		return d;
 	}
