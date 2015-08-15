@@ -1,6 +1,6 @@
 sCape.addModule('Entities',
-	'EventsManager', 'Level', 'GUI', 'Geometry', 'Physics', 'data'
-function (EventsManager, Level, GUI, Geometry, Physics, data) {
+	'Events', 'Level', 'GUI', 'Geometry', 'Physics', 'data'
+function (Events, Level, GUI, Geometry, Physics, data) {
 	var entityClass, movableClass, deathClass, playerClass, _directions, _directionsSetup;
 
 	_directions = ['down', 'left', 'right', 'up'];
@@ -275,7 +275,7 @@ function (EventsManager, Level, GUI, Geometry, Physics, data) {
 
 	playerClass = function (x, y, direction) {
 		movableClass.call(this, x, y, data.resources['player'], direction);
-		EventsManager.on('event.action-on-screen', this, function (x, y) {
+		Events.on('event.action-on-screen', this, function (x, y) {
 			var trigoX, trigoY, touchRatio, canvasRatio;
 				trigoX = x - this.cellChange.x;
 				trigoY = -1 * y + this.cellChange.y;
@@ -304,7 +304,7 @@ function (EventsManager, Level, GUI, Geometry, Physics, data) {
 			}
 		});
 
-		EventsManager.on('event.action-off-screen', this, function () {
+		Events.on('event.action-off-screen', this, function () {
 			if (this.isMoving()) {
 				_worldChanged = true;
 				this.stopMotion();

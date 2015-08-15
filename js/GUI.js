@@ -41,17 +41,17 @@
 			var y = 100;
 			for (var i = 0; i < menu.length; i++) {
 				menu[i].coordinates = _drawButton(sCape.GUI.ctx, y, menu[i]);
-				sCape.EventsManager.on('event.clickbutton', menu[i], menu[i].event);
+				sCape.Events.on('event.clickbutton', menu[i], menu[i].event);
 				y = menu[i].coordinates.h + menu[i].coordinates.y + 20;
 			}
 
-			sCape.EventsManager.on('event.action-on-screen', menu, function (x, y) {
+			sCape.Events.on('event.action-on-screen', menu, function (x, y) {
 				for (var m = 0; m < this.length; m++) {
 					if (x >= this[m].coordinates.x && x <= this[m].coordinates.x + this[m].coordinates.w
 						&& y >= this[m].coordinates.y && y <= this[m].coordinates.y + this[m].coordinates.h
 					) {
-						sCape.EventsManager.fire('event.clickbutton', this[m]);
-						sCape.EventsManager.off('event.clickbutton', this[m]);
+						sCape.Events.fire('event.clickbutton', this[m]);
+						sCape.Events.off('event.clickbutton', this[m]);
 					}
 				}
 			});
