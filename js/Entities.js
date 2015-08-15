@@ -3,24 +3,24 @@
 		throw "sCape is needed to use the Entities module";
 	}
 
-	var entityClass, movableClass, deathClass, playerClass, _directions;
+	var entityClass, movableClass, deathClass, playerClass, _directions, _directionsSetup;
 
 	_directions = ['down', 'left', 'right', 'up'];
-	sCape.Entities.directionsSetup = {};
+	_directionsSetup = {};
 
-	sCape.Entities.directionsSetup[_directions[0]] = {
+	_directionsSetup[_directions[0]] = {
 		x: 0, y: 1, spriteRow: 0, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_LEFT
 	};
-	sCape.Entities.directionsSetup[_directions[1]] = {
+	_directionsSetup[_directions[1]] = {
 		x: -1, y: 0, spriteRow: 1, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_LEFT, vAngleEnd: sCape.Geometry.ANGLE_TOP_LEFT
 	};
-	sCape.Entities.directionsSetup[_directions[2]] = {
+	_directionsSetup[_directions[2]] = {
 		// This angle overlaps with the angle 0 of the trigonometry circle,
 		// so the end angle ends up being smaller than the start angle
 		// lets add one whole turn to the angle
 		x: 1, y: 0, spriteRow: 2, vAngleStart: sCape.Geometry.ANGLE_TOP_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_RIGHT + 2 * Math.PI
 	};
-	sCape.Entities.directionsSetup[_directions[3]] = {
+	_directionsSetup[_directions[3]] = {
 		x: 0, y: -1, spriteRow: 3, vAngleStart: sCape.Geometry.ANGLE_TOP_LEFT, vAngleEnd: sCape.Geometry.ANGLE_TOP_RIGHT
 	};
 
@@ -184,22 +184,22 @@
 
 				// target on the left
 				if (nextTargetVector.x < 0) {
-					this.startMotion(sCape.Entities.directionsSetup.left);
+					this.startMotion(_directionsSetup.left);
 					this.speedX = Math.max(this.speedX, nextTargetVector.x);
 				}
 				// target on the right
 				else if (nextTargetVector.x > 0) {
-					this.startMotion(sCape.Entities.directionsSetup.right);
+					this.startMotion(_directionsSetup.right);
 					this.speedX = Math.min(this.speedX, nextTargetVector.x);
 				}
 				// target above
 				else if (nextTargetVector.y < 0) {
-					this.startMotion(sCape.Entities.directionsSetup.up);
+					this.startMotion(_directionsSetup.up);
 					this.speedY = Math.max(this.speedY, nextTargetVector.y);
 				}
 				// target below
 				else if (nextTargetVector.y > 0) {
-					this.startMotion(sCape.Entities.directionsSetup.down);
+					this.startMotion(_directionsSetup.down);
 					this.speedY = Math.min(this.speedY, nextTargetVector.y);
 				}
 			}
@@ -286,22 +286,22 @@
 			canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
 			if (trigoY > 0 && touchRatio > canvasRatio) {
 				sCape.Level.currentLevel.player.startMotion(
-					sCape.Entities.directionsSetup.up
+					_directionsSetup.up
 				);
 			}
 			else if (trigoY < 0 && touchRatio > canvasRatio) {
 				sCape.Level.currentLevel.player.startMotion(
-					sCape.Entities.directionsSetup.down
+					_directionsSetup.down
 				);
 			}
 			else if (trigoX > 0) {
 				sCape.Level.currentLevel.player.startMotion(
-					sCape.Entities.directionsSetup.right
+					_directionsSetup.right
 				);
 			}
 			else {
 				sCape.Level.currentLevel.player.startMotion(
-					sCape.Entities.directionsSetup.left
+					_directionsSetup.left
 				);
 			}
 		});
