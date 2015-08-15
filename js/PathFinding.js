@@ -1,8 +1,4 @@
-(function (sCape) {
-	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the PathFinding module";
-	}
-
+sCape.addModule('PathFinding', function () {
 	function _getKey(object, a) {
 		return object.cellX + '-' + object.cellY;
 	}
@@ -23,7 +19,7 @@
 		return path;
 	}
 
-	sCape.PathFinding = {
+	return {
 		shortestPath: function (grid, start, end) {
 			// @TODO @XXX Fix implementation, too slow
 			var cameFrom = {},
@@ -74,6 +70,5 @@
 			return getPath(cameFrom, start, end);
 		}
 	};
-
-})(sCape);
+});
 
