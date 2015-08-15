@@ -1,9 +1,5 @@
-(function (sCape) {
-	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the Geometry module";
-	}
-
-	sCape.Geometry = {
+sCape.addModule('Geometry', function () {
+	return {
 		Point: function (x, y) {
 			this.x = x;
 			this.y = y;
@@ -26,5 +22,4 @@
 		ANGLE_BOTTOM_LEFT: 3 * Math.PI / 4,
 		ANGLE_BOTTOM_RIGHT: Math.PI / 4
 	};
-
-})(sCape);
+});
