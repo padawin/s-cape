@@ -126,10 +126,6 @@
 
 		draw: function (object) {
 			var resource = object.resource;
-			// the animations have 4 frames
-			// the grid has cells of sCape.Level.currentLevel.grid.tileWidth * sCape.Level.currentLevel.grid.tileHeight px
-			// there are 4 directions, so 4 rows in the sprite
-			// To set the sprite on the middle bottom of the tile
 			var spriteStartX = object.moveFrame ? parseInt(object.moveFrame) * resource.w : 0,
 				spriteStartY = object.direction ? object.direction.spriteRow * resource.h : 0;
 
