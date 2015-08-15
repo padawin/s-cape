@@ -1,8 +1,5 @@
-(function (sCape) {
-	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the Level module";
-	}
-	sCape.Level = function (grid) {
+sCape.addModule('Level', 'GUI', function (GUI) {
+	var Level = function (grid) {
 		this.grid = grid;
 		this.player = null;
 		this.obstacles = [];
@@ -16,7 +13,7 @@
 		};
 	};
 
-	sCape.Level.Grid = function (tileWidth, tileHeight, map) {
+	Level.Grid = function (tileWidth, tileHeight, map) {
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.map = map;
@@ -68,16 +65,16 @@
 		}
 	};
 
-	sCape.Level.Grid.getObjectDisplayXFromCell = function (cellX, resourceWidth) {
-		var x = cellX * sCape.Level.currentLevel.grid.tileWidth + (sCape.Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
-		return Math.max(0, Math.min(sCape.GUI.canvas.width - resourceWidth, x));
+	Level.Grid.getObjectDisplayXFromCell = function (cellX, resourceWidth) {
+		var x = cellX * Level.currentLevel.grid.tileWidth + (Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
+		return Math.max(0, Math.min(GUI.canvas.width - resourceWidth, x));
 	}
 
-	sCape.Level.Grid.getObjectDisplayYFromCell = function (cellY, resourceHeight) {
-		var y = cellY * sCape.Level.currentLevel.grid.tileHeight + sCape.Level.currentLevel.grid.tileHeight - resourceHeight;
-		return Math.max(0, Math.min(sCape.GUI.canvas.height - resourceHeight, y));
+	Level.Grid.getObjectDisplayYFromCell = function (cellY, resourceHeight) {
+		var y = cellY * Level.currentLevel.grid.tileHeight + Level.currentLevel.grid.tileHeight - resourceHeight;
+		return Math.max(0, Math.min(GUI.canvas.height - resourceHeight, y));
 	}
 
-	sCape.Level.currentLevel = null;
-})(sCape);
+	Level.currentLevel = null;
+});
 
