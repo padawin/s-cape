@@ -29,8 +29,8 @@
 
 		this.cellX = cellX;
 		this.cellY = cellY;
-		this.x = sCape.Grid.getObjectDisplayXFromCell(cellX, this.resource.w);
-		this.y = sCape.Grid.getObjectDisplayYFromCell(cellY, this.resource.h);
+		this.x = sCape.Level.Grid.getObjectDisplayXFromCell(cellX, this.resource.w);
+		this.y = sCape.Level.Grid.getObjectDisplayYFromCell(cellY, this.resource.h);
 		this.w = this.resource.w;
 		this.h = this.resource.h;
 		this.hitbox = new sCape.Geometry.Rectangle(
@@ -168,8 +168,8 @@
 					}
 
 					if (this.nextTarget) {
-						this.nextTarget.x = this.nextTarget.content == 'D' ? this.x : sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w);
-						this.nextTarget.y = this.nextTarget.content == 'D' ? this.y : sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h);
+						this.nextTarget.x = this.nextTarget.content == 'D' ? this.x : sCape.Level.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w);
+						this.nextTarget.y = this.nextTarget.content == 'D' ? this.y : sCape.Level.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h);
 					}
 				}
 			}

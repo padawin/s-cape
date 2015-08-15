@@ -10,7 +10,7 @@
 	sCape.Engine = {};
 
 	sCape.Engine.initLevel = function (levelIndex) {
-		var grid = new sCape.Grid(
+		var grid = new sCape.Level.Grid(
 			sCape.data.levels[levelIndex].tileWidth,
 			sCape.data.levels[levelIndex].tileHeight,
 			sCape.data.levels[levelIndex].map

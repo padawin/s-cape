@@ -63,8 +63,8 @@
 
 		drawTree: function (cellX, cellY) {
 			sCape.GUI.draw({
-				x: sCape.Grid.getObjectDisplayXFromCell(cellX, sCape.data.resources['tree'].w),
-				y: sCape.Grid.getObjectDisplayYFromCell(cellY, sCape.data.resources['tree'].h),
+				x: sCape.Level.Grid.getObjectDisplayXFromCell(cellX, sCape.data.resources['tree'].w),
+				y: sCape.Level.Grid.getObjectDisplayYFromCell(cellY, sCape.data.resources['tree'].h),
 				resource: sCape.data.resources.tree
 			});
 		},
