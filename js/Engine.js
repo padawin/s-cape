@@ -8,25 +8,6 @@
 		_worldChanged = true;
 
 	sCape.Engine = {};
-	_directions = ['down', 'left', 'right', 'up'];
-	sCape.Engine.directions = _directions;
-	sCape.Engine.directionsSetup = {};
-
-	sCape.Engine.directionsSetup[_directions[0]] = {
-		x: 0, y: 1, spriteRow: 0, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_LEFT
-	};
-	sCape.Engine.directionsSetup[_directions[1]] = {
-		x: -1, y: 0, spriteRow: 1, vAngleStart: sCape.Geometry.ANGLE_BOTTOM_LEFT, vAngleEnd: sCape.Geometry.ANGLE_TOP_LEFT
-	};
-	sCape.Engine.directionsSetup[_directions[2]] = {
-		// This angle overlaps with the angle 0 of the trigonometry circle,
-		// so the end angle ends up being smaller than the start angle
-		// lets add one whole turn to the angle
-		x: 1, y: 0, spriteRow: 2, vAngleStart: sCape.Geometry.ANGLE_TOP_RIGHT, vAngleEnd: sCape.Geometry.ANGLE_BOTTOM_RIGHT + 2 * Math.PI
-	};
-	sCape.Engine.directionsSetup[_directions[3]] = {
-		x: 0, y: -1, spriteRow: 3, vAngleStart: sCape.Geometry.ANGLE_TOP_LEFT, vAngleEnd: sCape.Geometry.ANGLE_TOP_RIGHT
-	};
 
 	sCape.Engine.initLevel = function (levelIndex) {
 		var grid = new sCape.Grid(
@@ -129,13 +110,13 @@
 
 	function _createPlayer (x, y) {
 		var playerClass = sCape.data.playerClass || sCape.Entities.playerClass;
-		return new playerClass(x, y, sCape.Engine.directionsSetup['down']);
+		return new playerClass(x, y, sCape.Entities.directionsSetup['down']);
 	}
 
 	function _createDeath (x, y) {
 		var deathClass = sCape.data.deathClass || sCape.Entities.deathClass,
 			direction = _directions[parseInt(Math.random() * 100) % 4],
-			d = new deathClass(x, y, sCape.Engine.directionsSetup[direction]);
+			d = new deathClass(x, y, sCape.Entities.directionsSetup[direction]);
 		sCape.Level.currentLevel.deaths.push(d);
 		return d;
 	}
@@ -175,8 +156,8 @@
 			if (!deaths[d].updatePosition()) {
 				changed = deaths[d].increaseRotationFrequency();
 				if (changed) {
-					deaths[d].direction = sCape.Engine.directionsSetup[
-						sCape.Engine.directions[parseInt(Math.random() * 100) % 4]
+					deaths[d].direction = sCape.Entities.directionsSetup[
+						sCape.Entities.directions[parseInt(Math.random() * 100) % 4]
 					];
 					_worldChanged = true;
 				}
