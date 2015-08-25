@@ -27,8 +27,8 @@ function (Events, Level, GUI, Geometry, Physics, data) {
 
 		this.cellX = cellX;
 		this.cellY = cellY;
-		this.x = Level.Grid.getObjectDisplayXFromCell(cellX, this.resource.w);
-		this.y = Level.Grid.getObjectDisplayYFromCell(cellY, this.resource.h);
+		this.x = Level.Grid.getObjectDisplayXFromCell(cellX, GUI.canvas.width, this.resource.w);
+		this.y = Level.Grid.getObjectDisplayYFromCell(cellY, GUI.canvas.height, this.resource.h);
 		this.w = this.resource.w;
 		this.h = this.resource.h;
 		this.hitbox = new Geometry.Rectangle(
@@ -168,8 +168,22 @@ function (Events, Level, GUI, Geometry, Physics, data) {
 					}
 
 					if (this.nextTarget) {
-						this.nextTarget.x = this.nextTarget.content == 'D' ? this.x : Level.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w);
-						this.nextTarget.y = this.nextTarget.content == 'D' ? this.y : Level.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h);
+						if (this.nextTarget.content == 'D') {
+							this.nextTarget.x = this.x;
+							this.nextTarget.y = this.y;
+						}
+						else {
+						this.nextTarget.x = Level.Grid.getObjectDisplayXFromCell(
+							this.nextTarget.cellX,
+							GUI.canvas.width,
+							this.w
+						);
+						this.nextTarget.y = Level.Grid.getObjectDisplayYFromCell(
+							this.nextTarget.cellY,
+							GUI.canvas.height,
+							this.h
+						);
+						}
 					}
 				}
 			}

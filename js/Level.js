@@ -65,14 +65,14 @@ sCape.addModule('Level', 'GUI', function (GUI) {
 		}
 	};
 
-	Level.Grid.getObjectDisplayXFromCell = function (cellX, resourceWidth) {
+	Level.Grid.getObjectDisplayXFromCell = function (cellX, gridWidth, resourceWidth) {
 		var x = cellX * Level.currentLevel.grid.tileWidth + (Level.currentLevel.grid.tileWidth - resourceWidth) / 2;
-		return Math.max(0, Math.min(GUI.canvas.width - resourceWidth, x));
+		return Math.max(0, Math.min(gridWidth - resourceWidth, x));
 	}
 
-	Level.Grid.getObjectDisplayYFromCell = function (cellY, resourceHeight) {
+	Level.Grid.getObjectDisplayYFromCell = function (cellY, gridHeight, resourceHeight) {
 		var y = cellY * Level.currentLevel.grid.tileHeight + Level.currentLevel.grid.tileHeight - resourceHeight;
-		return Math.max(0, Math.min(GUI.canvas.height - resourceHeight, y));
+		return Math.max(0, Math.min(gridHeight - resourceHeight, y));
 	}
 
 	Level.currentLevel = null;

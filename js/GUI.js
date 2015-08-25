@@ -58,8 +58,8 @@ sCape.addModule('GUI', 'Events', 'Level', 'data', function (Events, Level, data)
 
 		drawTree: function (cellX, cellY) {
 			GUI.draw({
-				x: Level.Grid.getObjectDisplayXFromCell(cellX, data.resources['tree'].w),
-				y: Level.Grid.getObjectDisplayYFromCell(cellY, data.resources['tree'].h),
+				x: Level.Grid.getObjectDisplayXFromCell(cellX, GUI.canvas.width, data.resources['tree'].w),
+				y: Level.Grid.getObjectDisplayYFromCell(cellY, GUI.canvas.height, data.resources['tree'].h),
 				resource: data.resources.tree
 			});
 		},
