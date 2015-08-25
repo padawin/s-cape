@@ -23,8 +23,11 @@ var sCape = (function () {
 			else if (a == arguments.length - 1) {
 				definition = arguments[a];
 			}
-			else {
+			else if (arguments[a] in modules) {
 				args.push(modules[arguments[a]]);
+			}
+			else {
+				throw 'Unknown module ' + arguments[a] + ' included by ' + definitionName;
 			}
 		}
 
