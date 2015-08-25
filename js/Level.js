@@ -1,4 +1,4 @@
-sCape.addModule('Level', 'GUI', function (GUI) {
+sCape.addModule('Level', function () {
 	var Level = function (grid) {
 		this.grid = grid;
 		this.player = null;
