@@ -1,5 +1,5 @@
 sCape.addModule('Entities',
-	'Events', 'Level', 'GUI', 'Geometry', 'Physics', 'data'
+	'Events', 'Level', 'GUI', 'Geometry', 'Physics', 'data',
 function (Events, Level, GUI, Geometry, Physics, data) {
 	var entityClass, movableClass, deathClass, playerClass, _directions, _directionsSetup;
 
