@@ -24,7 +24,7 @@ var sCape = (function () {
 				definition = arguments[a];
 			}
 			else {
-				args.push(modules[a]);
+				args.push(modules[arguments[a]]);
 			}
 		}
 
