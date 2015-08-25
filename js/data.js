@@ -1,5 +1,5 @@
 sCape.addModule('data', function () {
-	sCape.data = {
+	return {
 		'resources': {
 			// url, tile dimensions, top left position in grid's cell to be
 			// middle bottom aligned

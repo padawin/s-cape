@@ -1,10 +1,10 @@
-sCape.addModule('Menus', function () {
+sCape.addModule('Menus', 'Engine', function (Engine) {
 	return {
 		mainmenu: [
 			{text: 'New game', event: function () {
-				sCape.Engine.initLevel(0);
-				sCape.Engine.loadResources(function () {
-					sCape.Engine.startMainLoop();
+				Engine.initLevel(0);
+				Engine.loadResources(function () {
+					Engine.startMainLoop();
 				});
 			}}
 		]
