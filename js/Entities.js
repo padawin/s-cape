@@ -141,7 +141,9 @@ function (Events, Level, GUI, Geometry, Physics, data) {
 		return false;
 	};
 
-	deathClass = function (x, y, direction) {
+	deathClass = function (x, y) {
+		var direction = _directions[parseInt(Math.random() * 100) % 4];
+
 		movableClass.call(this, x, y, data.resources['death'], direction);
 		this.extends(movableClass.prototype);
 		this.rotationFrequency = parseInt(Math.random() * (1000 - 100 + 1)) + 100;

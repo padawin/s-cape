@@ -92,8 +92,7 @@ function (data, GUI, Level, Entities, PathFinding) {
 
 	function _createDeath (x, y) {
 		var deathClass = data.deathClass || Entities.deathClass,
-			direction = _directions[parseInt(Math.random() * 100) % 4],
-			d = new deathClass(x, y, direction);
+			d = new deathClass(x, y);
 		Level.currentLevel.deaths.push(d);
 		return d;
 	}
