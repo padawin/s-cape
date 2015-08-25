@@ -1,8 +1,7 @@
 sCape.addModule('Engine',
-	'data', 'GUI', 'Level', 'Entities',
-function (data, GUI, Level, Entities) {
-	var _directions,
-		_isMobile,
+	'data', 'GUI', 'Level', 'Entities', 'PathFinding',
+function (data, GUI, Level, Entities, PathFinding) {
+	var _isMobile,
 		_worldChanged = true,
 		Engine = {};
 
@@ -151,7 +150,7 @@ function (data, GUI, Level, Entities) {
 						|| player.changedCell
 					)
 				) {
-					var path = sCape.PathFinding.shortestPath(
+					var path = PathFinding.shortestPath(
 						Level.currentLevel.grid,
 						deaths[d],
 						player
