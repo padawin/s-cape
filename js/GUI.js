@@ -1,103 +1,98 @@
-(function (sCape) {
-	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the GUI module";
-	}
-
+sCape.addModule('GUI', 'Events', 'Level', 'data', function (Events, Level, data) {
 	function _drawButton(ctx, y, button) {
-		sCape.GUI.ctx.fillStyle = '#E0995E';
+		GUI.ctx.fillStyle = '#E0995E';
 
 		ctx.font = "30px Arial";
 		var textSize = ctx.measureText(button.text);
 		// Button border
-		sCape.GUI.ctx.fillRect((sCape.GUI.canvas.width - textSize.width) / 2 - 5, y, textSize.width + 10, 40);
+		GUI.ctx.fillRect((GUI.canvas.width - textSize.width) / 2 - 5, y, textSize.width + 10, 40);
 		// Button background
-		sCape.GUI.ctx.strokeRect((sCape.GUI.canvas.width - textSize.width) / 2 - 5, y, textSize.width + 10, 40);
-		sCape.GUI.ctx.fillStyle = '#000';
+		GUI.ctx.strokeRect((GUI.canvas.width - textSize.width) / 2 - 5, y, textSize.width + 10, 40);
+		GUI.ctx.fillStyle = '#000';
 		// Button text
-		sCape.GUI.ctx.fillText(button.text, (sCape.GUI.canvas.width - textSize.width) / 2, y + 30);
+		GUI.ctx.fillText(button.text, (GUI.canvas.width - textSize.width) / 2, y + 30);
 
 		return {
-			x: (sCape.GUI.canvas.width - textSize.width) / 2,
+			x: (GUI.canvas.width - textSize.width) / 2,
 			y: y,
 			w: textSize.width + 10,
 			h: 40
 		};
 	}
 
-	sCape.GUI = {
-
+	var GUI = {
 		init: function (canvasElement, width, height) {
-			sCape.GUI.canvas = canvasElement;
-			sCape.GUI.canvas.width = width;
-			sCape.GUI.canvas.height = height;
-			sCape.GUI.ctx = sCape.GUI.canvas.getContext('2d');
+			GUI.canvas = canvasElement;
+			GUI.canvas.width = width;
+			GUI.canvas.height = height;
+			GUI.ctx = GUI.canvas.getContext('2d');
 		},
 
 		drawMenu: function (menu) {
 			// draw background
-			sCape.GUI.ctx.fillStyle = '#734B4B';
-			sCape.GUI.ctx.fillRect(0, 0, sCape.GUI.canvas.width, sCape.GUI.canvas.height); // context.fillRect(x, y, width, height);
+			GUI.ctx.fillStyle = '#734B4B';
+			GUI.ctx.fillRect(0, 0, GUI.canvas.width, GUI.canvas.height); // context.fillRect(x, y, width, height);
 
 			var y = 100;
 			for (var i = 0; i < menu.length; i++) {
-				menu[i].coordinates = _drawButton(sCape.GUI.ctx, y, menu[i]);
-				sCape.EventsManager.on('event.clickbutton', menu[i], menu[i].event);
+				menu[i].coordinates = _drawButton(GUI.ctx, y, menu[i]);
+				Events.on('event.clickbutton', menu[i], menu[i].event);
 				y = menu[i].coordinates.h + menu[i].coordinates.y + 20;
 			}
 
-			sCape.EventsManager.on('event.action-on-screen', menu, function (x, y) {
+			Events.on('event.action-on-screen', menu, function (x, y) {
 				for (var m = 0; m < this.length; m++) {
 					if (x >= this[m].coordinates.x && x <= this[m].coordinates.x + this[m].coordinates.w
 						&& y >= this[m].coordinates.y && y <= this[m].coordinates.y + this[m].coordinates.h
 					) {
-						sCape.EventsManager.fire('event.clickbutton', this[m]);
-						sCape.EventsManager.off('event.clickbutton', this[m]);
+						Events.fire('event.clickbutton', this[m]);
+						Events.off('event.clickbutton', this[m]);
 					}
 				}
 			});
 		},
 
-		drawPlayer: function () {
-			sCape.GUI.draw(sCape.Level.currentLevel.player);
+		drawPlayer: function (player) {
+			GUI.draw(player);
 		},
 
 		drawTree: function (cellX, cellY) {
-			sCape.GUI.draw({
-				x: sCape.Grid.getObjectDisplayXFromCell(cellX, sCape.data.resources['tree'].w),
-				y: sCape.Grid.getObjectDisplayYFromCell(cellY, sCape.data.resources['tree'].h),
-				resource: sCape.data.resources.tree
+			GUI.draw({
+				x: Level.Grid.getObjectDisplayXFromCell(cellX, GUI.canvas.width, data.resources['tree'].w),
+				y: Level.Grid.getObjectDisplayYFromCell(cellY, GUI.canvas.height, data.resources['tree'].h),
+				resource: data.resources.tree
 			});
 		},
 
 		drawDeath: function (death) {
 			if (death.seesPlayer) {
-				sCape.GUI.ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+				GUI.ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
 			}
 			else {
-				sCape.GUI.ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
+				GUI.ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
 			}
-			sCape.GUI.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-			sCape.GUI.ctx.beginPath();
-			sCape.GUI.ctx.moveTo(
+			GUI.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+			GUI.ctx.beginPath();
+			GUI.ctx.moveTo(
 				death.cellChange.x,
 				death.cellChange.y
 			);
-			sCape.GUI.ctx.arc(
+			GUI.ctx.arc(
 				death.cellChange.x,
 				death.cellChange.y,
 				death.visionDepth,
 				death.direction.vAngleStart,
 				death.direction.vAngleEnd
 			);
-			sCape.GUI.ctx.lineTo(
+			GUI.ctx.lineTo(
 				death.cellChange.x,
 				death.cellChange.y
 			);
-			sCape.GUI.ctx.fill();
-			sCape.GUI.ctx.stroke();
-			sCape.GUI.ctx.closePath();
+			GUI.ctx.fill();
+			GUI.ctx.stroke();
+			GUI.ctx.closePath();
 
-			sCape.GUI.draw(death);
+			GUI.draw(death);
 		},
 
 		drawLevel: function (level) {
@@ -105,35 +100,31 @@
 
 			level.grid.loopThroughMap({
 				'P': function (col, row) {
-					sCape.GUI.drawPlayer();
+					GUI.drawPlayer(level.player);
 				},
 				'T': function (col, row) {
-					sCape.GUI.drawTree(row, col);
+					GUI.drawTree(row, col);
 				},
 				'D': function (col, row) {
-					sCape.GUI.drawDeath(sCape.Level.currentLevel.deaths[d]);
+					GUI.drawDeath(level.deaths[d]);
 					++d;
 				}
 			});
 		},
 
 		drawBackground: function (bgResource) {
-			var img = sCape.data.resources[bgResource].resource,
-				pattern = sCape.GUI.ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
-			sCape.GUI.ctx.fillStyle = pattern;
-			sCape.GUI.ctx.fillRect(0, 0, sCape.GUI.canvas.width, sCape.GUI.canvas.height); // context.fillRect(x, y, width, height);
+			var img = data.resources[bgResource].resource,
+				pattern = GUI.ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+			GUI.ctx.fillStyle = pattern;
+			GUI.ctx.fillRect(0, 0, GUI.canvas.width, GUI.canvas.height); // context.fillRect(x, y, width, height);
 		},
 
 		draw: function (object) {
 			var resource = object.resource;
-			// the animations have 4 frames
-			// the grid has cells of sCape.Level.currentLevel.grid.tileWidth * sCape.Level.currentLevel.grid.tileHeight px
-			// there are 4 directions, so 4 rows in the sprite
-			// To set the sprite on the middle bottom of the tile
 			var spriteStartX = object.moveFrame ? parseInt(object.moveFrame) * resource.w : 0,
 				spriteStartY = object.direction ? object.direction.spriteRow * resource.h : 0;
 
-			sCape.GUI.ctx.drawImage(
+			GUI.ctx.drawImage(
 				resource.resource,
 				// Start in the sprite board
 				spriteStartX, spriteStartY,
@@ -146,5 +137,6 @@
 			);
 		}
 	};
-})(sCape);
 
+	return GUI;
+});

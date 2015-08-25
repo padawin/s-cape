@@ -1,18 +1,17 @@
-(function (sCape) {
-	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the Events module";
-	}
-
+sCape.addModule('Events', function () {
 	function _stopEvent () {
-		sCape.EventsManager.fire('event.action-off-screen');
+		Events.fire('event.action-off-screen');
 	}
 
-	sCape.Events = {
-		init: function () {
+	var events = {},
+		Events;
+
+	Events = {
+		init: function (canvas) {
 			var mouseIsDown = false;
 
 			function _touchEvent (e) {
-				sCape.EventsManager.fire('event.action-on-screen', [e.touches[0].clientX, e.touches[0].clientY]);
+				Events.fire('event.action-on-screen', [e.touches[0].clientX, e.touches[0].clientY]);
 				e.preventDefault();
 				return false;
 			}
@@ -22,15 +21,15 @@
 					return false;
 				}
 
-				sCape.EventsManager.fire('event.action-on-screen', [e.clientX, e.clientY]);
+				Events.fire('event.action-on-screen', [e.clientX, e.clientY]);
 			}
 
 			if (_isMobile) {
-				B.addEvent(sCape.GUI.canvas, 'touchstart', _touchEvent);
+				B.addEvent(canvas, 'touchstart', _touchEvent);
 
-				B.addEvent(sCape.GUI.canvas, 'touchmove', _touchEvent);
+				B.addEvent(canvas, 'touchmove', _touchEvent);
 
-				B.addEvent(sCape.GUI.canvas, 'touchend', _stopEvent);
+				B.addEvent(canvas, 'touchend', _stopEvent);
 			}
 			else {
 				B.addEvent(document, 'mouseup', function (e) {
@@ -44,12 +43,8 @@
 				});
 				B.addEvent(document, 'mousemove', _clickEvent);
 			}
-		}
-	};
+		},
 
-	var events = {};
-
-	sCape.EventsManager = {
 		on: function(event, element, callback) {
 			if (!(event in events)) {
 				events[event] = [];
@@ -111,5 +106,6 @@
 		}
 	};
 
-})(sCape);
+	return Events;
+});
 

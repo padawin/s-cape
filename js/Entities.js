@@ -1,20 +1,37 @@
-(function (sCape) {
-	if (typeof(sCape) == 'undefined') {
-		throw "sCape is needed to use the Entities module";
-	}
+sCape.addModule('Entities',
+	'Events', 'Level', 'GUI', 'Geometry', 'Physics', 'data',
+function (Events, Level, GUI, Geometry, Physics, data) {
+	var entityClass, movableClass, deathClass, playerClass, _directions, _directionsSetup;
 
-	var entityClass, movableClass, deathClass, playerClass;
+	_directions = ['down', 'left', 'right', 'up'];
+	_directionsSetup = {};
+
+	_directionsSetup[_directions[0]] = {
+		x: 0, y: 1, spriteRow: 0, vAngleStart: Geometry.ANGLE_BOTTOM_RIGHT, vAngleEnd: Geometry.ANGLE_BOTTOM_LEFT
+	};
+	_directionsSetup[_directions[1]] = {
+		x: -1, y: 0, spriteRow: 1, vAngleStart: Geometry.ANGLE_BOTTOM_LEFT, vAngleEnd: Geometry.ANGLE_TOP_LEFT
+	};
+	_directionsSetup[_directions[2]] = {
+		// This angle overlaps with the angle 0 of the trigonometry circle,
+		// so the end angle ends up being smaller than the start angle
+		// lets add one whole turn to the angle
+		x: 1, y: 0, spriteRow: 2, vAngleStart: Geometry.ANGLE_TOP_RIGHT, vAngleEnd: Geometry.ANGLE_BOTTOM_RIGHT + 2 * Math.PI
+	};
+	_directionsSetup[_directions[3]] = {
+		x: 0, y: -1, spriteRow: 3, vAngleStart: Geometry.ANGLE_TOP_LEFT, vAngleEnd: Geometry.ANGLE_TOP_RIGHT
+	};
 
 	entityClass = function (cellX, cellY, resource) {
 		this.resource = resource;
 
 		this.cellX = cellX;
 		this.cellY = cellY;
-		this.x = sCape.Grid.getObjectDisplayXFromCell(cellX, this.resource.w);
-		this.y = sCape.Grid.getObjectDisplayYFromCell(cellY, this.resource.h);
+		this.x = Level.Grid.getObjectDisplayXFromCell(cellX, GUI.canvas.width, this.resource.w);
+		this.y = Level.Grid.getObjectDisplayYFromCell(cellY, GUI.canvas.height, this.resource.h);
 		this.w = this.resource.w;
 		this.h = this.resource.h;
-		this.hitbox = new sCape.Geometry.Rectangle(
+		this.hitbox = new Geometry.Rectangle(
 			this.x + this.resource.hitbox[0],
 			this.y + this.resource.hitbox[1],
 			this.resource.hitbox[2],
@@ -25,7 +42,7 @@
 	movableClass = function (cellX, cellY, resource, direction) {
 		entityClass.call(this, cellX, cellY, resource);
 		this.extends(entityClass.prototype);
-		this.cellChange = new sCape.Geometry.Point(
+		this.cellChange = new Geometry.Point(
 			this.x + this.resource.cellChange[0],
 			this.y + this.resource.cellChange[1]
 		);
@@ -33,7 +50,7 @@
 		this.speedY = 0;
 		this.moving = false;
 		this.moveFrame = 0;
-		this.direction = direction;
+		this.direction = _directionsSetup[direction];
 		this.baseSpeed = 1;
 	};
 
@@ -63,19 +80,19 @@
 		// Map borders
 		if (this.x < 0
 			|| this.y < 0
-			|| this.x + this.w > sCape.GUI.canvas.width
-			|| this.y + this.h > sCape.GUI.canvas.height
+			|| this.x + this.w > GUI.canvas.width
+			|| this.y + this.h > GUI.canvas.height
 		) {
 			return true;
 		}
 		// Object in map
 		else {
-			var o, nbObstacles = sCape.Level.currentLevel.obstacles.length, colliding;
+			var o, nbObstacles = Level.currentLevel.obstacles.length, colliding;
 			for (o = 0; o < nbObstacles; ++o) {
-				if (sCape.Level.currentLevel.obstacles[o].obstacle === this) {
+				if (Level.currentLevel.obstacles[o].obstacle === this) {
 					continue;
 				}
-				colliding = sCape.Physics.areRectanglesColliding(this.hitbox, sCape.Level.currentLevel.obstacles[o].obstacle.hitbox);
+				colliding = Physics.areRectanglesColliding(this.hitbox, Level.currentLevel.obstacles[o].obstacle.hitbox);
 
 				if (colliding) {
 					return true;
@@ -106,14 +123,14 @@
 				this.cellChange.y += this.speedY;
 				this.moveFrame = (this.moveFrame + 0.25) % 4;
 
-				var newPX = parseInt(this.cellChange.x / sCape.Level.currentLevel.grid.tileWidth),
-					newPY = parseInt(this.cellChange.y / sCape.Level.currentLevel.grid.tileHeight),
-					symbol = sCape.Level.currentLevel.grid.map[this.cellY][this.cellX];
-				if (sCape.Level.currentLevel.grid.map[newPY][newPX] == '') {
-					sCape.Level.currentLevel.grid.map[this.cellY][this.cellX] = '';
+				var newPX = parseInt(this.cellChange.x / Level.currentLevel.grid.tileWidth),
+					newPY = parseInt(this.cellChange.y / Level.currentLevel.grid.tileHeight),
+					symbol = Level.currentLevel.grid.map[this.cellY][this.cellX];
+				if (Level.currentLevel.grid.map[newPY][newPX] == '') {
+					Level.currentLevel.grid.map[this.cellY][this.cellX] = '';
 					this.cellX = newPX;
 					this.cellY = newPY;
-					sCape.Level.currentLevel.grid.map[this.cellY][this.cellX] = symbol;
+					Level.currentLevel.grid.map[this.cellY][this.cellX] = symbol;
 					this.changedCell = true;
 				}
 			}
@@ -124,8 +141,10 @@
 		return false;
 	};
 
-	deathClass = function (x, y, direction) {
-		movableClass.call(this, x, y, sCape.data.resources['death'], direction);
+	deathClass = function (x, y) {
+		var direction = _directions[parseInt(Math.random() * 100) % 4];
+
+		movableClass.call(this, x, y, data.resources['death'], direction);
 		this.extends(movableClass.prototype);
 		this.rotationFrequency = parseInt(Math.random() * (1000 - 100 + 1)) + 100;
 		this.frameBeforeRotation = 1;
@@ -149,8 +168,22 @@
 					}
 
 					if (this.nextTarget) {
-						this.nextTarget.x = this.nextTarget.content == 'D' ? this.x : sCape.Grid.getObjectDisplayXFromCell(this.nextTarget.cellX, this.w);
-						this.nextTarget.y = this.nextTarget.content == 'D' ? this.y : sCape.Grid.getObjectDisplayYFromCell(this.nextTarget.cellY, this.h);
+						if (this.nextTarget.content == 'D') {
+							this.nextTarget.x = this.x;
+							this.nextTarget.y = this.y;
+						}
+						else {
+						this.nextTarget.x = Level.Grid.getObjectDisplayXFromCell(
+							this.nextTarget.cellX,
+							GUI.canvas.width,
+							this.w
+						);
+						this.nextTarget.y = Level.Grid.getObjectDisplayYFromCell(
+							this.nextTarget.cellY,
+							GUI.canvas.height,
+							this.h
+						);
+						}
 					}
 				}
 			}
@@ -165,27 +198,27 @@
 
 				// target on the left
 				if (nextTargetVector.x < 0) {
-					this.startMotion(sCape.Engine.directionsSetup.left);
+					this.startMotion(_directionsSetup.left);
 					this.speedX = Math.max(this.speedX, nextTargetVector.x);
 				}
 				// target on the right
 				else if (nextTargetVector.x > 0) {
-					this.startMotion(sCape.Engine.directionsSetup.right);
+					this.startMotion(_directionsSetup.right);
 					this.speedX = Math.min(this.speedX, nextTargetVector.x);
 				}
 				// target above
 				else if (nextTargetVector.y < 0) {
-					this.startMotion(sCape.Engine.directionsSetup.up);
+					this.startMotion(_directionsSetup.up);
 					this.speedY = Math.max(this.speedY, nextTargetVector.y);
 				}
 				// target below
 				else if (nextTargetVector.y > 0) {
-					this.startMotion(sCape.Engine.directionsSetup.down);
+					this.startMotion(_directionsSetup.down);
 					this.speedY = Math.min(this.speedY, nextTargetVector.y);
 				}
 			}
 
-			return sCape.Entities.movableClass.prototype.updatePosition.call(this);
+			return movableClass.prototype.updatePosition.call(this);
 		};
 	};
 
@@ -213,17 +246,17 @@
 		inSight = this.direction.vAngleStart <= angle && angle <= this.direction.vAngleEnd;
 		obstaclesInWay = false;
 
-		for (o = 0; o < sCape.Level.currentLevel.obstacles.length; o++) {
-			if (sCape.Level.currentLevel.obstacles[o].type == 'death') {
+		for (o = 0; o < Level.currentLevel.obstacles.length; o++) {
+			if (Level.currentLevel.obstacles[o].type == 'death') {
 				continue;
 			}
 
-			obstaclesInWay = obstaclesInWay || sCape.Physics.areSegmentAndRectangleColliding(
-				new sCape.Geometry.Segment(
+			obstaclesInWay = obstaclesInWay || Physics.areSegmentAndRectangleColliding(
+				new Geometry.Segment(
 					this.cellChange,
 					player.cellChange
 				),
-				sCape.Level.currentLevel.obstacles[o].obstacle.hitbox
+				Level.currentLevel.obstacles[o].obstacle.hitbox
 			);
 		}
 
@@ -250,38 +283,44 @@
 		return this.path && this.path.length || this.nextTarget;
 	};
 
+	deathClass.prototype.changeDirection = function () {
+		this.direction = _directionsSetup[
+			_directions[parseInt(Math.random() * 100) % 4]
+		];
+	};
+
 	playerClass = function (x, y, direction) {
-		movableClass.call(this, x, y, sCape.data.resources['player'], direction);
-		sCape.EventsManager.on('event.action-on-screen', this, function (x, y) {
+		movableClass.call(this, x, y, data.resources['player'], direction);
+		Events.on('event.action-on-screen', this, function (x, y) {
 			var trigoX, trigoY, touchRatio, canvasRatio;
 				trigoX = x - this.cellChange.x;
 				trigoY = -1 * y + this.cellChange.y;
 
 			touchRatio = Math.abs(trigoY / trigoX);
-			canvasRatio = sCape.GUI.canvas.height / sCape.GUI.canvas.width;
+			canvasRatio = GUI.canvas.height / GUI.canvas.width;
 			if (trigoY > 0 && touchRatio > canvasRatio) {
-				sCape.Level.currentLevel.player.startMotion(
-					sCape.Engine.directionsSetup.up
+				Level.currentLevel.player.startMotion(
+					_directionsSetup.up
 				);
 			}
 			else if (trigoY < 0 && touchRatio > canvasRatio) {
-				sCape.Level.currentLevel.player.startMotion(
-					sCape.Engine.directionsSetup.down
+				Level.currentLevel.player.startMotion(
+					_directionsSetup.down
 				);
 			}
 			else if (trigoX > 0) {
-				sCape.Level.currentLevel.player.startMotion(
-					sCape.Engine.directionsSetup.right
+				Level.currentLevel.player.startMotion(
+					_directionsSetup.right
 				);
 			}
 			else {
-				sCape.Level.currentLevel.player.startMotion(
-					sCape.Engine.directionsSetup.left
+				Level.currentLevel.player.startMotion(
+					_directionsSetup.left
 				);
 			}
 		});
 
-		sCape.EventsManager.on('event.action-off-screen', this, function () {
+		Events.on('event.action-off-screen', this, function () {
 			if (this.isMoving()) {
 				_worldChanged = true;
 				this.stopMotion();
@@ -292,7 +331,7 @@
 		this.baseSpeed = 2;
 	};
 
-	sCape.Entities = {
+	return {
 		entityClass: entityClass,
 
 		movableClass: movableClass,
@@ -301,4 +340,4 @@
 
 		deathClass: deathClass
 	};
-})(sCape);
+});
