@@ -60,7 +60,6 @@ function (data, GUI, Level, Entities, PathFinding) {
 	};
 
 	Engine.startMainLoop = function () {
-
 		var fps = 60,
 			now,
 			then = Date.now(),
