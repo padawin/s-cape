@@ -37,6 +37,10 @@ var sCape = (function () {
 	return _sCape;
 })();
 
+if (typeof (exports) != 'undefined') {
+	exports.sCape = sCape;
+}
+
 Object.prototype.extends = function (parent) {
 	for (var i in parent) {
 		if (parent.hasOwnProperty(i)) {
