@@ -5,6 +5,82 @@ function (data, GUI, Level, Entities, PathFinding) {
 		_worldChanged = true,
 		Engine = {};
 
+	function _createPlayer (x, y) {
+		var playerClass = data.playerClass || Entities.playerClass;
+		return new playerClass(x, y, 'down');
+	}
+
+	function _createDeath (x, y) {
+		var deathClass = data.deathClass || Entities.deathClass,
+			d = new deathClass(x, y);
+		Level.currentLevel.deaths.push(d);
+		return d;
+	}
+
+	function _createTree (x, y) {
+		var t = new Entities.entityClass(x, y, data.resources['tree']);
+
+		return t;
+	}
+
+	/**
+	 * Redraw the scene if any entity moved
+	 */
+	function _updateScene () {
+		if (!_worldChanged) {
+			return;
+		}
+
+		GUI.drawBackground('grass');
+		GUI.drawLevel(Level.currentLevel);
+		_worldChanged = false;
+	};
+
+	/**
+	 * Update the position of the movable entities
+	 * May contain factorizable calculations
+	 */
+	function _updateState () {
+		var d,
+			changed,
+			player = Level.currentLevel.player,
+			deaths = Level.currentLevel.deaths;
+
+		_worldChanged = _worldChanged || player.updatePosition();
+
+		for (d = 0; d < deaths.length; d++) {
+			if (!deaths[d].updatePosition()) {
+				changed = deaths[d].increaseRotationFrequency();
+				if (changed) {
+					deaths[d].changeDirection();
+					_worldChanged = true;
+				}
+			}
+			else {
+				_worldChanged = true;
+			}
+
+			if (_worldChanged) {
+				deaths[d].detectPlayer(player);
+
+				if (deaths[d].seesPlayer
+					&& (
+						!deaths[d].isChasing()
+						|| player.changedCell
+					)
+				) {
+					var path = PathFinding.shortestPath(
+						Level.currentLevel.grid,
+						deaths[d],
+						player
+					);
+
+					deaths[d].chase(path);
+				}
+			}
+		}
+	}
+
 	Engine.initLevel = function (levelIndex) {
 		// Create them differently, via calling new somewhere else
 		var grid = new Level.Grid(
@@ -87,81 +163,6 @@ function (data, GUI, Level, Entities, PathFinding) {
 		draw();
 	};
 
-	function _createPlayer (x, y) {
-		var playerClass = data.playerClass || Entities.playerClass;
-		return new playerClass(x, y, 'down');
-	}
-
-	function _createDeath (x, y) {
-		var deathClass = data.deathClass || Entities.deathClass,
-			d = new deathClass(x, y);
-		Level.currentLevel.deaths.push(d);
-		return d;
-	}
-
-	function _createTree (x, y) {
-		var t = new Entities.entityClass(x, y, data.resources['tree']);
-
-		return t;
-	}
-
-	/**
-	 * Redraw the scene if any entity moved
-	 */
-	function _updateScene () {
-		if (!_worldChanged) {
-			return;
-		}
-
-		GUI.drawBackground('grass');
-		GUI.drawLevel(Level.currentLevel);
-		_worldChanged = false;
-	};
-
-	/**
-	 * Update the position of the movable entities
-	 * May contain factorizable calculations
-	 */
-	function _updateState () {
-		var d,
-			changed,
-			player = Level.currentLevel.player,
-			deaths = Level.currentLevel.deaths;
-
-		_worldChanged = _worldChanged || player.updatePosition();
-
-		for (d = 0; d < deaths.length; d++) {
-			if (!deaths[d].updatePosition()) {
-				changed = deaths[d].increaseRotationFrequency();
-				if (changed) {
-					deaths[d].changeDirection();
-					_worldChanged = true;
-				}
-			}
-			else {
-				_worldChanged = true;
-			}
-
-			if (_worldChanged) {
-				deaths[d].detectPlayer(player);
-
-				if (deaths[d].seesPlayer
-					&& (
-						!deaths[d].isChasing()
-						|| player.changedCell
-					)
-				) {
-					var path = PathFinding.shortestPath(
-						Level.currentLevel.grid,
-						deaths[d],
-						player
-					);
-
-					deaths[d].chase(path);
-				}
-			}
-		}
-	}
 
 	return Engine;
 });
