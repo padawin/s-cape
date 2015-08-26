@@ -30,6 +30,9 @@ function (data, GUI, Level, Entities, PathFinding) {
 		});
 	};
 
+	/**
+	 * Use events to display loading bar
+	 */
 	Engine.loadResources = function (loadedCallback) {
 		var r, loaded = 0, loadingWidth = 0.70 * GUI.canvas.width;
 
