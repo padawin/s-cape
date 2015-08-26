@@ -5,21 +5,21 @@ if (typeof (require) != 'undefined') {
 sCape.addModule('GeometryTests', 'Geometry', 'Tests', function (Geometry, Tests) {
 	Tests.addSuite('geometry', [
 		/**
-		 * Test of the method Tests.Point exists
+		 * Test if the method Tests.Point exists
 		 */
 		function() {
 			Tests.isA(Geometry.Point, 'function');
 		},
 
 		/**
-		 * Test of the method Tests.Rectangle exists
+		 * Test if the method Tests.Rectangle exists
 		 */
 		function() {
 			Tests.isA(Geometry.Rectangle, 'function');
 		},
 
 		/**
-		 * Test of the method Tests.Segment exists
+		 * Test if the method Tests.Segment exists
 		 */
 		function() {
 			Tests.isA(Geometry.Segment, 'function');
