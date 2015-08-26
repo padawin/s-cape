@@ -10,6 +10,7 @@ sCape.executeModule('GeometryTests', 'Geometry', 'Tests', function (Geometry, Te
 		function() {
 			Tests.isA(Geometry.Point, 'function');
 		},
+
 		/**
 		 * Test of the method Tests.Point
 		 */
@@ -108,5 +109,3 @@ sCape.executeModule('GeometryTests', 'Geometry', 'Tests', function (Geometry, Te
 		}
 	]);
 });
-
-
