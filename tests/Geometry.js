@@ -10,6 +10,14 @@ sCape.addModule('GeometryTests', 'Geometry', 'Tests', function (Geometry, Tests)
 		function() {
 			Tests.isA(Geometry.Point, 'function');
 		},
+		/**
+		 * Test of the method Tests.Point
+		 */
+		function() {
+			var p = new Geometry.Point(2, 3);
+			Tests.equals(p.x, 2);
+			Tests.equals(p.y, 3);
+		},
 
 		/**
 		 * Test if the method Tests.Rectangle exists
