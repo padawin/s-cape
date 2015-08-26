@@ -1,9 +1,10 @@
 /* global exports, require */
 if (typeof (require) != 'undefined') {
-	var color = require('colors/safe');
+	var sCape = require('./../js/sCape.js').sCape,
+		color = require('colors/safe');
 }
 
-var Tests = (function () {
+sCape.addModule('Tests', function () {
 	//Micro tests service
 
 	var tests = {}, // The tests library
@@ -183,9 +184,9 @@ var Tests = (function () {
 		return result;
 	};
 
-	return tests;
-})();
+	if (typeof (exports) != 'undefined') {
+		exports.Tests = tests;
+	}
 
-if (typeof (exports) != 'undefined') {
-	exports.Tests = Tests;
-}
+	return tests;
+});
