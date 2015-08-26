@@ -2,7 +2,7 @@ if (typeof (require) != 'undefined') {
 	var sCape = require('./../js/sCape.js').sCape;
 }
 
-sCape.addModule('GeometryTests', 'Geometry', 'Tests', function (Geometry, Tests) {
+sCape.executeModule('GeometryTests', 'Geometry', 'Tests', function (Geometry, Tests) {
 	Tests.addSuite('geometry', [
 		/**
 		 * Test if the method Tests.Point exists

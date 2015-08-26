@@ -4,7 +4,7 @@ if (typeof (require) != 'undefined') {
 	var sCape = require('./../js/sCape.js').sCape;
 }
 
-sCape.addModule('TestsOfTests', 'Tests', function (Tests) {
+sCape.executeModule('TestsOfTests', 'Tests', function (Tests) {
 	Tests.addSuite('tests', [
 		function() {
 			//Test if the method Tests.isA exists (A bit recursive logic...)
