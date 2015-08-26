@@ -1,8 +1,8 @@
 var sCape = (function () {
 	var modules = {},
-	_sCape = {};
+		_sCape = {};
 
-	_sCape.addModule = function () {
+	function _loadModule () {
 		var args = [],
 			definition,
 			definitionName,
@@ -31,7 +31,17 @@ var sCape = (function () {
 			}
 		}
 
-		modules[definitionName] = definition.apply({}, args);
+		return [definition, args, definitionName];
+	}
+
+	_sCape.executeModule = function () {
+		var module = _loadModule.apply(this, arguments);
+		module[0].apply({}, module[1]);
+	}
+
+	_sCape.addModule = function () {
+		var module = _loadModule.apply(this, arguments);
+		modules[module[2]] = module[0].apply({}, module[1]);
 	};
 
 	return _sCape;
