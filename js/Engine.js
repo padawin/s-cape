@@ -1,3 +1,7 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./sCape.js').sCape;
+}
+
 sCape.addModule('Engine',
 	'data', 'GUI', 'Level', 'Entities', 'PathFinding',
 function (data, GUI, Level, Entities, PathFinding) {
@@ -163,6 +167,9 @@ function (data, GUI, Level, Entities, PathFinding) {
 		draw();
 	};
 
+	if (typeof (exports) != 'undefined') {
+		exports.Engine = Engine;
+	}
 
 	return Engine;
 });

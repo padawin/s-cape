@@ -1,3 +1,7 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./sCape.js').sCape;
+}
+
 sCape.addModule('Events', function () {
 	function _stopEvent () {
 		Events.fire('event.action-off-screen');
@@ -105,6 +109,10 @@ sCape.addModule('Events', function () {
 			}
 		}
 	};
+
+	if (typeof (exports) != 'undefined') {
+		exports.Events = Events;
+	}
 
 	return Events;
 });

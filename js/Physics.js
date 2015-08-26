@@ -1,5 +1,9 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./../js/sCape.js').sCape;
+}
+
 sCape.addModule('Physics', function () {
-	return {
+	var Physics = {
 		areRectanglesColliding: function (rect1, rect2) {
 			return rect1.x < rect2.x + rect2.w
 				&& rect1.x + rect1.w > rect2.x
@@ -58,4 +62,10 @@ sCape.addModule('Physics', function () {
 			return MathMax(rect.y, MathMin(minY, maxY)) <= MathMin(rect.y + rect.h, MathMax(minY, maxY));
 		}
 	};
+
+	if (typeof (exports) != 'undefined') {
+		exports.Physics = Physics;
+	}
+
+	return Physics;
 });

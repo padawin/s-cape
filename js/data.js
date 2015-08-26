@@ -1,5 +1,9 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./sCape.js').sCape;
+}
+
 sCape.addModule('data', function () {
-	return {
+	var data = {
 		'resources': {
 			// url, tile dimensions, top left position in grid's cell to be
 			// middle bottom aligned
@@ -44,4 +48,10 @@ sCape.addModule('data', function () {
 			}
 		]
 	};
+
+	if (typeof (exports) != 'undefined') {
+		exports.data = data;
+	}
+
+	return data;
 });

@@ -1,3 +1,7 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./../js/sCape.js').sCape;
+}
+
 sCape.addModule('PathFinding', function () {
 	function _getKey(object, a) {
 		return object.cellX + '-' + object.cellY;
@@ -19,7 +23,7 @@ sCape.addModule('PathFinding', function () {
 		return path;
 	}
 
-	return {
+	var PathFinding = {
 		shortestPath: function (grid, start, end) {
 			// @TODO @XXX Fix implementation, too slow
 			var cameFrom = {},
@@ -70,5 +74,11 @@ sCape.addModule('PathFinding', function () {
 			return getPath(cameFrom, start, end);
 		}
 	};
+
+	if (typeof (exports) != 'undefined') {
+		exports.PathFinding = PathFinding;
+	}
+
+	return PathFinding;
 });
 
