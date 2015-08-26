@@ -2,12 +2,11 @@
 
 ## Ideas
 
-If Player in enemy's line of sight, make the enemy move toward the player.
-If the player hides himself, stop the enemy or make him go at the player last seen position?
+Dark/cave with limited visibility? (Cf branch night)
 
-Move player and enemy cell by cell or animated between cells?
+Allow external modules ($, B,....) in the sCape modules system
 
-Dark/cave with limited visibility?
+Use events to update loading bar when loading resources
 
 
 ## Copyrights
