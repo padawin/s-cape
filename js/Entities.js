@@ -1,7 +1,13 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./../js/sCape.js').sCape;
+}
+
 sCape.addModule('Entities',
 	'Events', 'Level', 'GUI', 'Geometry', 'Physics', 'data',
 function (Events, Level, GUI, Geometry, Physics, data) {
-	var entityClass, movableClass, deathClass, playerClass, _directions, _directionsSetup;
+	var Entities,
+		entityClass, movableClass, deathClass, playerClass,
+		_directions, _directionsSetup;
 
 	_directions = ['down', 'left', 'right', 'up'];
 	_directionsSetup = {};
@@ -331,7 +337,7 @@ function (Events, Level, GUI, Geometry, Physics, data) {
 		this.baseSpeed = 2;
 	};
 
-	return {
+	Entities = {
 		entityClass: entityClass,
 
 		movableClass: movableClass,
@@ -340,4 +346,10 @@ function (Events, Level, GUI, Geometry, Physics, data) {
 
 		deathClass: deathClass
 	};
+
+	if (typeof (exports) != 'undefined') {
+		exports.Entities = Entities;
+	}
+
+	return Entities;
 });

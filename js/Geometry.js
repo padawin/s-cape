@@ -1,5 +1,9 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./sCape.js').sCape;
+}
+
 sCape.addModule('Geometry', function () {
-	return {
+	var Geometry = {
 		Point: function (x, y) {
 			this.x = x;
 			this.y = y;
@@ -22,4 +26,10 @@ sCape.addModule('Geometry', function () {
 		ANGLE_BOTTOM_LEFT: 3 * Math.PI / 4,
 		ANGLE_BOTTOM_RIGHT: Math.PI / 4
 	};
+
+	if (typeof (exports) != 'undefined') {
+		exports.Geometry = Geometry;
+	}
+
+	return Geometry;
 });

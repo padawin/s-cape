@@ -1,3 +1,7 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./sCape.js').sCape;
+}
+
 sCape.addModule('Level', function () {
 	var Level = function (grid) {
 		this.grid = grid;
@@ -76,6 +80,10 @@ sCape.addModule('Level', function () {
 	}
 
 	Level.currentLevel = null;
+
+	if (typeof (exports) != 'undefined') {
+		exports.Level = Level;
+	}
 
 	return Level;
 });

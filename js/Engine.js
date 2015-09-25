@@ -1,88 +1,13 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./sCape.js').sCape;
+}
+
 sCape.addModule('Engine',
 	'data', 'GUI', 'Level', 'Entities', 'PathFinding',
 function (data, GUI, Level, Entities, PathFinding) {
 	var _isMobile,
 		_worldChanged = true,
 		Engine = {};
-
-	Engine.initLevel = function (levelIndex) {
-		// Create them differently, via calling new somewhere else
-		var grid = new Level.Grid(
-			data.levels[levelIndex].tileWidth,
-			data.levels[levelIndex].tileHeight,
-			data.levels[levelIndex].map
-		);
-		GUI.canvas.width = grid.map[0].length * grid.tileWidth;
-		GUI.canvas.height = grid.map.length * grid.tileHeight;
-
-		Level.currentLevel = new Level(grid);
-		grid.loopThroughMap({
-			'P': function (col, row) {
-				Level.currentLevel.player = _createPlayer(row, col);
-			},
-			'T': function (col, row) {
-				Level.currentLevel.createObstacle('tree', _createTree(row, col));
-			},
-			'D': function (col, row) {
-				Level.currentLevel.createObstacle('death', _createDeath(row, col));
-
-			}
-		});
-	};
-
-	Engine.loadResources = function (loadedCallback) {
-		var r, loaded = 0, loadingWidth = 0.70 * GUI.canvas.width;
-
-		// rect starts from 15% from the border of the canvas
-		GUI.ctx.rect(
-			0.15 * GUI.canvas.width, GUI.canvas.height / 2 - 10,
-			loadingWidth, 20
-		);
-		GUI.ctx.stroke();
-
-		for (r in data.resources) {
-			if (data.resources.hasOwnProperty(r)) {
-				data.resources[r].resource = new Image();
-				data.resources[r].resource.src = data.resources[r].url;
-				data.resources[r].resource.onload = function () {
-					if (++loaded == data.nbResources) {
-						loadedCallback();
-					}
-					else {
-						GUI.ctx.fillRect(
-							0.15 * GUI.canvas.width, GUI.canvas.height / 2 - 10,
-							loadingWidth * loaded / data.nbResources, 20
-						);
-					}
-				};
-			}
-		}
-	};
-
-	Engine.startMainLoop = function () {
-		var fps = 60,
-			now,
-			then = Date.now(),
-			interval = 1000 / fps,
-			delta;
-
-		// found at http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/
-		function draw() {
-			requestAnimationFrame(draw);
-
-			now = Date.now();
-			delta = now - then;
-
-			if (delta > interval) {
-				then = now - (delta % interval);
-
-				_updateState();
-				_updateScene();
-			}
-		}
-
-		draw();
-	};
 
 	function _createPlayer (x, y) {
 		var playerClass = data.playerClass || Entities.playerClass;
@@ -158,6 +83,92 @@ function (data, GUI, Level, Entities, PathFinding) {
 				}
 			}
 		}
+	}
+
+	Engine.initLevel = function (levelIndex) {
+		// Create them differently, via calling new somewhere else
+		var grid = new Level.Grid(
+			data.levels[levelIndex].tileWidth,
+			data.levels[levelIndex].tileHeight,
+			data.levels[levelIndex].map
+		);
+		GUI.canvas.width = grid.map[0].length * grid.tileWidth;
+		GUI.canvas.height = grid.map.length * grid.tileHeight;
+
+		Level.currentLevel = new Level(grid);
+		grid.loopThroughMap({
+			'P': function (col, row) {
+				Level.currentLevel.player = _createPlayer(row, col);
+			},
+			'T': function (col, row) {
+				Level.currentLevel.createObstacle('tree', _createTree(row, col));
+			},
+			'D': function (col, row) {
+				Level.currentLevel.createObstacle('death', _createDeath(row, col));
+
+			}
+		});
+	};
+
+	/**
+	 * Use events to display loading bar
+	 */
+	Engine.loadResources = function (loadedCallback) {
+		var r, loaded = 0, loadingWidth = 0.70 * GUI.canvas.width;
+
+		// rect starts from 15% from the border of the canvas
+		GUI.ctx.rect(
+			0.15 * GUI.canvas.width, GUI.canvas.height / 2 - 10,
+			loadingWidth, 20
+		);
+		GUI.ctx.stroke();
+
+		for (r in data.resources) {
+			if (data.resources.hasOwnProperty(r)) {
+				data.resources[r].resource = new Image();
+				data.resources[r].resource.src = data.resources[r].url;
+				data.resources[r].resource.onload = function () {
+					if (++loaded == data.nbResources) {
+						loadedCallback();
+					}
+					else {
+						GUI.ctx.fillRect(
+							0.15 * GUI.canvas.width, GUI.canvas.height / 2 - 10,
+							loadingWidth * loaded / data.nbResources, 20
+						);
+					}
+				};
+			}
+		}
+	};
+
+	Engine.startMainLoop = function () {
+		var fps = 60,
+			now,
+			then = Date.now(),
+			interval = 1000 / fps,
+			delta;
+
+		// found at http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/
+		function draw() {
+			requestAnimationFrame(draw);
+
+			now = Date.now();
+			delta = now - then;
+
+			if (delta > interval) {
+				then = now - (delta % interval);
+
+				_updateState();
+				_updateScene();
+			}
+		}
+
+		draw();
+	};
+
+	if (typeof (exports) != 'undefined') {
+		exports.Engine = Engine;
 	}
 
 	return Engine;

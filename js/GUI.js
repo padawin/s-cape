@@ -1,3 +1,7 @@
+if (typeof (require) != 'undefined') {
+	var sCape = require('./sCape.js').sCape;
+}
+
 sCape.addModule('GUI', 'Events', 'Level', 'data', function (Events, Level, data) {
 	function _drawButton(ctx, y, button) {
 		GUI.ctx.fillStyle = '#E0995E';
@@ -137,6 +141,10 @@ sCape.addModule('GUI', 'Events', 'Level', 'data', function (Events, Level, data)
 			);
 		}
 	};
+
+	if (typeof (exports) != 'undefined') {
+		exports.GUI = GUI;
+	}
 
 	return GUI;
 });

@@ -1,4 +1,4 @@
-sCape.addModule('Main', 'GUI', 'Events', 'Menus', function (GUI, Events, Menus) {
+sCape.executeModule('Main', 'GUI', 'Events', 'Menus', function (GUI, Events, Menus) {
 	var chase = {};
 
 	chase.start = function (canvas, width, height, isMobile) {
